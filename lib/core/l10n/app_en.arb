@@ -7,5 +7,30 @@
   "retry": "Retry",
   "cancel": "Cancel",
   "confirm": "Confirm",
-  "loading": "Loading..."
+  "loading": "Loading...",
+
+
+  "splashTagline": "Everything you need, in one line",
+  "splashContinue": "Continue",
+  "onboardingSkip": "Skip",
+  "onboardingNext": "Next",
+  "onboardingStart": "Let’s start",
+  "onboardingPageCounter": "{current} of {total}",
+  "@onboardingPageCounter": {
+      "placeholders": {
+          "current": { "type": "int" },
+          "total": { "type": "int" }
+      }
+  },
+  "onboarding1Title": "Everything you need, in one line",
+  "onboarding1Body": "Books, stationery, toys and gifts… all in one place.",
+  "onboarding2Title": "Your files, ready to print",
+  "onboarding2Body": "Upload your file, pick the print options, and we prepare your order.",
+  "onboarding3Title": "Order easily, we handle the rest",
+  "onboarding3Body": "Type or speak your request, and Satr builds your cart and delivers it.",
+  "roleWelcomeTitle": "Welcome to Satr!",
+  "roleWelcomeSubtitle": "Choose how you want to continue",
+  "roleCustomer": "I’m a customer",
+  "roleDriver": "I’m a driver",
+  "roleTermsNote": "By continuing you agree to the Terms of Use and Privacy Policy"
 }

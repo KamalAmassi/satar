@@ -7,5 +7,29 @@
   "retry": "إعادة المحاولة",
   "cancel": "إلغاء",
   "confirm": "تأكيد",
-  "loading": "جاري التحميل..."
+  "loading": "جاري التحميل...",
+
+  "splashTagline": "كل احتياجاتك، بسطر واحد",
+  "splashContinue": "متابعة",
+  "onboardingSkip": "تخطي",
+  "onboardingNext": "التالي",
+  "onboardingStart": "يلا نبدأ",
+  "onboardingPageCounter": "{current} من {total}",
+  "@onboardingPageCounter": {
+      "placeholders": {
+          "current": { "type": "int" },
+          "total": { "type": "int" }
+      }
+  },
+  "onboarding1Title": "كل اللي بتحتاجه، بسطر واحد",
+  "onboarding1Body": "كتب، قرطاسية، ألعاب وهدايا… كل إشي بتحتاجه بمكان واحد.",
+  "onboarding2Title": "ملفاتك جاهزة للطباعة",
+  "onboarding2Body": "ارفع ملفك، اختر مواصفات الطباعة، وإحنا بنجهّزلك طلبك.",
+  "onboarding3Title": "اطلبها بسهولة، وخلي الباقي علينا",
+  "onboarding3Body": "اطلب بالكتابة أو بالصوت، وسطر بيجهزلك السلة ويوصلها لبابك.",
+  "roleWelcomeTitle": "أهلاً فيك بسطر!",
+  "roleWelcomeSubtitle": "اختر كيف بدك تكمل",
+  "roleCustomer": "أنا زبون",
+  "roleDriver": "أنا سائق",
+  "roleTermsNote": "بالمتابعة أنت توافق على شروط الاستخدام وسياسة الخصوصية"
 }

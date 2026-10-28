@@ -32,4 +32,61 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loading => 'Loading...';
+
+  @override
+  String get splashTagline => 'Everything you need, in one line';
+
+  @override
+  String get splashContinue => 'Continue';
+
+  @override
+  String get onboardingSkip => 'Skip';
+
+  @override
+  String get onboardingNext => 'Next';
+
+  @override
+  String get onboardingStart => 'Let’s start';
+
+  @override
+  String onboardingPageCounter(int current, int total) {
+    return '$current of $total';
+  }
+
+  @override
+  String get onboarding1Title => 'Everything you need, in one line';
+
+  @override
+  String get onboarding1Body =>
+      'Books, stationery, toys and gifts… all in one place.';
+
+  @override
+  String get onboarding2Title => 'Your files, ready to print';
+
+  @override
+  String get onboarding2Body =>
+      'Upload your file, pick the print options, and we prepare your order.';
+
+  @override
+  String get onboarding3Title => 'Order easily, we handle the rest';
+
+  @override
+  String get onboarding3Body =>
+      'Type or speak your request, and Satr builds your cart and delivers it.';
+
+  @override
+  String get roleWelcomeTitle => 'Welcome to Satr!';
+
+  @override
+  String get roleWelcomeSubtitle => 'Choose how you want to continue';
+
+  @override
+  String get roleCustomer => 'I’m a customer';
+
+  @override
+  String get roleDriver => 'I’m a driver';
+
+  @override
+  String get roleTermsNote =>
+      'By continuing you agree to the Terms of Use and Privacy Policy';
 }

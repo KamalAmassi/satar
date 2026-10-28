@@ -11,9 +11,13 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  intl: ^0.20.3
+  intl:
+  dio:
+  dartz:
+  shared_preferences:
   lucide_icons_flutter: ^1.0.3
   get: ^4.6.6
+  equatable:
 
   cupertino_icons: ^1.0.8
 

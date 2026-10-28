@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:get/get.dart';
 import 'package:project/core/routes/app_routes.dart';
 import 'package:project/core/widgets/placeholder_view.dart';
 import 'package:project/welcome/presentation/bindings/welcome_binding.dart';

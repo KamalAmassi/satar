@@ -1,30 +1,46 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:get/get.dart';
+import 'package:project/core/routes/app_routes.dart';
 import 'package:project/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+Future<void> _pumpApp(WidgetTester tester, Map<String, Object> prefs) async {
+  SharedPreferences.setMockInitialValues(prefs);
+  Get.put<SharedPreferences>(
+    await SharedPreferences.getInstance(),
+    permanent: true,
+  );
+  await tester.pumpWidget(const SatrApp());
+  await tester.pumpAndSettle();
+}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  tearDown(Get.reset);
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  testWidgets('App starts on the splash screen', (tester) async {
+    await _pumpApp(tester, {});
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    expect(Get.currentRoute, SharedRoutes.splash);
+    expect(find.text('كل احتياجاتك، بسطر واحد'), findsOneWidget);
+    expect(find.text('متابعة'), findsOneWidget);
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  testWidgets('Continue opens onboarding on first launch', (tester) async {
+    await _pumpApp(tester, {});
+
+    await tester.tap(find.text('متابعة'));
+    await tester.pumpAndSettle();
+
+    expect(Get.currentRoute, SharedRoutes.onboarding);
+  });
+
+  testWidgets('Continue skips to role choice once onboarding was seen',
+      (tester) async {
+    await _pumpApp(tester, {'onboarding_seen': true});
+
+    await tester.tap(find.text('متابعة'));
+    await tester.pumpAndSettle();
+
+    expect(Get.currentRoute, SharedRoutes.roleChoice);
   });
 }

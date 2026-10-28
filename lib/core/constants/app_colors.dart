@@ -29,7 +29,7 @@ abstract final class AppColors {
   static const Color warning = Color(0xFFF59E0B);
   static const Color error = Color(0xFFE02424);
   static const Color info = Color(0xFF0EA5E9);
-
+  static const Color illustrationBg = Color(0xFFF1E6D6);
   static const Color cream = Color(0xFFFBF6EE);
   static const Color sand = Color(0xFFF1DDB5);
   /// ألوان حالات الطلب (من الـ handoff).

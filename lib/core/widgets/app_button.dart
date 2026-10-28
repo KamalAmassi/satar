@@ -69,8 +69,18 @@ class AppButton extends StatelessWidget {
           Icon(icon, size: AppSizes.iconSm),
           const SizedBox(width: AppSizes.sm),
         ],
-        Flexible(child: Text(label, overflow: TextOverflow.ellipsis)),
-      ],
+        Flexible(
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            transitionBuilder: (child, animation) =>
+                FadeTransition(opacity: animation, child: child),
+            child: Text(
+              label,
+              key: ValueKey(label),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),      ],
     );
   }
 }

@@ -1,0 +1,11 @@
+{
+  "@@locale": "en",
+  "appName": "Satr",
+  "appTitle": "Satr Smart Library",
+  "errorGeneral": "An unexpected error occurred. Please try again.",
+  "errorNetwork": "Network connection error. Please check your connection.",
+  "retry": "Retry",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "loading": "Loading..."
+}

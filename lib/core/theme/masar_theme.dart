@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 abstract final class MasarTheme {
   static const Color brand = Color(0xFF30142A);
-  static const String fontFamily = 'IBMPlexSansArabic';
 
   /// Status colors from the project's status definitions.
   static const Map<String, Color> statusColors = {
@@ -36,7 +35,6 @@ abstract final class MasarTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
-      fontFamily: fontFamily,
       scaffoldBackgroundColor: brightness == Brightness.light ? const Color(0xFFF8FAFC) : const Color(0xFF0B1120),
       cardTheme: CardThemeData(
         elevation: 0,

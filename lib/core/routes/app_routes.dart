@@ -10,12 +10,19 @@ abstract final class CustomerRoutes {
   static const languageOnboarding = '/customer/onboarding-language';
   static const login = '/customer/login';
   static const otp = '/customer/otp';
+  static const completeProfile = '/customer/complete-profile';
+  static const success = '/customer/success';
   static const home = '/customer/home';
+  static const categories = '/customer/categories';
   static const products = '/customer/products';
   static const productDetails = '/customer/product-details';
+  static const search = '/customer/search';
+  static const searchResults = '/customer/search-results';
   static const aiAssistant = '/customer/ai-assistant';
   static const aiProposal = '/customer/ai-proposal';
   static const printing = '/customer/printing';
+  static const uploadFiles = '/customer/upload-files';
+  static const printSpecs = '/customer/print-specs';
   static const printPreview = '/customer/print-preview';
   static const cart = '/customer/cart';
   static const addresses = '/customer/addresses';
@@ -30,8 +37,8 @@ abstract final class CustomerRoutes {
   static const profile = '/customer/profile';
 
   static const all = [
-    languageOnboarding, login, otp, home, products, productDetails,
-    aiAssistant, aiProposal, printing, printPreview, cart, addresses,
+    languageOnboarding, login, otp, completeProfile, success, home, categories, products, productDetails,
+    search, searchResults, aiAssistant, aiProposal, printing, uploadFiles, printSpecs, printPreview, cart, addresses,
     addressForm, priceReview, payment, offer, orderDetails, orders,
     notifications, receipt, profile,
   ];

@@ -16,7 +16,7 @@ class SatrApp extends StatelessWidget {
   const SatrApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'سطر',

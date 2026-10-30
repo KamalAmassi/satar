@@ -31,5 +31,32 @@
   "roleWelcomeSubtitle": "اختر كيف بدك تكمل",
   "roleCustomer": "أنا زبون",
   "roleDriver": "أنا سائق",
-  "roleTermsNote": "بالمتابعة أنت توافق على شروط الاستخدام وسياسة الخصوصية"
+  "roleTermsNote": "بالمتابعة أنت توافق على شروط الاستخدام وسياسة الخصوصية",
+  "errorTimeout": "انتهت مهلة الاتصال. حاول مرة أخرى.",
+  "errorSessionExpired": "انتهت جلستك. سجّل الدخول مرة أخرى.",
+  "errorRateLimited": "طلبات كثيرة خلال وقت قصير. انتظر قليلًا ثم حاول.",
+  "errorRateLimitedSeconds": "طلبات كثيرة خلال وقت قصير. حاول بعد {seconds} ثانية.",
+  "@errorRateLimitedSeconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "errorAppNotConfigured": "التطبيق غير مهيأ للاتصال بالخادم حاليًا.",
+  "errorOutOfZone": "هذا العنوان خارج منطقة التوصيل. اختر عنوانًا آخر.",
+  "errorOutOfStock": "الكمية المطلوبة غير متوفرة حاليًا.",
+  "errorOutOfStockAvailable": "الكمية غير متوفرة. المتاح الآن: {count}.",
+  "@errorOutOfStockAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorStateChanged": "تغيّرت حالة الطلب. حدّثنا البيانات، راجعها ثم تابع.",
+  "remove": "حذف",
+  "reject": "ارفض",
+  "quoteExpiredBody": "حدّث السعر والتوفر قبل تأكيد الطلب.",
+  "quoteUsedBody": "راجع طلباتك قبل محاولة إنشاء طلب جديد."
 }

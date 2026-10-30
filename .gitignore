@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Local build settings with secrets (see config/dev.example.json)
+/config/dev.json

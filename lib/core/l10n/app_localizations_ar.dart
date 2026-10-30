@@ -88,4 +88,51 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get roleTermsNote =>
       'بالمتابعة أنت توافق على شروط الاستخدام وسياسة الخصوصية';
+
+  @override
+  String get errorTimeout => 'انتهت مهلة الاتصال. حاول مرة أخرى.';
+
+  @override
+  String get errorSessionExpired => 'انتهت جلستك. سجّل الدخول مرة أخرى.';
+
+  @override
+  String get errorRateLimited =>
+      'طلبات كثيرة خلال وقت قصير. انتظر قليلًا ثم حاول.';
+
+  @override
+  String errorRateLimitedSeconds(int seconds) {
+    return 'طلبات كثيرة خلال وقت قصير. حاول بعد $seconds ثانية.';
+  }
+
+  @override
+  String get errorAppNotConfigured =>
+      'التطبيق غير مهيأ للاتصال بالخادم حاليًا.';
+
+  @override
+  String get errorOutOfZone =>
+      'هذا العنوان خارج منطقة التوصيل. اختر عنوانًا آخر.';
+
+  @override
+  String get errorOutOfStock => 'الكمية المطلوبة غير متوفرة حاليًا.';
+
+  @override
+  String errorOutOfStockAvailable(int count) {
+    return 'الكمية غير متوفرة. المتاح الآن: $count.';
+  }
+
+  @override
+  String get errorStateChanged =>
+      'تغيّرت حالة الطلب. حدّثنا البيانات، راجعها ثم تابع.';
+
+  @override
+  String get remove => 'حذف';
+
+  @override
+  String get reject => 'ارفض';
+
+  @override
+  String get quoteExpiredBody => 'حدّث السعر والتوفر قبل تأكيد الطلب.';
+
+  @override
+  String get quoteUsedBody => 'راجع طلباتك قبل محاولة إنشاء طلب جديد.';
 }

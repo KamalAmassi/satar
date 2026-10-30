@@ -32,5 +32,18 @@
   "roleWelcomeSubtitle": "Choose how you want to continue",
   "roleCustomer": "I’m a customer",
   "roleDriver": "I’m a driver",
-  "roleTermsNote": "By continuing you agree to the Terms of Use and Privacy Policy"
+  "roleTermsNote": "By continuing you agree to the Terms of Use and Privacy Policy",
+  "errorTimeout": "The connection timed out. Please try again.",
+  "errorSessionExpired": "Your session has ended. Please sign in again.",
+  "errorRateLimited": "Too many requests. Please wait a moment and try again.",
+  "errorRateLimitedSeconds": "Too many requests. Try again in {seconds} seconds.",
+  "errorAppNotConfigured": "The app is not configured to reach the server right now.",
+  "errorOutOfZone": "This address is outside the delivery area. Choose another address.",
+  "errorOutOfStock": "The requested quantity is not available right now.",
+  "errorOutOfStockAvailable": "Not enough stock. Available now: {count}.",
+  "errorStateChanged": "The order status changed. We refreshed it — please review and continue.",
+  "remove": "Remove",
+  "reject": "Reject",
+  "quoteExpiredBody": "Refresh the price and availability before confirming.",
+  "quoteUsedBody": "Check your orders before trying to place a new one."
 }

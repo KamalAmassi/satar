@@ -12,9 +12,17 @@ abstract class Failure extends Equatable {
   final String? code;
   final int? statusCode;
 
+  /// error.details كما وصلت (مثل reason و available و allowed).
+  Map<String, dynamic>? get details => null;
+
+  /// error.details.reason إن وُجد (مثل quote_payload_mismatch).
+  String? get reason => details?['reason'] as String?;
+
+  /// لم يصل أي رد من الخادم: نتيجة أي طلب كتابة غير مؤكدة.
+  bool get hasNoResponse => statusCode == null;
+
   bool get isRetryable => false;
-  bool get isBlocking =>
-      code != null && ApiErrorCodes.blocking.contains(code);
+  bool get isBlocking => code != null && ApiErrorCodes.blocking.contains(code);
 
   @override
   List<Object?> get props => [message, code, statusCode];
@@ -26,20 +34,29 @@ class ServerFailure extends Failure {
     super.code,
     super.statusCode,
     this.requestId,
-    this.details,
-  });
+    Map<String, dynamic>? details,
+  }) : _details = details;
 
   final String? requestId;
-  final Map<String, dynamic>? details;
+  final Map<String, dynamic>? _details;
+
+  @override
+  Map<String, dynamic>? get details => _details;
+
+  /// details.retry_after (ثوانٍ) مع 429 too_many_requests.
+  int? get retryAfterSeconds {
+    final raw = _details?['retry_after'];
+    return raw is int ? raw : int.tryParse('$raw');
+  }
 
   @override
   bool get isRetryable =>
       (statusCode != null && statusCode! >= 500) ||
-          code == ApiErrorCodes.tooManyRequests ||
-          code == ApiErrorCodes.chaosInjected;
+      code == ApiErrorCodes.tooManyRequests ||
+      code == ApiErrorCodes.chaosInjected;
 
   @override
-  List<Object?> get props => [...super.props, requestId, details];
+  List<Object?> get props => [...super.props, requestId, _details];
 }
 
 /// 422 validation_failed مع details.fields
@@ -47,13 +64,27 @@ class ValidationFailure extends Failure {
   const ValidationFailure({
     super.message,
     this.fieldErrors = const {},
-  }) : super(code: ApiErrorCodes.validationFailed, statusCode: 422);
+    this.requestId,
+    Map<String, dynamic>? details,
+  })  : _details = details,
+        super(code: ApiErrorCodes.validationFailed, statusCode: 422);
 
-  /// اسم الحقل → رسالة الخطأ
+  /// اسم الحقل → رسالة الخطأ (مثل print_items.0.print_page_range).
   final Map<String, String> fieldErrors;
+  final String? requestId;
+  final Map<String, dynamic>? _details;
 
   @override
-  List<Object?> get props => [...super.props, fieldErrors];
+  Map<String, dynamic>? get details => _details;
+
+  /// أخطاء الحقول التي تبدأ بمسار معيّن، مثل 'print_items.1.'.
+  Map<String, String> fieldsUnder(String prefix) => {
+        for (final e in fieldErrors.entries)
+          if (e.key.startsWith(prefix)) e.key.substring(prefix.length): e.value,
+      };
+
+  @override
+  List<Object?> get props => [...super.props, fieldErrors, requestId];
 }
 
 /// 401 — التوكن مفقود أو منتهي: يجب العودة لشاشة الدخول.
@@ -74,6 +105,11 @@ class TimeoutFailure extends Failure {
 
   @override
   bool get isRetryable => true;
+}
+
+/// أُلغي الطلب من التطبيق (مثل إلغاء رفع ملف).
+class CancelledFailure extends Failure {
+  const CancelledFailure();
 }
 
 class CacheFailure extends Failure {

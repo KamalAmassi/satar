@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:project/app/bindings/app_binding.dart';
+import 'package:project/core/config/app_env.dart';
 import 'package:project/core/l10n/app_localizations.dart';
 import 'package:project/core/routes/app_router.dart';
 import 'package:project/core/theme/app_theme.dart';
@@ -23,9 +25,10 @@ class SatrApp extends StatelessWidget {
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       themeMode: ThemeMode.light,
-      locale: const Locale('ar'),
+      locale: Locale(AppEnv.locale),
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
+      initialBinding: AppBinding(),
       initialRoute: AppRouter.initial,
       getPages: AppRouter.pages,
       unknownRoute: AppRouter.unknown,

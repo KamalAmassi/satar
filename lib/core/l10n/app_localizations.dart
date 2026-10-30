@@ -247,6 +247,84 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'بالمتابعة أنت توافق على شروط الاستخدام وسياسة الخصوصية'**
   String get roleTermsNote;
+
+  /// No description provided for @errorTimeout.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهت مهلة الاتصال. حاول مرة أخرى.'**
+  String get errorTimeout;
+
+  /// No description provided for @errorSessionExpired.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهت جلستك. سجّل الدخول مرة أخرى.'**
+  String get errorSessionExpired;
+
+  /// No description provided for @errorRateLimited.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبات كثيرة خلال وقت قصير. انتظر قليلًا ثم حاول.'**
+  String get errorRateLimited;
+
+  /// No description provided for @errorRateLimitedSeconds.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبات كثيرة خلال وقت قصير. حاول بعد {seconds} ثانية.'**
+  String errorRateLimitedSeconds(int seconds);
+
+  /// No description provided for @errorAppNotConfigured.
+  ///
+  /// In ar, this message translates to:
+  /// **'التطبيق غير مهيأ للاتصال بالخادم حاليًا.'**
+  String get errorAppNotConfigured;
+
+  /// No description provided for @errorOutOfZone.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا العنوان خارج منطقة التوصيل. اختر عنوانًا آخر.'**
+  String get errorOutOfZone;
+
+  /// No description provided for @errorOutOfStock.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكمية المطلوبة غير متوفرة حاليًا.'**
+  String get errorOutOfStock;
+
+  /// No description provided for @errorOutOfStockAvailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكمية غير متوفرة. المتاح الآن: {count}.'**
+  String errorOutOfStockAvailable(int count);
+
+  /// No description provided for @errorStateChanged.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيّرت حالة الطلب. حدّثنا البيانات، راجعها ثم تابع.'**
+  String get errorStateChanged;
+
+  /// No description provided for @remove.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف'**
+  String get remove;
+
+  /// No description provided for @reject.
+  ///
+  /// In ar, this message translates to:
+  /// **'ارفض'**
+  String get reject;
+
+  /// No description provided for @quoteExpiredBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدّث السعر والتوفر قبل تأكيد الطلب.'**
+  String get quoteExpiredBody;
+
+  /// No description provided for @quoteUsedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'راجع طلباتك قبل محاولة إنشاء طلب جديد.'**
+  String get quoteUsedBody;
 }
 
 class _AppLocalizationsDelegate

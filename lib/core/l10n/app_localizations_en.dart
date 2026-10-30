@@ -89,4 +89,55 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get roleTermsNote =>
       'By continuing you agree to the Terms of Use and Privacy Policy';
+
+  @override
+  String get errorTimeout => 'The connection timed out. Please try again.';
+
+  @override
+  String get errorSessionExpired =>
+      'Your session has ended. Please sign in again.';
+
+  @override
+  String get errorRateLimited =>
+      'Too many requests. Please wait a moment and try again.';
+
+  @override
+  String errorRateLimitedSeconds(int seconds) {
+    return 'Too many requests. Try again in $seconds seconds.';
+  }
+
+  @override
+  String get errorAppNotConfigured =>
+      'The app is not configured to reach the server right now.';
+
+  @override
+  String get errorOutOfZone =>
+      'This address is outside the delivery area. Choose another address.';
+
+  @override
+  String get errorOutOfStock =>
+      'The requested quantity is not available right now.';
+
+  @override
+  String errorOutOfStockAvailable(int count) {
+    return 'Not enough stock. Available now: $count.';
+  }
+
+  @override
+  String get errorStateChanged =>
+      'The order status changed. We refreshed it — please review and continue.';
+
+  @override
+  String get remove => 'Remove';
+
+  @override
+  String get reject => 'Reject';
+
+  @override
+  String get quoteExpiredBody =>
+      'Refresh the price and availability before confirming.';
+
+  @override
+  String get quoteUsedBody =>
+      'Check your orders before trying to place a new one.';
 }

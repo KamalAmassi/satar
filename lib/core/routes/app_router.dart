@@ -2,12 +2,13 @@ import 'package:get/get.dart';
 import 'package:project/core/routes/app_routes.dart';
 import 'package:project/core/widgets/placeholder_view.dart';
 import 'package:project/customer/features/purchasing_pages.dart';
+import 'package:project/dev/dev_routes.dart';
 import 'package:project/welcome/presentation/bindings/welcome_binding.dart';
 import 'package:project/welcome/presentation/views/onboarding_view.dart';
 import 'package:project/welcome/presentation/views/role_choice_view.dart';
 import 'package:project/welcome/presentation/views/splash_view.dart';
 abstract final class AppRouter {
-  static const initial = SharedRoutes.splash;
+  static String get initial => DevRoutes.initialOverride ?? SharedRoutes.splash;
 
   static const _transition = Transition.cupertino; // يدعم RTL تلقائياً
 
@@ -17,6 +18,7 @@ abstract final class AppRouter {
     for (final route in CustomerRoutes.all)
       if (!PurchasingPages.routes.contains(route)) _placeholder(route),
     for (final route in DriverRoutes.all) _placeholder(route),
+    if (DevRoutes.enabled) ...DevRoutes.pages,
   ];
 
   static final List<GetPage<dynamic>> _shared = [

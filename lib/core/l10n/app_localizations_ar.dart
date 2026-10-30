@@ -631,4 +631,216 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get viewTransferDetails => 'عرض بيانات التحويل';
+
+  @override
+  String get copy => 'نسخ';
+
+  @override
+  String get copied => 'تم النسخ';
+
+  @override
+  String get copyLink => 'نسخ الرابط';
+
+  @override
+  String get transferTitle => 'الدفع بالتحويل';
+
+  @override
+  String get transferHeadline => 'حوّل المبلغ وارفع الإشعار';
+
+  @override
+  String get transferSubtitle => 'أكمل التحويل خارج سطر ثم ارفع إشعاره.';
+
+  @override
+  String get correctionTitle => 'تصحيح إشعار الدفع';
+
+  @override
+  String get correctionSubtitle =>
+      'طلبت المكتبة تصحيحًا. ارفع إشعارًا جديدًا حسب الملاحظة.';
+
+  @override
+  String get libraryNote => 'ملاحظة المكتبة';
+
+  @override
+  String get previousReceipt => 'الإشعار السابق';
+
+  @override
+  String get amountDue => 'المبلغ المطلوب';
+
+  @override
+  String get recipientAccount => 'الحساب المستلم';
+
+  @override
+  String get noTransferAccounts =>
+      'لا توجد بيانات حساب حاليًا. تواصل مع المكتبة.';
+
+  @override
+  String get wallet => 'محفظة';
+
+  @override
+  String get bank => 'بنك';
+
+  @override
+  String get uploadReceipt => 'ارفع إشعار التحويل';
+
+  @override
+  String receiptTypes(String size) {
+    return 'صورة أو PDF · حتى $size';
+  }
+
+  @override
+  String get chooseReceipt => 'اختيار الإشعار';
+
+  @override
+  String get replaceReceipt => 'استبدال';
+
+  @override
+  String get receiptPreview => 'معاينة الإشعار';
+
+  @override
+  String get submitReceipt => 'إرسال إشعار الدفع';
+
+  @override
+  String get resubmitReceipt => 'إعادة إرسال الإشعار';
+
+  @override
+  String get receiptNotApproval =>
+      'بعد الإرسال: قيد مراجعة المكتبة — لا يعني اعتماد الدفع.';
+
+  @override
+  String get receiptSentTitle => 'تم إرسال الإشعار';
+
+  @override
+  String get receiptUnderReviewTitle => 'الإشعار قيد المراجعة';
+
+  @override
+  String get receiptUnderReviewBody =>
+      'تراجع المكتبة الإشعار قبل اعتماد الدفع. لا يمكن إرسال إشعار آخر أثناء المراجعة.';
+
+  @override
+  String get refreshStatus => 'تحديث الحالة';
+
+  @override
+  String get paymentStateChanged =>
+      'تغيّرت حالة الدفع. حدّثنا الشاشة بآخر حالة.';
+
+  @override
+  String get transferNotOpenTitle => 'الدفع لم يُفتح بعد';
+
+  @override
+  String get transferNotOpenBody =>
+      'تراجع المكتبة طلبك. يُفتح رفع الإشعار عندما يصبح الطلب بانتظار الدفع.';
+
+  @override
+  String get transferNeedsOfferBody =>
+      'أرسلت المكتبة عرض السعر. وافق عليه أولًا ليُفتح الدفع.';
+
+  @override
+  String get reviewLibraryOffer => 'مراجعة عرض المكتبة';
+
+  @override
+  String get paymentConfirmedTitle => 'تم اعتماد الدفع';
+
+  @override
+  String get paymentConfirmedBody =>
+      'اعتمدت المكتبة الدفع ويتابع الطلب خطواته.';
+
+  @override
+  String get notTransferOrderTitle => 'هذا الطلب ليس بالتحويل';
+
+  @override
+  String get notTransferOrderBody => 'لا يحتاج هذا الطلب إشعار تحويل.';
+
+  @override
+  String get libraryOfferTitle => 'عرض المكتبة';
+
+  @override
+  String offerValidFor(String time) {
+    return 'العرض صالح لمدة $time';
+  }
+
+  @override
+  String get reviewPriceAndSubstitutes => 'راجع السعر والبدائل';
+
+  @override
+  String get offerIntro => 'المكتبة راجعت طلبك وجهّزت العرض التالي.';
+
+  @override
+  String itemUnavailable(String name) {
+    return '$name غير متوفر';
+  }
+
+  @override
+  String qtyTimesUnit(int qty, String unit) {
+    return '$qty × $unit';
+  }
+
+  @override
+  String suggestedSubstitute(String name) {
+    return 'البديل المقترح: $name';
+  }
+
+  @override
+  String get samePrice => 'نفس السعر';
+
+  @override
+  String priceHigherBy(String amount) {
+    return 'أغلى بـ $amount';
+  }
+
+  @override
+  String priceLowerBy(String amount) {
+    return 'أرخص بـ $amount';
+  }
+
+  @override
+  String get acceptSubstitutes =>
+      'أوافق على التعديلات المقترحة (البنود غير المتوفرة والبدائل)';
+
+  @override
+  String get productsAndPrinting => 'المنتجات والطباعة';
+
+  @override
+  String get approvePrice => 'وافق على السعر';
+
+  @override
+  String get rejectOfferTitle => 'رفض العرض؟';
+
+  @override
+  String get rejectOfferBody =>
+      'رفض العرض يلغي الطلب. إذا كنت دفعت مبلغًا فتواصل مع المكتبة؛ الاسترداد ليس تلقائيًا.';
+
+  @override
+  String get offerNotReadyTitle => 'المكتبة تراجع طلبك';
+
+  @override
+  String get offerNotReadyBody => 'سيظهر عرض السعر هنا عندما تجهّزه المكتبة.';
+
+  @override
+  String get refreshOffer => 'تحديث العرض';
+
+  @override
+  String get offerExpiredTitle => 'انتهت صلاحية العرض';
+
+  @override
+  String get offerExpiredBody =>
+      'ما بتقدر توافق على هذا العرض. تواصل مع المكتبة أو حدّث العرض.';
+
+  @override
+  String get offerChangedTitle => 'تم تحديث العرض';
+
+  @override
+  String get offerChangedBody => 'حدّث العرض وراجع البنود قبل الموافقة.';
+
+  @override
+  String get offerApprovedTitle => 'تمت الموافقة على العرض';
+
+  @override
+  String get offerApprovedBody => 'يتابع طلبك خطواته. تابع حالته من طلباتك.';
+
+  @override
+  String get offerRejectedTitle => 'تم رفض العرض';
+
+  @override
+  String get offerRejectedBody =>
+      'أُلغي الطلب. للاستفسار عن أي مبلغ مدفوع تواصل مع المكتبة.';
 }

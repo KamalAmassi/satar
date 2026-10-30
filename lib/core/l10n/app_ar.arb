@@ -321,5 +321,119 @@
   "orderCreatedBody": "تابع حالة الطلب لمعرفة الخطوة التالية.",
   "orderAwaitingPaymentTitle": "تم إنشاء طلبك",
   "orderCreatedTransferBody": "ستراجع المكتبة الطلب، ثم حوّل المبلغ وارفع الإشعار عند فتح الدفع.",
-  "viewTransferDetails": "عرض بيانات التحويل"
+  "viewTransferDetails": "عرض بيانات التحويل",
+  "copy": "نسخ",
+  "copied": "تم النسخ",
+  "copyLink": "نسخ الرابط",
+  "transferTitle": "الدفع بالتحويل",
+  "transferHeadline": "حوّل المبلغ وارفع الإشعار",
+  "transferSubtitle": "أكمل التحويل خارج سطر ثم ارفع إشعاره.",
+  "correctionTitle": "تصحيح إشعار الدفع",
+  "correctionSubtitle": "طلبت المكتبة تصحيحًا. ارفع إشعارًا جديدًا حسب الملاحظة.",
+  "libraryNote": "ملاحظة المكتبة",
+  "previousReceipt": "الإشعار السابق",
+  "amountDue": "المبلغ المطلوب",
+  "recipientAccount": "الحساب المستلم",
+  "noTransferAccounts": "لا توجد بيانات حساب حاليًا. تواصل مع المكتبة.",
+  "wallet": "محفظة",
+  "bank": "بنك",
+  "uploadReceipt": "ارفع إشعار التحويل",
+  "receiptTypes": "صورة أو PDF · حتى {size}",
+  "@receiptTypes": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "chooseReceipt": "اختيار الإشعار",
+  "replaceReceipt": "استبدال",
+  "receiptPreview": "معاينة الإشعار",
+  "submitReceipt": "إرسال إشعار الدفع",
+  "resubmitReceipt": "إعادة إرسال الإشعار",
+  "receiptNotApproval": "بعد الإرسال: قيد مراجعة المكتبة — لا يعني اعتماد الدفع.",
+  "receiptSentTitle": "تم إرسال الإشعار",
+  "receiptUnderReviewTitle": "الإشعار قيد المراجعة",
+  "receiptUnderReviewBody": "تراجع المكتبة الإشعار قبل اعتماد الدفع. لا يمكن إرسال إشعار آخر أثناء المراجعة.",
+  "refreshStatus": "تحديث الحالة",
+  "paymentStateChanged": "تغيّرت حالة الدفع. حدّثنا الشاشة بآخر حالة.",
+  "transferNotOpenTitle": "الدفع لم يُفتح بعد",
+  "transferNotOpenBody": "تراجع المكتبة طلبك. يُفتح رفع الإشعار عندما يصبح الطلب بانتظار الدفع.",
+  "transferNeedsOfferBody": "أرسلت المكتبة عرض السعر. وافق عليه أولًا ليُفتح الدفع.",
+  "reviewLibraryOffer": "مراجعة عرض المكتبة",
+  "paymentConfirmedTitle": "تم اعتماد الدفع",
+  "paymentConfirmedBody": "اعتمدت المكتبة الدفع ويتابع الطلب خطواته.",
+  "notTransferOrderTitle": "هذا الطلب ليس بالتحويل",
+  "notTransferOrderBody": "لا يحتاج هذا الطلب إشعار تحويل.",
+  "libraryOfferTitle": "عرض المكتبة",
+  "offerValidFor": "العرض صالح لمدة {time}",
+  "@offerValidFor": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewPriceAndSubstitutes": "راجع السعر والبدائل",
+  "offerIntro": "المكتبة راجعت طلبك وجهّزت العرض التالي.",
+  "itemUnavailable": "{name} غير متوفر",
+  "@itemUnavailable": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "qtyTimesUnit": "{qty} × {unit}",
+  "@qtyTimesUnit": {
+    "placeholders": {
+      "qty": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "suggestedSubstitute": "البديل المقترح: {name}",
+  "@suggestedSubstitute": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "samePrice": "نفس السعر",
+  "priceHigherBy": "أغلى بـ {amount}",
+  "@priceHigherBy": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "priceLowerBy": "أرخص بـ {amount}",
+  "@priceLowerBy": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "acceptSubstitutes": "أوافق على التعديلات المقترحة (البنود غير المتوفرة والبدائل)",
+  "productsAndPrinting": "المنتجات والطباعة",
+  "approvePrice": "وافق على السعر",
+  "rejectOfferTitle": "رفض العرض؟",
+  "rejectOfferBody": "رفض العرض يلغي الطلب. إذا كنت دفعت مبلغًا فتواصل مع المكتبة؛ الاسترداد ليس تلقائيًا.",
+  "offerNotReadyTitle": "المكتبة تراجع طلبك",
+  "offerNotReadyBody": "سيظهر عرض السعر هنا عندما تجهّزه المكتبة.",
+  "refreshOffer": "تحديث العرض",
+  "offerExpiredTitle": "انتهت صلاحية العرض",
+  "offerExpiredBody": "ما بتقدر توافق على هذا العرض. تواصل مع المكتبة أو حدّث العرض.",
+  "offerChangedTitle": "تم تحديث العرض",
+  "offerChangedBody": "حدّث العرض وراجع البنود قبل الموافقة.",
+  "offerApprovedTitle": "تمت الموافقة على العرض",
+  "offerApprovedBody": "يتابع طلبك خطواته. تابع حالته من طلباتك.",
+  "offerRejectedTitle": "تم رفض العرض",
+  "offerRejectedBody": "أُلغي الطلب. للاستفسار عن أي مبلغ مدفوع تواصل مع المكتبة."
 }

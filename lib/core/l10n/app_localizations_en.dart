@@ -635,4 +635,222 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get viewTransferDetails => 'View transfer details';
+
+  @override
+  String get copy => 'Copy';
+
+  @override
+  String get copied => 'Copied';
+
+  @override
+  String get copyLink => 'Copy link';
+
+  @override
+  String get transferTitle => 'Transfer payment';
+
+  @override
+  String get transferHeadline => 'Transfer the amount and upload the receipt';
+
+  @override
+  String get transferSubtitle =>
+      'Complete the transfer outside Satr, then upload its receipt.';
+
+  @override
+  String get correctionTitle => 'Correct the payment receipt';
+
+  @override
+  String get correctionSubtitle =>
+      'The library asked for a correction. Upload a new receipt as noted.';
+
+  @override
+  String get libraryNote => 'Library note';
+
+  @override
+  String get previousReceipt => 'Previous receipt';
+
+  @override
+  String get amountDue => 'Amount due';
+
+  @override
+  String get recipientAccount => 'Recipient account';
+
+  @override
+  String get noTransferAccounts =>
+      'No account details are available. Contact the library.';
+
+  @override
+  String get wallet => 'Wallet';
+
+  @override
+  String get bank => 'Bank';
+
+  @override
+  String get uploadReceipt => 'Upload the transfer receipt';
+
+  @override
+  String receiptTypes(String size) {
+    return 'Image or PDF · up to $size';
+  }
+
+  @override
+  String get chooseReceipt => 'Choose receipt';
+
+  @override
+  String get replaceReceipt => 'Replace';
+
+  @override
+  String get receiptPreview => 'Receipt preview';
+
+  @override
+  String get submitReceipt => 'Send payment receipt';
+
+  @override
+  String get resubmitReceipt => 'Resend receipt';
+
+  @override
+  String get receiptNotApproval =>
+      'After sending: under library review — this is not payment approval.';
+
+  @override
+  String get receiptSentTitle => 'Receipt sent';
+
+  @override
+  String get receiptUnderReviewTitle => 'Receipt under review';
+
+  @override
+  String get receiptUnderReviewBody =>
+      'The library reviews the receipt before approving payment. Another receipt can’t be sent during review.';
+
+  @override
+  String get refreshStatus => 'Refresh status';
+
+  @override
+  String get paymentStateChanged =>
+      'The payment status changed. We refreshed the screen.';
+
+  @override
+  String get transferNotOpenTitle => 'Payment isn’t open yet';
+
+  @override
+  String get transferNotOpenBody =>
+      'The library is reviewing your order. Receipt upload opens when the order is awaiting payment.';
+
+  @override
+  String get transferNeedsOfferBody =>
+      'The library sent a price offer. Approve it first to open payment.';
+
+  @override
+  String get reviewLibraryOffer => 'Review the library offer';
+
+  @override
+  String get paymentConfirmedTitle => 'Payment approved';
+
+  @override
+  String get paymentConfirmedBody =>
+      'The library approved the payment and the order is moving on.';
+
+  @override
+  String get notTransferOrderTitle => 'This order isn’t paid by transfer';
+
+  @override
+  String get notTransferOrderBody =>
+      'This order doesn’t need a transfer receipt.';
+
+  @override
+  String get libraryOfferTitle => 'Library offer';
+
+  @override
+  String offerValidFor(String time) {
+    return 'Offer valid for $time';
+  }
+
+  @override
+  String get reviewPriceAndSubstitutes => 'Review the price and substitutes';
+
+  @override
+  String get offerIntro =>
+      'The library reviewed your order and prepared this offer.';
+
+  @override
+  String itemUnavailable(String name) {
+    return '$name is unavailable';
+  }
+
+  @override
+  String qtyTimesUnit(int qty, String unit) {
+    return '$qty × $unit';
+  }
+
+  @override
+  String suggestedSubstitute(String name) {
+    return 'Suggested substitute: $name';
+  }
+
+  @override
+  String get samePrice => 'Same price';
+
+  @override
+  String priceHigherBy(String amount) {
+    return '$amount more';
+  }
+
+  @override
+  String priceLowerBy(String amount) {
+    return '$amount less';
+  }
+
+  @override
+  String get acceptSubstitutes =>
+      'I accept the proposed changes (unavailable items and substitutes)';
+
+  @override
+  String get productsAndPrinting => 'Products and printing';
+
+  @override
+  String get approvePrice => 'Approve price';
+
+  @override
+  String get rejectOfferTitle => 'Reject the offer?';
+
+  @override
+  String get rejectOfferBody =>
+      'Rejecting the offer cancels the order. If you already paid, contact the library — refunds are not automatic.';
+
+  @override
+  String get offerNotReadyTitle => 'The library is reviewing your order';
+
+  @override
+  String get offerNotReadyBody =>
+      'The price offer will appear here once the library prepares it.';
+
+  @override
+  String get refreshOffer => 'Refresh offer';
+
+  @override
+  String get offerExpiredTitle => 'The offer has expired';
+
+  @override
+  String get offerExpiredBody =>
+      'You can’t approve this offer. Contact the library or refresh the offer.';
+
+  @override
+  String get offerChangedTitle => 'The offer was updated';
+
+  @override
+  String get offerChangedBody =>
+      'Refresh the offer and review the items before approving.';
+
+  @override
+  String get offerApprovedTitle => 'Offer approved';
+
+  @override
+  String get offerApprovedBody =>
+      'Your order is moving on. Follow its status from your orders.';
+
+  @override
+  String get offerRejectedTitle => 'Offer rejected';
+
+  @override
+  String get offerRejectedBody =>
+      'The order was cancelled. Contact the library about any amount already paid.';
 }

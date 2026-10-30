@@ -1195,6 +1195,378 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'عرض بيانات التحويل'**
   String get viewTransferDetails;
+
+  /// No description provided for @copy.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسخ'**
+  String get copy;
+
+  /// No description provided for @copied.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم النسخ'**
+  String get copied;
+
+  /// No description provided for @copyLink.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسخ الرابط'**
+  String get copyLink;
+
+  /// No description provided for @transferTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدفع بالتحويل'**
+  String get transferTitle;
+
+  /// No description provided for @transferHeadline.
+  ///
+  /// In ar, this message translates to:
+  /// **'حوّل المبلغ وارفع الإشعار'**
+  String get transferHeadline;
+
+  /// No description provided for @transferSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'أكمل التحويل خارج سطر ثم ارفع إشعاره.'**
+  String get transferSubtitle;
+
+  /// No description provided for @correctionTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصحيح إشعار الدفع'**
+  String get correctionTitle;
+
+  /// No description provided for @correctionSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبت المكتبة تصحيحًا. ارفع إشعارًا جديدًا حسب الملاحظة.'**
+  String get correctionSubtitle;
+
+  /// No description provided for @libraryNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظة المكتبة'**
+  String get libraryNote;
+
+  /// No description provided for @previousReceipt.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإشعار السابق'**
+  String get previousReceipt;
+
+  /// No description provided for @amountDue.
+  ///
+  /// In ar, this message translates to:
+  /// **'المبلغ المطلوب'**
+  String get amountDue;
+
+  /// No description provided for @recipientAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساب المستلم'**
+  String get recipientAccount;
+
+  /// No description provided for @noTransferAccounts.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد بيانات حساب حاليًا. تواصل مع المكتبة.'**
+  String get noTransferAccounts;
+
+  /// No description provided for @wallet.
+  ///
+  /// In ar, this message translates to:
+  /// **'محفظة'**
+  String get wallet;
+
+  /// No description provided for @bank.
+  ///
+  /// In ar, this message translates to:
+  /// **'بنك'**
+  String get bank;
+
+  /// No description provided for @uploadReceipt.
+  ///
+  /// In ar, this message translates to:
+  /// **'ارفع إشعار التحويل'**
+  String get uploadReceipt;
+
+  /// No description provided for @receiptTypes.
+  ///
+  /// In ar, this message translates to:
+  /// **'صورة أو PDF · حتى {size}'**
+  String receiptTypes(String size);
+
+  /// No description provided for @chooseReceipt.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختيار الإشعار'**
+  String get chooseReceipt;
+
+  /// No description provided for @replaceReceipt.
+  ///
+  /// In ar, this message translates to:
+  /// **'استبدال'**
+  String get replaceReceipt;
+
+  /// No description provided for @receiptPreview.
+  ///
+  /// In ar, this message translates to:
+  /// **'معاينة الإشعار'**
+  String get receiptPreview;
+
+  /// No description provided for @submitReceipt.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال إشعار الدفع'**
+  String get submitReceipt;
+
+  /// No description provided for @resubmitReceipt.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة إرسال الإشعار'**
+  String get resubmitReceipt;
+
+  /// No description provided for @receiptNotApproval.
+  ///
+  /// In ar, this message translates to:
+  /// **'بعد الإرسال: قيد مراجعة المكتبة — لا يعني اعتماد الدفع.'**
+  String get receiptNotApproval;
+
+  /// No description provided for @receiptSentTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال الإشعار'**
+  String get receiptSentTitle;
+
+  /// No description provided for @receiptUnderReviewTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإشعار قيد المراجعة'**
+  String get receiptUnderReviewTitle;
+
+  /// No description provided for @receiptUnderReviewBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'تراجع المكتبة الإشعار قبل اعتماد الدفع. لا يمكن إرسال إشعار آخر أثناء المراجعة.'**
+  String get receiptUnderReviewBody;
+
+  /// No description provided for @refreshStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث الحالة'**
+  String get refreshStatus;
+
+  /// No description provided for @paymentStateChanged.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيّرت حالة الدفع. حدّثنا الشاشة بآخر حالة.'**
+  String get paymentStateChanged;
+
+  /// No description provided for @transferNotOpenTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدفع لم يُفتح بعد'**
+  String get transferNotOpenTitle;
+
+  /// No description provided for @transferNotOpenBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'تراجع المكتبة طلبك. يُفتح رفع الإشعار عندما يصبح الطلب بانتظار الدفع.'**
+  String get transferNotOpenBody;
+
+  /// No description provided for @transferNeedsOfferBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرسلت المكتبة عرض السعر. وافق عليه أولًا ليُفتح الدفع.'**
+  String get transferNeedsOfferBody;
+
+  /// No description provided for @reviewLibraryOffer.
+  ///
+  /// In ar, this message translates to:
+  /// **'مراجعة عرض المكتبة'**
+  String get reviewLibraryOffer;
+
+  /// No description provided for @paymentConfirmedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم اعتماد الدفع'**
+  String get paymentConfirmedTitle;
+
+  /// No description provided for @paymentConfirmedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتمدت المكتبة الدفع ويتابع الطلب خطواته.'**
+  String get paymentConfirmedBody;
+
+  /// No description provided for @notTransferOrderTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الطلب ليس بالتحويل'**
+  String get notTransferOrderTitle;
+
+  /// No description provided for @notTransferOrderBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يحتاج هذا الطلب إشعار تحويل.'**
+  String get notTransferOrderBody;
+
+  /// No description provided for @libraryOfferTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض المكتبة'**
+  String get libraryOfferTitle;
+
+  /// No description provided for @offerValidFor.
+  ///
+  /// In ar, this message translates to:
+  /// **'العرض صالح لمدة {time}'**
+  String offerValidFor(String time);
+
+  /// No description provided for @reviewPriceAndSubstitutes.
+  ///
+  /// In ar, this message translates to:
+  /// **'راجع السعر والبدائل'**
+  String get reviewPriceAndSubstitutes;
+
+  /// No description provided for @offerIntro.
+  ///
+  /// In ar, this message translates to:
+  /// **'المكتبة راجعت طلبك وجهّزت العرض التالي.'**
+  String get offerIntro;
+
+  /// No description provided for @itemUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'{name} غير متوفر'**
+  String itemUnavailable(String name);
+
+  /// No description provided for @qtyTimesUnit.
+  ///
+  /// In ar, this message translates to:
+  /// **'{qty} × {unit}'**
+  String qtyTimesUnit(int qty, String unit);
+
+  /// No description provided for @suggestedSubstitute.
+  ///
+  /// In ar, this message translates to:
+  /// **'البديل المقترح: {name}'**
+  String suggestedSubstitute(String name);
+
+  /// No description provided for @samePrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'نفس السعر'**
+  String get samePrice;
+
+  /// No description provided for @priceHigherBy.
+  ///
+  /// In ar, this message translates to:
+  /// **'أغلى بـ {amount}'**
+  String priceHigherBy(String amount);
+
+  /// No description provided for @priceLowerBy.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرخص بـ {amount}'**
+  String priceLowerBy(String amount);
+
+  /// No description provided for @acceptSubstitutes.
+  ///
+  /// In ar, this message translates to:
+  /// **'أوافق على التعديلات المقترحة (البنود غير المتوفرة والبدائل)'**
+  String get acceptSubstitutes;
+
+  /// No description provided for @productsAndPrinting.
+  ///
+  /// In ar, this message translates to:
+  /// **'المنتجات والطباعة'**
+  String get productsAndPrinting;
+
+  /// No description provided for @approvePrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'وافق على السعر'**
+  String get approvePrice;
+
+  /// No description provided for @rejectOfferTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض العرض؟'**
+  String get rejectOfferTitle;
+
+  /// No description provided for @rejectOfferBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض العرض يلغي الطلب. إذا كنت دفعت مبلغًا فتواصل مع المكتبة؛ الاسترداد ليس تلقائيًا.'**
+  String get rejectOfferBody;
+
+  /// No description provided for @offerNotReadyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'المكتبة تراجع طلبك'**
+  String get offerNotReadyTitle;
+
+  /// No description provided for @offerNotReadyBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيظهر عرض السعر هنا عندما تجهّزه المكتبة.'**
+  String get offerNotReadyBody;
+
+  /// No description provided for @refreshOffer.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث العرض'**
+  String get refreshOffer;
+
+  /// No description provided for @offerExpiredTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهت صلاحية العرض'**
+  String get offerExpiredTitle;
+
+  /// No description provided for @offerExpiredBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما بتقدر توافق على هذا العرض. تواصل مع المكتبة أو حدّث العرض.'**
+  String get offerExpiredBody;
+
+  /// No description provided for @offerChangedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تحديث العرض'**
+  String get offerChangedTitle;
+
+  /// No description provided for @offerChangedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدّث العرض وراجع البنود قبل الموافقة.'**
+  String get offerChangedBody;
+
+  /// No description provided for @offerApprovedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت الموافقة على العرض'**
+  String get offerApprovedTitle;
+
+  /// No description provided for @offerApprovedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'يتابع طلبك خطواته. تابع حالته من طلباتك.'**
+  String get offerApprovedBody;
+
+  /// No description provided for @offerRejectedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم رفض العرض'**
+  String get offerRejectedTitle;
+
+  /// No description provided for @offerRejectedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُلغي الطلب. للاستفسار عن أي مبلغ مدفوع تواصل مع المكتبة.'**
+  String get offerRejectedBody;
 }
 
 class _AppLocalizationsDelegate

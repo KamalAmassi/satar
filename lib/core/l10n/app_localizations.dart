@@ -799,6 +799,402 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'انقطع رفع بعض ملفات الطباعة. افتح مواصفات الطباعة واختر الملفات مرة أخرى أو احذفها.'**
   String get fixInterruptedUploads;
+
+  /// No description provided for @total.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإجمالي'**
+  String get total;
+
+  /// No description provided for @discount.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخصم'**
+  String get discount;
+
+  /// No description provided for @payment.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدفع'**
+  String get payment;
+
+  /// No description provided for @orderCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الطلب'**
+  String get orderCode;
+
+  /// No description provided for @orderStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'حالة الطلب'**
+  String get orderStatus;
+
+  /// No description provided for @viewOrder.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض الطلب'**
+  String get viewOrder;
+
+  /// No description provided for @viewMyOrders.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض طلباتي'**
+  String get viewMyOrders;
+
+  /// No description provided for @deliveryTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'عنوان التوصيل'**
+  String get deliveryTitle;
+
+  /// No description provided for @whereToDeliver.
+  ///
+  /// In ar, this message translates to:
+  /// **'وين نوصّلك؟'**
+  String get whereToDeliver;
+
+  /// No description provided for @addAddress.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف عنوان'**
+  String get addAddress;
+
+  /// No description provided for @noAddresses.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد عناوين محفوظة. أضف عنوانًا للمتابعة.'**
+  String get noAddresses;
+
+  /// No description provided for @addressNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'عنوان {id}'**
+  String addressNumber(int id);
+
+  /// No description provided for @insideDeliveryArea.
+  ///
+  /// In ar, this message translates to:
+  /// **'داخل منطقة التوصيل'**
+  String get insideDeliveryArea;
+
+  /// No description provided for @outsideDeliveryArea.
+  ///
+  /// In ar, this message translates to:
+  /// **'خارج منطقة التوصيل'**
+  String get outsideDeliveryArea;
+
+  /// No description provided for @recipientNameOptional.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم المستلم (اختياري)'**
+  String get recipientNameOptional;
+
+  /// No description provided for @recipientNameHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسم'**
+  String get recipientNameHint;
+
+  /// No description provided for @recipientPhoneOptional.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الهاتف (اختياري)'**
+  String get recipientPhoneOptional;
+
+  /// No description provided for @phoneInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الهاتف غير صحيح.'**
+  String get phoneInvalid;
+
+  /// No description provided for @deliveryNotes.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات التوصيل'**
+  String get deliveryNotes;
+
+  /// No description provided for @deliveryNotesHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'علامة مميزة أو تفاصيل الوصول'**
+  String get deliveryNotesHint;
+
+  /// No description provided for @deliveryFeeAtReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسوم التوصيل والإجمالي النهائي تظهر في مراجعة الطلب.'**
+  String get deliveryFeeAtReview;
+
+  /// No description provided for @continueToPayment.
+  ///
+  /// In ar, this message translates to:
+  /// **'متابعة للدفع'**
+  String get continueToPayment;
+
+  /// No description provided for @paymentMethodTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طريقة الدفع'**
+  String get paymentMethodTitle;
+
+  /// No description provided for @howToPay.
+  ///
+  /// In ar, this message translates to:
+  /// **'كيف بتحب تدفع؟'**
+  String get howToPay;
+
+  /// No description provided for @payCashOnDelivery.
+  ///
+  /// In ar, this message translates to:
+  /// **'نقدًا عند التسليم'**
+  String get payCashOnDelivery;
+
+  /// No description provided for @payBankTransfer.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحويل بنكي أو محفظة'**
+  String get payBankTransfer;
+
+  /// No description provided for @paymentMethodNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'يظهر مبلغ التحصيل والتفاصيل قبل تأكيد الطلب.'**
+  String get paymentMethodNote;
+
+  /// No description provided for @transferAfterOrderNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'ارفع إشعار التحويل بعد أن تؤكد المكتبة سعر الطلب.'**
+  String get transferAfterOrderNote;
+
+  /// No description provided for @reviewOrder.
+  ///
+  /// In ar, this message translates to:
+  /// **'مراجعة الطلب'**
+  String get reviewOrder;
+
+  /// No description provided for @reviewBeforeConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'راجع طلبك قبل التأكيد'**
+  String get reviewBeforeConfirm;
+
+  /// No description provided for @orderType.
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع الطلب'**
+  String get orderType;
+
+  /// No description provided for @orderTypeProducts.
+  ///
+  /// In ar, this message translates to:
+  /// **'منتجات'**
+  String get orderTypeProducts;
+
+  /// No description provided for @orderTypePrinting.
+  ///
+  /// In ar, this message translates to:
+  /// **'طباعة'**
+  String get orderTypePrinting;
+
+  /// No description provided for @orderTypeMixed.
+  ///
+  /// In ar, this message translates to:
+  /// **'منتجات وطباعة'**
+  String get orderTypeMixed;
+
+  /// No description provided for @quoteValidFor.
+  ///
+  /// In ar, this message translates to:
+  /// **'التسعيرة صالحة لمدة {minutes}:{seconds}'**
+  String quoteValidFor(int minutes, String seconds);
+
+  /// No description provided for @libraryConfirmsNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'بعد التأكيد تراجع المكتبة طلبك وترسل لك عرض السعر النهائي للموافقة.'**
+  String get libraryConfirmsNote;
+
+  /// No description provided for @confirmOrder.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد الطلب'**
+  String get confirmOrder;
+
+  /// No description provided for @quoteLoadingTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري حساب السعر'**
+  String get quoteLoadingTitle;
+
+  /// No description provided for @quoteLoadingBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'بنطلب السعر والتوفر الحاليين.'**
+  String get quoteLoadingBody;
+
+  /// No description provided for @quoteFailedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر حساب السعر'**
+  String get quoteFailedTitle;
+
+  /// No description provided for @quoteFailedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'راجع الاتصال والعنوان وخيارات الطلب، ثم حاول مجددًا.'**
+  String get quoteFailedBody;
+
+  /// No description provided for @quoteNotReady.
+  ///
+  /// In ar, this message translates to:
+  /// **'أكمل السلة والعنوان وطريقة الدفع وانتظر رفع الملفات قبل طلب السعر.'**
+  String get quoteNotReady;
+
+  /// No description provided for @fixHighlightedItems.
+  ///
+  /// In ar, this message translates to:
+  /// **'صحّح العناصر المحددة في السلة ثم حاول مجددًا.'**
+  String get fixHighlightedItems;
+
+  /// No description provided for @backToCart.
+  ///
+  /// In ar, this message translates to:
+  /// **'العودة للسلة'**
+  String get backToCart;
+
+  /// No description provided for @changeAddress.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير العنوان'**
+  String get changeAddress;
+
+  /// No description provided for @quoteExpiredTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهت صلاحية التسعيرة'**
+  String get quoteExpiredTitle;
+
+  /// No description provided for @quoteStaleTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيّر طلبك'**
+  String get quoteStaleTitle;
+
+  /// No description provided for @quoteStaleBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدّلت السلة أو التوصيل بعد التسعيرة. اطلب سعرًا جديدًا وراجعه.'**
+  String get quoteStaleBody;
+
+  /// No description provided for @quoteUsedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم استخدام هذه التسعيرة'**
+  String get quoteUsedTitle;
+
+  /// No description provided for @refreshQuote.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث التسعيرة'**
+  String get refreshQuote;
+
+  /// No description provided for @priceChangedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيّر السعر. راجع السعر الجديد قبل المتابعة.'**
+  String get priceChangedBody;
+
+  /// No description provided for @paymentMethodChangedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'غيّرت طريقة الدفع، فأصدرنا تسعيرة جديدة لها. المبلغ لم يتغيّر.'**
+  String get paymentMethodChangedBody;
+
+  /// No description provided for @previousPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'السعر السابق'**
+  String get previousPrice;
+
+  /// No description provided for @currentPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'السعر الحالي'**
+  String get currentPrice;
+
+  /// No description provided for @acceptNewPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'أوافق على السعر الجديد'**
+  String get acceptNewPrice;
+
+  /// No description provided for @submittingTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري إنشاء طلبك'**
+  String get submittingTitle;
+
+  /// No description provided for @submittingBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'بنثبت تفاصيل الطلب والسعر.'**
+  String get submittingBody;
+
+  /// No description provided for @uncertainTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما قدرنا نتأكد من النتيجة'**
+  String get uncertainTitle;
+
+  /// No description provided for @uncertainBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ربما أُنشئ طلبك. تحقق مرة أخرى أو راجع طلباتك قبل إعادة المحاولة حتى لا يتكرر الطلب.'**
+  String get uncertainBody;
+
+  /// No description provided for @checkAgain.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحقق مرة أخرى'**
+  String get checkAgain;
+
+  /// No description provided for @checkMyOrders.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحقق من طلباتي'**
+  String get checkMyOrders;
+
+  /// No description provided for @orderCreatedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إنشاء الطلب'**
+  String get orderCreatedTitle;
+
+  /// No description provided for @orderCreatedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'تابع حالة الطلب لمعرفة الخطوة التالية.'**
+  String get orderCreatedBody;
+
+  /// No description provided for @orderAwaitingPaymentTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إنشاء طلبك'**
+  String get orderAwaitingPaymentTitle;
+
+  /// No description provided for @orderCreatedTransferBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستراجع المكتبة الطلب، ثم حوّل المبلغ وارفع الإشعار عند فتح الدفع.'**
+  String get orderCreatedTransferBody;
+
+  /// No description provided for @viewTransferDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض بيانات التحويل'**
+  String get viewTransferDetails;
 }
 
 class _AppLocalizationsDelegate

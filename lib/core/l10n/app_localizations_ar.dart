@@ -418,4 +418,217 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get fixInterruptedUploads =>
       'انقطع رفع بعض ملفات الطباعة. افتح مواصفات الطباعة واختر الملفات مرة أخرى أو احذفها.';
+
+  @override
+  String get total => 'الإجمالي';
+
+  @override
+  String get discount => 'الخصم';
+
+  @override
+  String get payment => 'الدفع';
+
+  @override
+  String get orderCode => 'رقم الطلب';
+
+  @override
+  String get orderStatus => 'حالة الطلب';
+
+  @override
+  String get viewOrder => 'عرض الطلب';
+
+  @override
+  String get viewMyOrders => 'عرض طلباتي';
+
+  @override
+  String get deliveryTitle => 'عنوان التوصيل';
+
+  @override
+  String get whereToDeliver => 'وين نوصّلك؟';
+
+  @override
+  String get addAddress => 'أضف عنوان';
+
+  @override
+  String get noAddresses => 'لا توجد عناوين محفوظة. أضف عنوانًا للمتابعة.';
+
+  @override
+  String addressNumber(int id) {
+    return 'عنوان $id';
+  }
+
+  @override
+  String get insideDeliveryArea => 'داخل منطقة التوصيل';
+
+  @override
+  String get outsideDeliveryArea => 'خارج منطقة التوصيل';
+
+  @override
+  String get recipientNameOptional => 'اسم المستلم (اختياري)';
+
+  @override
+  String get recipientNameHint => 'الاسم';
+
+  @override
+  String get recipientPhoneOptional => 'رقم الهاتف (اختياري)';
+
+  @override
+  String get phoneInvalid => 'رقم الهاتف غير صحيح.';
+
+  @override
+  String get deliveryNotes => 'ملاحظات التوصيل';
+
+  @override
+  String get deliveryNotesHint => 'علامة مميزة أو تفاصيل الوصول';
+
+  @override
+  String get deliveryFeeAtReview =>
+      'رسوم التوصيل والإجمالي النهائي تظهر في مراجعة الطلب.';
+
+  @override
+  String get continueToPayment => 'متابعة للدفع';
+
+  @override
+  String get paymentMethodTitle => 'طريقة الدفع';
+
+  @override
+  String get howToPay => 'كيف بتحب تدفع؟';
+
+  @override
+  String get payCashOnDelivery => 'نقدًا عند التسليم';
+
+  @override
+  String get payBankTransfer => 'تحويل بنكي أو محفظة';
+
+  @override
+  String get paymentMethodNote =>
+      'يظهر مبلغ التحصيل والتفاصيل قبل تأكيد الطلب.';
+
+  @override
+  String get transferAfterOrderNote =>
+      'ارفع إشعار التحويل بعد أن تؤكد المكتبة سعر الطلب.';
+
+  @override
+  String get reviewOrder => 'مراجعة الطلب';
+
+  @override
+  String get reviewBeforeConfirm => 'راجع طلبك قبل التأكيد';
+
+  @override
+  String get orderType => 'نوع الطلب';
+
+  @override
+  String get orderTypeProducts => 'منتجات';
+
+  @override
+  String get orderTypePrinting => 'طباعة';
+
+  @override
+  String get orderTypeMixed => 'منتجات وطباعة';
+
+  @override
+  String quoteValidFor(int minutes, String seconds) {
+    return 'التسعيرة صالحة لمدة $minutes:$seconds';
+  }
+
+  @override
+  String get libraryConfirmsNote =>
+      'بعد التأكيد تراجع المكتبة طلبك وترسل لك عرض السعر النهائي للموافقة.';
+
+  @override
+  String get confirmOrder => 'تأكيد الطلب';
+
+  @override
+  String get quoteLoadingTitle => 'جاري حساب السعر';
+
+  @override
+  String get quoteLoadingBody => 'بنطلب السعر والتوفر الحاليين.';
+
+  @override
+  String get quoteFailedTitle => 'تعذّر حساب السعر';
+
+  @override
+  String get quoteFailedBody =>
+      'راجع الاتصال والعنوان وخيارات الطلب، ثم حاول مجددًا.';
+
+  @override
+  String get quoteNotReady =>
+      'أكمل السلة والعنوان وطريقة الدفع وانتظر رفع الملفات قبل طلب السعر.';
+
+  @override
+  String get fixHighlightedItems =>
+      'صحّح العناصر المحددة في السلة ثم حاول مجددًا.';
+
+  @override
+  String get backToCart => 'العودة للسلة';
+
+  @override
+  String get changeAddress => 'تغيير العنوان';
+
+  @override
+  String get quoteExpiredTitle => 'انتهت صلاحية التسعيرة';
+
+  @override
+  String get quoteStaleTitle => 'تغيّر طلبك';
+
+  @override
+  String get quoteStaleBody =>
+      'عدّلت السلة أو التوصيل بعد التسعيرة. اطلب سعرًا جديدًا وراجعه.';
+
+  @override
+  String get quoteUsedTitle => 'تم استخدام هذه التسعيرة';
+
+  @override
+  String get refreshQuote => 'تحديث التسعيرة';
+
+  @override
+  String get priceChangedBody => 'تغيّر السعر. راجع السعر الجديد قبل المتابعة.';
+
+  @override
+  String get paymentMethodChangedBody =>
+      'غيّرت طريقة الدفع، فأصدرنا تسعيرة جديدة لها. المبلغ لم يتغيّر.';
+
+  @override
+  String get previousPrice => 'السعر السابق';
+
+  @override
+  String get currentPrice => 'السعر الحالي';
+
+  @override
+  String get acceptNewPrice => 'أوافق على السعر الجديد';
+
+  @override
+  String get submittingTitle => 'جاري إنشاء طلبك';
+
+  @override
+  String get submittingBody => 'بنثبت تفاصيل الطلب والسعر.';
+
+  @override
+  String get uncertainTitle => 'ما قدرنا نتأكد من النتيجة';
+
+  @override
+  String get uncertainBody =>
+      'ربما أُنشئ طلبك. تحقق مرة أخرى أو راجع طلباتك قبل إعادة المحاولة حتى لا يتكرر الطلب.';
+
+  @override
+  String get checkAgain => 'تحقق مرة أخرى';
+
+  @override
+  String get checkMyOrders => 'تحقق من طلباتي';
+
+  @override
+  String get orderCreatedTitle => 'تم إنشاء الطلب';
+
+  @override
+  String get orderCreatedBody => 'تابع حالة الطلب لمعرفة الخطوة التالية.';
+
+  @override
+  String get orderAwaitingPaymentTitle => 'تم إنشاء طلبك';
+
+  @override
+  String get orderCreatedTransferBody =>
+      'ستراجع المكتبة الطلب، ثم حوّل المبلغ وارفع الإشعار عند فتح الدفع.';
+
+  @override
+  String get viewTransferDetails => 'عرض بيانات التحويل';
 }

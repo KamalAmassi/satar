@@ -238,5 +238,88 @@
   "uploadInterrupted": "انقطع رفع هذا الملف لأن التطبيق أُغلق قبل اكتماله. اختر الملف نفسه مرة أخرى أو احذفه.",
   "uploadInterruptedShort": "انقطع الرفع — اختر الملف مرة أخرى.",
   "chooseFileAgain": "اختيار الملف",
-  "fixInterruptedUploads": "انقطع رفع بعض ملفات الطباعة. افتح مواصفات الطباعة واختر الملفات مرة أخرى أو احذفها."
+  "fixInterruptedUploads": "انقطع رفع بعض ملفات الطباعة. افتح مواصفات الطباعة واختر الملفات مرة أخرى أو احذفها.",
+  "total": "الإجمالي",
+  "discount": "الخصم",
+  "payment": "الدفع",
+  "orderCode": "رقم الطلب",
+  "orderStatus": "حالة الطلب",
+  "viewOrder": "عرض الطلب",
+  "viewMyOrders": "عرض طلباتي",
+  "deliveryTitle": "عنوان التوصيل",
+  "whereToDeliver": "وين نوصّلك؟",
+  "addAddress": "أضف عنوان",
+  "noAddresses": "لا توجد عناوين محفوظة. أضف عنوانًا للمتابعة.",
+  "addressNumber": "عنوان {id}",
+  "@addressNumber": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "insideDeliveryArea": "داخل منطقة التوصيل",
+  "outsideDeliveryArea": "خارج منطقة التوصيل",
+  "recipientNameOptional": "اسم المستلم (اختياري)",
+  "recipientNameHint": "الاسم",
+  "recipientPhoneOptional": "رقم الهاتف (اختياري)",
+  "phoneInvalid": "رقم الهاتف غير صحيح.",
+  "deliveryNotes": "ملاحظات التوصيل",
+  "deliveryNotesHint": "علامة مميزة أو تفاصيل الوصول",
+  "deliveryFeeAtReview": "رسوم التوصيل والإجمالي النهائي تظهر في مراجعة الطلب.",
+  "continueToPayment": "متابعة للدفع",
+  "paymentMethodTitle": "طريقة الدفع",
+  "howToPay": "كيف بتحب تدفع؟",
+  "payCashOnDelivery": "نقدًا عند التسليم",
+  "payBankTransfer": "تحويل بنكي أو محفظة",
+  "paymentMethodNote": "يظهر مبلغ التحصيل والتفاصيل قبل تأكيد الطلب.",
+  "transferAfterOrderNote": "ارفع إشعار التحويل بعد أن تؤكد المكتبة سعر الطلب.",
+  "reviewOrder": "مراجعة الطلب",
+  "reviewBeforeConfirm": "راجع طلبك قبل التأكيد",
+  "orderType": "نوع الطلب",
+  "orderTypeProducts": "منتجات",
+  "orderTypePrinting": "طباعة",
+  "orderTypeMixed": "منتجات وطباعة",
+  "quoteValidFor": "التسعيرة صالحة لمدة {minutes}:{seconds}",
+  "@quoteValidFor": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "libraryConfirmsNote": "بعد التأكيد تراجع المكتبة طلبك وترسل لك عرض السعر النهائي للموافقة.",
+  "confirmOrder": "تأكيد الطلب",
+  "quoteLoadingTitle": "جاري حساب السعر",
+  "quoteLoadingBody": "بنطلب السعر والتوفر الحاليين.",
+  "quoteFailedTitle": "تعذّر حساب السعر",
+  "quoteFailedBody": "راجع الاتصال والعنوان وخيارات الطلب، ثم حاول مجددًا.",
+  "quoteNotReady": "أكمل السلة والعنوان وطريقة الدفع وانتظر رفع الملفات قبل طلب السعر.",
+  "fixHighlightedItems": "صحّح العناصر المحددة في السلة ثم حاول مجددًا.",
+  "backToCart": "العودة للسلة",
+  "changeAddress": "تغيير العنوان",
+  "quoteExpiredTitle": "انتهت صلاحية التسعيرة",
+  "quoteStaleTitle": "تغيّر طلبك",
+  "quoteStaleBody": "عدّلت السلة أو التوصيل بعد التسعيرة. اطلب سعرًا جديدًا وراجعه.",
+  "quoteUsedTitle": "تم استخدام هذه التسعيرة",
+  "refreshQuote": "تحديث التسعيرة",
+  "priceChangedBody": "تغيّر السعر. راجع السعر الجديد قبل المتابعة.",
+  "paymentMethodChangedBody": "غيّرت طريقة الدفع، فأصدرنا تسعيرة جديدة لها. المبلغ لم يتغيّر.",
+  "previousPrice": "السعر السابق",
+  "currentPrice": "السعر الحالي",
+  "acceptNewPrice": "أوافق على السعر الجديد",
+  "submittingTitle": "جاري إنشاء طلبك",
+  "submittingBody": "بنثبت تفاصيل الطلب والسعر.",
+  "uncertainTitle": "ما قدرنا نتأكد من النتيجة",
+  "uncertainBody": "ربما أُنشئ طلبك. تحقق مرة أخرى أو راجع طلباتك قبل إعادة المحاولة حتى لا يتكرر الطلب.",
+  "checkAgain": "تحقق مرة أخرى",
+  "checkMyOrders": "تحقق من طلباتي",
+  "orderCreatedTitle": "تم إنشاء الطلب",
+  "orderCreatedBody": "تابع حالة الطلب لمعرفة الخطوة التالية.",
+  "orderAwaitingPaymentTitle": "تم إنشاء طلبك",
+  "orderCreatedTransferBody": "ستراجع المكتبة الطلب، ثم حوّل المبلغ وارفع الإشعار عند فتح الدفع.",
+  "viewTransferDetails": "عرض بيانات التحويل"
 }

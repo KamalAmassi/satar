@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:project/core/uploads/picked_file.dart';
 import 'package:project/customer/features/cart/domain/entities/stored_cart.dart';
 import 'package:project/customer/features/cart/presentation/controllers/cart_controller.dart';
+import 'package:project/customer/features/checkout/domain/entities/checkout_details.dart';
+import 'package:project/customer/features/checkout/domain/entities/quote_draft.dart';
 import 'package:project/customer/features/printing/domain/entities/file_check.dart';
 import 'package:project/customer/features/printing/domain/entities/print_job.dart';
 import 'package:project/customer/features/printing/presentation/controllers/printing_controller.dart';
@@ -120,6 +122,19 @@ void main() {
       await c.load();
       return c;
     }
+
+    test('blocks quoting until the file is chosen again', () async {
+      await withInterrupted(const []);
+      final (draft, blockers) = QuoteDraft.build(
+        products: const [],
+        printJobs: cart.printJobs.toList(),
+        substitutionPreference: null,
+        details: const CheckoutDetails(
+            addressId: 1, paymentMethod: PaymentMethod.cash),
+      );
+      expect(draft, isNull);
+      expect(blockers, contains(DraftBlocker.uploadsFailed));
+    });
 
     test('reselect checks the new file like any other and re-uploads it',
         () async {

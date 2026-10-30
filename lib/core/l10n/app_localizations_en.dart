@@ -421,4 +421,218 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get fixInterruptedUploads =>
       'Some print files were not fully uploaded. Open the print specs and choose them again or remove them.';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get discount => 'Discount';
+
+  @override
+  String get payment => 'Payment';
+
+  @override
+  String get orderCode => 'Order code';
+
+  @override
+  String get orderStatus => 'Order status';
+
+  @override
+  String get viewOrder => 'View order';
+
+  @override
+  String get viewMyOrders => 'View my orders';
+
+  @override
+  String get deliveryTitle => 'Delivery address';
+
+  @override
+  String get whereToDeliver => 'Where should we deliver?';
+
+  @override
+  String get addAddress => 'Add address';
+
+  @override
+  String get noAddresses => 'No saved addresses. Add one to continue.';
+
+  @override
+  String addressNumber(int id) {
+    return 'Address $id';
+  }
+
+  @override
+  String get insideDeliveryArea => 'Inside the delivery area';
+
+  @override
+  String get outsideDeliveryArea => 'Outside the delivery area';
+
+  @override
+  String get recipientNameOptional => 'Recipient name (optional)';
+
+  @override
+  String get recipientNameHint => 'Name';
+
+  @override
+  String get recipientPhoneOptional => 'Phone number (optional)';
+
+  @override
+  String get phoneInvalid => 'The phone number is not valid.';
+
+  @override
+  String get deliveryNotes => 'Delivery notes';
+
+  @override
+  String get deliveryNotesHint => 'A landmark or directions';
+
+  @override
+  String get deliveryFeeAtReview =>
+      'The delivery fee and final total appear at order review.';
+
+  @override
+  String get continueToPayment => 'Continue to payment';
+
+  @override
+  String get paymentMethodTitle => 'Payment method';
+
+  @override
+  String get howToPay => 'How would you like to pay?';
+
+  @override
+  String get payCashOnDelivery => 'Cash on delivery';
+
+  @override
+  String get payBankTransfer => 'Bank transfer or wallet';
+
+  @override
+  String get paymentMethodNote =>
+      'The amount and details appear before you confirm the order.';
+
+  @override
+  String get transferAfterOrderNote =>
+      'Upload the transfer receipt after the library confirms the order price.';
+
+  @override
+  String get reviewOrder => 'Review order';
+
+  @override
+  String get reviewBeforeConfirm => 'Review your order before confirming';
+
+  @override
+  String get orderType => 'Order type';
+
+  @override
+  String get orderTypeProducts => 'Products';
+
+  @override
+  String get orderTypePrinting => 'Printing';
+
+  @override
+  String get orderTypeMixed => 'Products and printing';
+
+  @override
+  String quoteValidFor(int minutes, String seconds) {
+    return 'This quote is valid for $minutes:$seconds';
+  }
+
+  @override
+  String get libraryConfirmsNote =>
+      'After you confirm, the library reviews your order and sends the final price for your approval.';
+
+  @override
+  String get confirmOrder => 'Confirm order';
+
+  @override
+  String get quoteLoadingTitle => 'Calculating the price';
+
+  @override
+  String get quoteLoadingBody => 'Getting the current price and availability.';
+
+  @override
+  String get quoteFailedTitle => 'Couldn’t calculate the price';
+
+  @override
+  String get quoteFailedBody =>
+      'Check your connection, address and order options, then try again.';
+
+  @override
+  String get quoteNotReady =>
+      'Complete the cart, address and payment method, and wait for uploads before requesting a price.';
+
+  @override
+  String get fixHighlightedItems =>
+      'Fix the highlighted items in your cart, then try again.';
+
+  @override
+  String get backToCart => 'Back to cart';
+
+  @override
+  String get changeAddress => 'Change address';
+
+  @override
+  String get quoteExpiredTitle => 'The quote has expired';
+
+  @override
+  String get quoteStaleTitle => 'Your order changed';
+
+  @override
+  String get quoteStaleBody =>
+      'You changed the cart or delivery after the quote. Get a new price and review it.';
+
+  @override
+  String get quoteUsedTitle => 'This quote was already used';
+
+  @override
+  String get refreshQuote => 'Refresh quote';
+
+  @override
+  String get priceChangedBody =>
+      'The price changed. Review the new price before continuing.';
+
+  @override
+  String get paymentMethodChangedBody =>
+      'You changed the payment method, so we issued a new quote for it. The amount is unchanged.';
+
+  @override
+  String get previousPrice => 'Previous price';
+
+  @override
+  String get currentPrice => 'Current price';
+
+  @override
+  String get acceptNewPrice => 'Accept the new price';
+
+  @override
+  String get submittingTitle => 'Placing your order';
+
+  @override
+  String get submittingBody => 'Confirming your order details and price.';
+
+  @override
+  String get uncertainTitle => 'We couldn’t confirm the result';
+
+  @override
+  String get uncertainBody =>
+      'Your order may have been placed. Check again or review your orders before retrying to avoid a duplicate.';
+
+  @override
+  String get checkAgain => 'Check again';
+
+  @override
+  String get checkMyOrders => 'Check my orders';
+
+  @override
+  String get orderCreatedTitle => 'Order placed';
+
+  @override
+  String get orderCreatedBody => 'Follow the order status for the next step.';
+
+  @override
+  String get orderAwaitingPaymentTitle => 'Your order was placed';
+
+  @override
+  String get orderCreatedTransferBody =>
+      'The library will review the order; then transfer the amount and upload the receipt when payment opens.';
+
+  @override
+  String get viewTransferDetails => 'View transfer details';
 }

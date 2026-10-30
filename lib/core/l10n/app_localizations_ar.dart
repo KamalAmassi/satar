@@ -135,4 +135,287 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get quoteUsedBody => 'راجع طلباتك قبل محاولة إنشاء طلب جديد.';
+
+  @override
+  String get dismiss => 'إغلاق';
+
+  @override
+  String get increase => 'زيادة';
+
+  @override
+  String get decrease => 'إنقاص';
+
+  @override
+  String get deliveryFee => 'رسوم التوصيل';
+
+  @override
+  String get printingServicesTitle => 'خدمات الطباعة';
+
+  @override
+  String get printingHeroEyebrow => 'من الملف للورق';
+
+  @override
+  String get printingHeroTitle => 'ملفاتك علينا!';
+
+  @override
+  String get printingHeroBody =>
+      'ارفع ملفك، اختار المواصفات، وخلي الطباعة علينا.';
+
+  @override
+  String printingServiceBw(String paper) {
+    return 'أبيض وأسود $paper';
+  }
+
+  @override
+  String printingServiceColor(String paper) {
+    return 'طباعة ملونة $paper';
+  }
+
+  @override
+  String perPrintedSide(String price) {
+    return '$price / وجه مطبوع';
+  }
+
+  @override
+  String perCopy(String price) {
+    return '$price / نسخة';
+  }
+
+  @override
+  String get printingFinalPriceNote =>
+      'راجع عرض السعر النهائي قبل تأكيد الطلب.';
+
+  @override
+  String get printingStart => 'ابدأ بطلب طباعة';
+
+  @override
+  String get printSpecsTitle => 'مواصفات الملفات';
+
+  @override
+  String get printSpecsHint =>
+      'اختار مواصفات كل ملف، وراجع السعر قبل تأكيد طلبك.';
+
+  @override
+  String get whatToPrint => 'شو بدك تطبع؟';
+
+  @override
+  String get supportedFiles => 'الملفات المدعومة';
+
+  @override
+  String get supportedFileTypes => 'PDF، JPG، PNG، WebP';
+
+  @override
+  String get maxFileSize => 'الحد الأقصى للحجم';
+
+  @override
+  String maxPerFile(String size) {
+    return '$size لكل ملف';
+  }
+
+  @override
+  String get maxFiles => 'عدد الملفات المسموح';
+
+  @override
+  String get tapToChooseFile => 'اضغط لاختيار ملف';
+
+  @override
+  String get addAnotherFile => 'أضف ملف ثاني بمواصفات مختلفة';
+
+  @override
+  String fileLimitBody(int max) {
+    return 'وصلت لحد الملفات ($max). احذف ملفًا قبل إضافة ملف طباعة جديد.';
+  }
+
+  @override
+  String get uploadTooLargeTitle => 'الملف أكبر من الحجم المسموح';
+
+  @override
+  String uploadTooLargeBody(String size) {
+    return 'حجم كل ملف لازم يكون $size أو أقل. صغّر الملف وحاول مرة ثانية.';
+  }
+
+  @override
+  String get uploadUnsupportedTitle => 'نوع الملف غير مدعوم';
+
+  @override
+  String get uploadUnsupportedBody =>
+      'ارفع ملف بصيغة PDF أو JPG أو PNG أو WebP.';
+
+  @override
+  String get uploadEmptyBody => 'الملف فارغ. اختر ملفًا آخر.';
+
+  @override
+  String get chooseAnotherFile => 'اختيار ملف ثاني';
+
+  @override
+  String uploadingPercent(int percent) {
+    return 'جاري الرفع… $percent%';
+  }
+
+  @override
+  String get uploadFailed => 'تعذّر رفع الملف.';
+
+  @override
+  String pagesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count صفحة',
+      many: '$count صفحة',
+      few: '$count صفحات',
+      two: 'صفحتان',
+      one: 'صفحة واحدة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get paperSize => 'حجم الورق';
+
+  @override
+  String get printColor => 'اللون';
+
+  @override
+  String get printColorBw => 'أبيض وأسود';
+
+  @override
+  String get printColorColor => 'ملون';
+
+  @override
+  String get printSides => 'الطباعة';
+
+  @override
+  String get printSidesSingle => 'وجه واحد';
+
+  @override
+  String get printSidesDouble => 'وجهان';
+
+  @override
+  String get binding => 'التجليد';
+
+  @override
+  String get pageRange => 'نطاق الصفحات';
+
+  @override
+  String get pageRangeAllHint => 'الكل';
+
+  @override
+  String pageRangeHelper(int pages) {
+    return 'اتركه فارغًا لطباعة الكل، أو اكتب نطاقًا مثل 1-5 وافصل بين الأجزاء بفاصلة. عدد صفحات الملف: $pages.';
+  }
+
+  @override
+  String get pageRangeInvalid =>
+      'راجع نطاق الصفحات: اكتب نطاقًا مثل 1-5 وافصل بين الأجزاء بفاصلة، ضمن عدد صفحات الملف.';
+
+  @override
+  String get copies => 'عدد النسخ';
+
+  @override
+  String pagesTimesCopies(int pages, int copies) {
+    return 'الصفحات: $pages · النسخ: $copies';
+  }
+
+  @override
+  String get fileNotes => 'ملاحظات لهذا الملف';
+
+  @override
+  String get fileNotesHint => 'أي تفاصيل إضافية؟';
+
+  @override
+  String get estimateForFile => 'التقدير لهذا الملف';
+
+  @override
+  String get estimateLabel => 'التقدير';
+
+  @override
+  String get reviewPrice => 'مراجعة السعر';
+
+  @override
+  String get cartTitle => 'سلّتك';
+
+  @override
+  String get cartEmptyTitle => 'سلّتك فاضية';
+
+  @override
+  String get cartEmptyBody => 'أضف منتجات أو ملفات طباعة للمتابعة.';
+
+  @override
+  String get startShopping => 'ابدأ التسوق';
+
+  @override
+  String get productsSection => 'المنتجات';
+
+  @override
+  String get printingSection => 'الطباعة';
+
+  @override
+  String productNumber(int id) {
+    return 'منتج رقم $id';
+  }
+
+  @override
+  String get pricedByLibrary => 'تسعّره المكتبة';
+
+  @override
+  String get productUnavailable => 'هذا المنتج غير متوفر حاليًا.';
+
+  @override
+  String onlyAvailable(int count) {
+    return 'المتوفر حاليًا $count فقط. عدّل الكمية.';
+  }
+
+  @override
+  String chooseOption(String label) {
+    return 'اختر $label';
+  }
+
+  @override
+  String get illustrativePrice => 'سعر توضيحي';
+
+  @override
+  String get printingIllustrative => 'الطباعة (تقدير)';
+
+  @override
+  String get notesForLibrary => 'ملاحظات للمكتبة';
+
+  @override
+  String get notesForLibraryHint => 'أي تفاصيل بتحب تضيفها؟';
+
+  @override
+  String get ifOutOfStock => 'لو المنتج خلص';
+
+  @override
+  String get deliveryByAddress => 'تُحسب حسب العنوان';
+
+  @override
+  String get totalBeforeDelivery => 'الإجمالي قبل التوصيل';
+
+  @override
+  String get finalPriceAtReview =>
+      'الأسعار هنا للعرض. السعر النهائي يظهر في مراجعة الطلب.';
+
+  @override
+  String get continueToDelivery => 'تابع للتوصيل';
+
+  @override
+  String get waitForUploads => 'انتظر اكتمال رفع الملفات قبل المتابعة.';
+
+  @override
+  String get fixFailedUploads =>
+      'بعض الملفات لم تُرفع. أعد المحاولة أو احذفها.';
+
+  @override
+  String get uploadInterrupted =>
+      'انقطع رفع هذا الملف لأن التطبيق أُغلق قبل اكتماله. اختر الملف نفسه مرة أخرى أو احذفه.';
+
+  @override
+  String get uploadInterruptedShort => 'انقطع الرفع — اختر الملف مرة أخرى.';
+
+  @override
+  String get chooseFileAgain => 'اختيار الملف';
+
+  @override
+  String get fixInterruptedUploads =>
+      'انقطع رفع بعض ملفات الطباعة. افتح مواصفات الطباعة واختر الملفات مرة أخرى أو احذفها.';
 }

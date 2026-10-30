@@ -20,6 +20,8 @@ abstract final class CustomerRoutes {
   static const cart = '/customer/cart';
   static const addresses = '/customer/addresses';
   static const addressForm = '/customer/address-form';
+  static const checkout = '/customer/checkout';
+  static const paymentMethod = '/customer/payment-method';
   static const priceReview = '/customer/price-review';
   static const payment = '/customer/payment';
   static const offer = '/customer/offer';
@@ -32,8 +34,8 @@ abstract final class CustomerRoutes {
   static const all = [
     languageOnboarding, login, otp, home, products, productDetails,
     aiAssistant, aiProposal, printing, printPreview, cart, addresses,
-    addressForm, priceReview, payment, offer, orderDetails, orders,
-    notifications, receipt, profile,
+    addressForm, checkout, paymentMethod, priceReview, payment, offer,
+    orderDetails, orders, notifications, receipt, profile,
   ];
 }
 

@@ -140,4 +140,285 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get quoteUsedBody =>
       'Check your orders before trying to place a new one.';
+
+  @override
+  String get dismiss => 'Dismiss';
+
+  @override
+  String get increase => 'Increase';
+
+  @override
+  String get decrease => 'Decrease';
+
+  @override
+  String get deliveryFee => 'Delivery fee';
+
+  @override
+  String get printingServicesTitle => 'Printing services';
+
+  @override
+  String get printingHeroEyebrow => 'From file to paper';
+
+  @override
+  String get printingHeroTitle => 'Leave your files to us!';
+
+  @override
+  String get printingHeroBody =>
+      'Upload your file, choose the options, and we’ll handle the printing.';
+
+  @override
+  String printingServiceBw(String paper) {
+    return 'Black & white $paper';
+  }
+
+  @override
+  String printingServiceColor(String paper) {
+    return 'Color printing $paper';
+  }
+
+  @override
+  String perPrintedSide(String price) {
+    return '$price / printed side';
+  }
+
+  @override
+  String perCopy(String price) {
+    return '$price / copy';
+  }
+
+  @override
+  String get printingFinalPriceNote =>
+      'Review the final price before confirming your order.';
+
+  @override
+  String get printingStart => 'Start a print order';
+
+  @override
+  String get printSpecsTitle => 'File specifications';
+
+  @override
+  String get printSpecsHint =>
+      'Choose the options for each file, then review the price before confirming.';
+
+  @override
+  String get whatToPrint => 'What would you like to print?';
+
+  @override
+  String get supportedFiles => 'Supported files';
+
+  @override
+  String get supportedFileTypes => 'PDF, JPG, PNG, WebP';
+
+  @override
+  String get maxFileSize => 'Maximum size';
+
+  @override
+  String maxPerFile(String size) {
+    return '$size per file';
+  }
+
+  @override
+  String get maxFiles => 'Files allowed';
+
+  @override
+  String get tapToChooseFile => 'Tap to choose a file';
+
+  @override
+  String get addAnotherFile => 'Add another file with different options';
+
+  @override
+  String fileLimitBody(int max) {
+    return 'You reached the file limit ($max). Remove a file before adding a new one.';
+  }
+
+  @override
+  String get uploadTooLargeTitle => 'The file is too large';
+
+  @override
+  String uploadTooLargeBody(String size) {
+    return 'Each file must be $size or smaller. Reduce the file size and try again.';
+  }
+
+  @override
+  String get uploadUnsupportedTitle => 'Unsupported file type';
+
+  @override
+  String get uploadUnsupportedBody => 'Upload a PDF, JPG, PNG or WebP file.';
+
+  @override
+  String get uploadEmptyBody => 'The file is empty. Choose another file.';
+
+  @override
+  String get chooseAnotherFile => 'Choose another file';
+
+  @override
+  String uploadingPercent(int percent) {
+    return 'Uploading… $percent%';
+  }
+
+  @override
+  String get uploadFailed => 'The file could not be uploaded.';
+
+  @override
+  String pagesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pages',
+      one: '1 page',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get paperSize => 'Paper size';
+
+  @override
+  String get printColor => 'Color';
+
+  @override
+  String get printColorBw => 'Black & white';
+
+  @override
+  String get printColorColor => 'Color';
+
+  @override
+  String get printSides => 'Sides';
+
+  @override
+  String get printSidesSingle => 'Single-sided';
+
+  @override
+  String get printSidesDouble => 'Double-sided';
+
+  @override
+  String get binding => 'Binding';
+
+  @override
+  String get pageRange => 'Pages to print';
+
+  @override
+  String get pageRangeAllHint => 'All';
+
+  @override
+  String pageRangeHelper(int pages) {
+    return 'Leave empty for all pages, or write e.g. 1-5, 8. The file has $pages pages.';
+  }
+
+  @override
+  String get pageRangeInvalid =>
+      'Check the page range: use a format like 1-5, 8 within the file’s pages.';
+
+  @override
+  String get copies => 'Copies';
+
+  @override
+  String pagesTimesCopies(int pages, int copies) {
+    return 'Pages: $pages · Copies: $copies';
+  }
+
+  @override
+  String get fileNotes => 'Notes for this file';
+
+  @override
+  String get fileNotesHint => 'Any extra details?';
+
+  @override
+  String get estimateForFile => 'Estimate for this file';
+
+  @override
+  String get estimateLabel => 'Estimate';
+
+  @override
+  String get reviewPrice => 'Review price';
+
+  @override
+  String get cartTitle => 'Your cart';
+
+  @override
+  String get cartEmptyTitle => 'Your cart is empty';
+
+  @override
+  String get cartEmptyBody => 'Add products or print files to continue.';
+
+  @override
+  String get startShopping => 'Start shopping';
+
+  @override
+  String get productsSection => 'Products';
+
+  @override
+  String get printingSection => 'Printing';
+
+  @override
+  String productNumber(int id) {
+    return 'Product #$id';
+  }
+
+  @override
+  String get pricedByLibrary => 'Priced by the library';
+
+  @override
+  String get productUnavailable => 'This product is currently unavailable.';
+
+  @override
+  String onlyAvailable(int count) {
+    return 'Only $count available now. Adjust the quantity.';
+  }
+
+  @override
+  String chooseOption(String label) {
+    return 'Choose $label';
+  }
+
+  @override
+  String get illustrativePrice => 'Illustrative price';
+
+  @override
+  String get printingIllustrative => 'Printing (estimate)';
+
+  @override
+  String get notesForLibrary => 'Notes for the library';
+
+  @override
+  String get notesForLibraryHint => 'Anything you’d like to add?';
+
+  @override
+  String get ifOutOfStock => 'If an item is out of stock';
+
+  @override
+  String get deliveryByAddress => 'Based on address';
+
+  @override
+  String get totalBeforeDelivery => 'Total before delivery';
+
+  @override
+  String get finalPriceAtReview =>
+      'Prices here are for display. The final price appears at order review.';
+
+  @override
+  String get continueToDelivery => 'Continue to delivery';
+
+  @override
+  String get waitForUploads =>
+      'Wait for the files to finish uploading before continuing.';
+
+  @override
+  String get fixFailedUploads =>
+      'Some files failed to upload. Retry or remove them.';
+
+  @override
+  String get uploadInterrupted =>
+      'This upload was interrupted because the app closed before it finished. Choose the same file again or remove it.';
+
+  @override
+  String get uploadInterruptedShort =>
+      'Upload interrupted — choose the file again.';
+
+  @override
+  String get chooseFileAgain => 'Choose file';
+
+  @override
+  String get fixInterruptedUploads =>
+      'Some print files were not fully uploaded. Open the print specs and choose them again or remove them.';
 }

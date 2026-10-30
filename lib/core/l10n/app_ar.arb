@@ -58,5 +58,185 @@
   "remove": "حذف",
   "reject": "ارفض",
   "quoteExpiredBody": "حدّث السعر والتوفر قبل تأكيد الطلب.",
-  "quoteUsedBody": "راجع طلباتك قبل محاولة إنشاء طلب جديد."
+  "quoteUsedBody": "راجع طلباتك قبل محاولة إنشاء طلب جديد.",
+  "dismiss": "إغلاق",
+  "increase": "زيادة",
+  "decrease": "إنقاص",
+  "deliveryFee": "رسوم التوصيل",
+  "printingServicesTitle": "خدمات الطباعة",
+  "printingHeroEyebrow": "من الملف للورق",
+  "printingHeroTitle": "ملفاتك علينا!",
+  "printingHeroBody": "ارفع ملفك، اختار المواصفات، وخلي الطباعة علينا.",
+  "printingServiceBw": "أبيض وأسود {paper}",
+  "@printingServiceBw": {
+    "placeholders": {
+      "paper": {
+        "type": "String"
+      }
+    }
+  },
+  "printingServiceColor": "طباعة ملونة {paper}",
+  "@printingServiceColor": {
+    "placeholders": {
+      "paper": {
+        "type": "String"
+      }
+    }
+  },
+  "perPrintedSide": "{price} / وجه مطبوع",
+  "@perPrintedSide": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "perCopy": "{price} / نسخة",
+  "@perCopy": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "printingFinalPriceNote": "راجع عرض السعر النهائي قبل تأكيد الطلب.",
+  "printingStart": "ابدأ بطلب طباعة",
+  "printSpecsTitle": "مواصفات الملفات",
+  "printSpecsHint": "اختار مواصفات كل ملف، وراجع السعر قبل تأكيد طلبك.",
+  "whatToPrint": "شو بدك تطبع؟",
+  "supportedFiles": "الملفات المدعومة",
+  "supportedFileTypes": "PDF، JPG، PNG، WebP",
+  "maxFileSize": "الحد الأقصى للحجم",
+  "maxPerFile": "{size} لكل ملف",
+  "@maxPerFile": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "maxFiles": "عدد الملفات المسموح",
+  "tapToChooseFile": "اضغط لاختيار ملف",
+  "addAnotherFile": "أضف ملف ثاني بمواصفات مختلفة",
+  "fileLimitBody": "وصلت لحد الملفات ({max}). احذف ملفًا قبل إضافة ملف طباعة جديد.",
+  "@fileLimitBody": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "uploadTooLargeTitle": "الملف أكبر من الحجم المسموح",
+  "uploadTooLargeBody": "حجم كل ملف لازم يكون {size} أو أقل. صغّر الملف وحاول مرة ثانية.",
+  "@uploadTooLargeBody": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "uploadUnsupportedTitle": "نوع الملف غير مدعوم",
+  "uploadUnsupportedBody": "ارفع ملف بصيغة PDF أو JPG أو PNG أو WebP.",
+  "uploadEmptyBody": "الملف فارغ. اختر ملفًا آخر.",
+  "chooseAnotherFile": "اختيار ملف ثاني",
+  "uploadingPercent": "جاري الرفع… {percent}%",
+  "@uploadingPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "uploadFailed": "تعذّر رفع الملف.",
+  "pagesCount": "{count, plural, =1{صفحة واحدة} =2{صفحتان} few{{count} صفحات} many{{count} صفحة} other{{count} صفحة}}",
+  "@pagesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paperSize": "حجم الورق",
+  "printColor": "اللون",
+  "printColorBw": "أبيض وأسود",
+  "printColorColor": "ملون",
+  "printSides": "الطباعة",
+  "printSidesSingle": "وجه واحد",
+  "printSidesDouble": "وجهان",
+  "binding": "التجليد",
+  "pageRange": "نطاق الصفحات",
+  "pageRangeAllHint": "الكل",
+  "pageRangeHelper": "اتركه فارغًا لطباعة الكل، أو اكتب نطاقًا مثل 1-5 وافصل بين الأجزاء بفاصلة. عدد صفحات الملف: {pages}.",
+  "@pageRangeHelper": {
+    "placeholders": {
+      "pages": {
+        "type": "int"
+      }
+    }
+  },
+  "pageRangeInvalid": "راجع نطاق الصفحات: اكتب نطاقًا مثل 1-5 وافصل بين الأجزاء بفاصلة، ضمن عدد صفحات الملف.",
+  "copies": "عدد النسخ",
+  "pagesTimesCopies": "الصفحات: {pages} · النسخ: {copies}",
+  "@pagesTimesCopies": {
+    "placeholders": {
+      "pages": {
+        "type": "int"
+      },
+      "copies": {
+        "type": "int"
+      }
+    }
+  },
+  "fileNotes": "ملاحظات لهذا الملف",
+  "fileNotesHint": "أي تفاصيل إضافية؟",
+  "estimateForFile": "التقدير لهذا الملف",
+  "estimateLabel": "التقدير",
+  "reviewPrice": "مراجعة السعر",
+  "cartTitle": "سلّتك",
+  "cartEmptyTitle": "سلّتك فاضية",
+  "cartEmptyBody": "أضف منتجات أو ملفات طباعة للمتابعة.",
+  "startShopping": "ابدأ التسوق",
+  "productsSection": "المنتجات",
+  "printingSection": "الطباعة",
+  "productNumber": "منتج رقم {id}",
+  "@productNumber": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "pricedByLibrary": "تسعّره المكتبة",
+  "productUnavailable": "هذا المنتج غير متوفر حاليًا.",
+  "onlyAvailable": "المتوفر حاليًا {count} فقط. عدّل الكمية.",
+  "@onlyAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chooseOption": "اختر {label}",
+  "@chooseOption": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "illustrativePrice": "سعر توضيحي",
+  "printingIllustrative": "الطباعة (تقدير)",
+  "notesForLibrary": "ملاحظات للمكتبة",
+  "notesForLibraryHint": "أي تفاصيل بتحب تضيفها؟",
+  "ifOutOfStock": "لو المنتج خلص",
+  "deliveryByAddress": "تُحسب حسب العنوان",
+  "totalBeforeDelivery": "الإجمالي قبل التوصيل",
+  "finalPriceAtReview": "الأسعار هنا للعرض. السعر النهائي يظهر في مراجعة الطلب.",
+  "continueToDelivery": "تابع للتوصيل",
+  "waitForUploads": "انتظر اكتمال رفع الملفات قبل المتابعة.",
+  "fixFailedUploads": "بعض الملفات لم تُرفع. أعد المحاولة أو احذفها.",
+  "uploadInterrupted": "انقطع رفع هذا الملف لأن التطبيق أُغلق قبل اكتماله. اختر الملف نفسه مرة أخرى أو احذفه.",
+  "uploadInterruptedShort": "انقطع الرفع — اختر الملف مرة أخرى.",
+  "chooseFileAgain": "اختيار الملف",
+  "fixInterruptedUploads": "انقطع رفع بعض ملفات الطباعة. افتح مواصفات الطباعة واختر الملفات مرة أخرى أو احذفها."
 }

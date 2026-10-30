@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:project/core/routes/app_routes.dart';
 import 'package:project/core/widgets/placeholder_view.dart';
+import 'package:project/customer/features/purchasing_pages.dart';
 import 'package:project/welcome/presentation/bindings/welcome_binding.dart';
 import 'package:project/welcome/presentation/views/onboarding_view.dart';
 import 'package:project/welcome/presentation/views/role_choice_view.dart';
@@ -12,7 +13,9 @@ abstract final class AppRouter {
 
   static final List<GetPage<dynamic>> pages = [
     ..._shared,
-    for (final route in CustomerRoutes.all) _placeholder(route),
+    ...PurchasingPages.pages(transition: _transition),
+    for (final route in CustomerRoutes.all)
+      if (!PurchasingPages.routes.contains(route)) _placeholder(route),
     for (final route in DriverRoutes.all) _placeholder(route),
   ];
 

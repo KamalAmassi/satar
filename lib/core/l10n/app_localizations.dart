@@ -325,6 +325,480 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'راجع طلباتك قبل محاولة إنشاء طلب جديد.'**
   String get quoteUsedBody;
+
+  /// No description provided for @dismiss.
+  ///
+  /// In ar, this message translates to:
+  /// **'إغلاق'**
+  String get dismiss;
+
+  /// No description provided for @increase.
+  ///
+  /// In ar, this message translates to:
+  /// **'زيادة'**
+  String get increase;
+
+  /// No description provided for @decrease.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنقاص'**
+  String get decrease;
+
+  /// No description provided for @deliveryFee.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسوم التوصيل'**
+  String get deliveryFee;
+
+  /// No description provided for @printingServicesTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'خدمات الطباعة'**
+  String get printingServicesTitle;
+
+  /// No description provided for @printingHeroEyebrow.
+  ///
+  /// In ar, this message translates to:
+  /// **'من الملف للورق'**
+  String get printingHeroEyebrow;
+
+  /// No description provided for @printingHeroTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملفاتك علينا!'**
+  String get printingHeroTitle;
+
+  /// No description provided for @printingHeroBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ارفع ملفك، اختار المواصفات، وخلي الطباعة علينا.'**
+  String get printingHeroBody;
+
+  /// No description provided for @printingServiceBw.
+  ///
+  /// In ar, this message translates to:
+  /// **'أبيض وأسود {paper}'**
+  String printingServiceBw(String paper);
+
+  /// No description provided for @printingServiceColor.
+  ///
+  /// In ar, this message translates to:
+  /// **'طباعة ملونة {paper}'**
+  String printingServiceColor(String paper);
+
+  /// No description provided for @perPrintedSide.
+  ///
+  /// In ar, this message translates to:
+  /// **'{price} / وجه مطبوع'**
+  String perPrintedSide(String price);
+
+  /// No description provided for @perCopy.
+  ///
+  /// In ar, this message translates to:
+  /// **'{price} / نسخة'**
+  String perCopy(String price);
+
+  /// No description provided for @printingFinalPriceNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'راجع عرض السعر النهائي قبل تأكيد الطلب.'**
+  String get printingFinalPriceNote;
+
+  /// No description provided for @printingStart.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ بطلب طباعة'**
+  String get printingStart;
+
+  /// No description provided for @printSpecsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مواصفات الملفات'**
+  String get printSpecsTitle;
+
+  /// No description provided for @printSpecsHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختار مواصفات كل ملف، وراجع السعر قبل تأكيد طلبك.'**
+  String get printSpecsHint;
+
+  /// No description provided for @whatToPrint.
+  ///
+  /// In ar, this message translates to:
+  /// **'شو بدك تطبع؟'**
+  String get whatToPrint;
+
+  /// No description provided for @supportedFiles.
+  ///
+  /// In ar, this message translates to:
+  /// **'الملفات المدعومة'**
+  String get supportedFiles;
+
+  /// No description provided for @supportedFileTypes.
+  ///
+  /// In ar, this message translates to:
+  /// **'PDF، JPG، PNG، WebP'**
+  String get supportedFileTypes;
+
+  /// No description provided for @maxFileSize.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحد الأقصى للحجم'**
+  String get maxFileSize;
+
+  /// No description provided for @maxPerFile.
+  ///
+  /// In ar, this message translates to:
+  /// **'{size} لكل ملف'**
+  String maxPerFile(String size);
+
+  /// No description provided for @maxFiles.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدد الملفات المسموح'**
+  String get maxFiles;
+
+  /// No description provided for @tapToChooseFile.
+  ///
+  /// In ar, this message translates to:
+  /// **'اضغط لاختيار ملف'**
+  String get tapToChooseFile;
+
+  /// No description provided for @addAnotherFile.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف ملف ثاني بمواصفات مختلفة'**
+  String get addAnotherFile;
+
+  /// No description provided for @fileLimitBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصلت لحد الملفات ({max}). احذف ملفًا قبل إضافة ملف طباعة جديد.'**
+  String fileLimitBody(int max);
+
+  /// No description provided for @uploadTooLargeTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الملف أكبر من الحجم المسموح'**
+  String get uploadTooLargeTitle;
+
+  /// No description provided for @uploadTooLargeBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'حجم كل ملف لازم يكون {size} أو أقل. صغّر الملف وحاول مرة ثانية.'**
+  String uploadTooLargeBody(String size);
+
+  /// No description provided for @uploadUnsupportedTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع الملف غير مدعوم'**
+  String get uploadUnsupportedTitle;
+
+  /// No description provided for @uploadUnsupportedBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'ارفع ملف بصيغة PDF أو JPG أو PNG أو WebP.'**
+  String get uploadUnsupportedBody;
+
+  /// No description provided for @uploadEmptyBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'الملف فارغ. اختر ملفًا آخر.'**
+  String get uploadEmptyBody;
+
+  /// No description provided for @chooseAnotherFile.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختيار ملف ثاني'**
+  String get chooseAnotherFile;
+
+  /// No description provided for @uploadingPercent.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري الرفع… {percent}%'**
+  String uploadingPercent(int percent);
+
+  /// No description provided for @uploadFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر رفع الملف.'**
+  String get uploadFailed;
+
+  /// No description provided for @pagesCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{صفحة واحدة} =2{صفحتان} few{{count} صفحات} many{{count} صفحة} other{{count} صفحة}}'**
+  String pagesCount(int count);
+
+  /// No description provided for @paperSize.
+  ///
+  /// In ar, this message translates to:
+  /// **'حجم الورق'**
+  String get paperSize;
+
+  /// No description provided for @printColor.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللون'**
+  String get printColor;
+
+  /// No description provided for @printColorBw.
+  ///
+  /// In ar, this message translates to:
+  /// **'أبيض وأسود'**
+  String get printColorBw;
+
+  /// No description provided for @printColorColor.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملون'**
+  String get printColorColor;
+
+  /// No description provided for @printSides.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطباعة'**
+  String get printSides;
+
+  /// No description provided for @printSidesSingle.
+  ///
+  /// In ar, this message translates to:
+  /// **'وجه واحد'**
+  String get printSidesSingle;
+
+  /// No description provided for @printSidesDouble.
+  ///
+  /// In ar, this message translates to:
+  /// **'وجهان'**
+  String get printSidesDouble;
+
+  /// No description provided for @binding.
+  ///
+  /// In ar, this message translates to:
+  /// **'التجليد'**
+  String get binding;
+
+  /// No description provided for @pageRange.
+  ///
+  /// In ar, this message translates to:
+  /// **'نطاق الصفحات'**
+  String get pageRange;
+
+  /// No description provided for @pageRangeAllHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get pageRangeAllHint;
+
+  /// No description provided for @pageRangeHelper.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتركه فارغًا لطباعة الكل، أو اكتب نطاقًا مثل 1-5 وافصل بين الأجزاء بفاصلة. عدد صفحات الملف: {pages}.'**
+  String pageRangeHelper(int pages);
+
+  /// No description provided for @pageRangeInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'راجع نطاق الصفحات: اكتب نطاقًا مثل 1-5 وافصل بين الأجزاء بفاصلة، ضمن عدد صفحات الملف.'**
+  String get pageRangeInvalid;
+
+  /// No description provided for @copies.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدد النسخ'**
+  String get copies;
+
+  /// No description provided for @pagesTimesCopies.
+  ///
+  /// In ar, this message translates to:
+  /// **'الصفحات: {pages} · النسخ: {copies}'**
+  String pagesTimesCopies(int pages, int copies);
+
+  /// No description provided for @fileNotes.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات لهذا الملف'**
+  String get fileNotes;
+
+  /// No description provided for @fileNotesHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أي تفاصيل إضافية؟'**
+  String get fileNotesHint;
+
+  /// No description provided for @estimateForFile.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقدير لهذا الملف'**
+  String get estimateForFile;
+
+  /// No description provided for @estimateLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقدير'**
+  String get estimateLabel;
+
+  /// No description provided for @reviewPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'مراجعة السعر'**
+  String get reviewPrice;
+
+  /// No description provided for @cartTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سلّتك'**
+  String get cartTitle;
+
+  /// No description provided for @cartEmptyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سلّتك فاضية'**
+  String get cartEmptyTitle;
+
+  /// No description provided for @cartEmptyBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف منتجات أو ملفات طباعة للمتابعة.'**
+  String get cartEmptyBody;
+
+  /// No description provided for @startShopping.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ التسوق'**
+  String get startShopping;
+
+  /// No description provided for @productsSection.
+  ///
+  /// In ar, this message translates to:
+  /// **'المنتجات'**
+  String get productsSection;
+
+  /// No description provided for @printingSection.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطباعة'**
+  String get printingSection;
+
+  /// No description provided for @productNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'منتج رقم {id}'**
+  String productNumber(int id);
+
+  /// No description provided for @pricedByLibrary.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسعّره المكتبة'**
+  String get pricedByLibrary;
+
+  /// No description provided for @productUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا المنتج غير متوفر حاليًا.'**
+  String get productUnavailable;
+
+  /// No description provided for @onlyAvailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'المتوفر حاليًا {count} فقط. عدّل الكمية.'**
+  String onlyAvailable(int count);
+
+  /// No description provided for @chooseOption.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر {label}'**
+  String chooseOption(String label);
+
+  /// No description provided for @illustrativePrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'سعر توضيحي'**
+  String get illustrativePrice;
+
+  /// No description provided for @printingIllustrative.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطباعة (تقدير)'**
+  String get printingIllustrative;
+
+  /// No description provided for @notesForLibrary.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات للمكتبة'**
+  String get notesForLibrary;
+
+  /// No description provided for @notesForLibraryHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أي تفاصيل بتحب تضيفها؟'**
+  String get notesForLibraryHint;
+
+  /// No description provided for @ifOutOfStock.
+  ///
+  /// In ar, this message translates to:
+  /// **'لو المنتج خلص'**
+  String get ifOutOfStock;
+
+  /// No description provided for @deliveryByAddress.
+  ///
+  /// In ar, this message translates to:
+  /// **'تُحسب حسب العنوان'**
+  String get deliveryByAddress;
+
+  /// No description provided for @totalBeforeDelivery.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإجمالي قبل التوصيل'**
+  String get totalBeforeDelivery;
+
+  /// No description provided for @finalPriceAtReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأسعار هنا للعرض. السعر النهائي يظهر في مراجعة الطلب.'**
+  String get finalPriceAtReview;
+
+  /// No description provided for @continueToDelivery.
+  ///
+  /// In ar, this message translates to:
+  /// **'تابع للتوصيل'**
+  String get continueToDelivery;
+
+  /// No description provided for @waitForUploads.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتظر اكتمال رفع الملفات قبل المتابعة.'**
+  String get waitForUploads;
+
+  /// No description provided for @fixFailedUploads.
+  ///
+  /// In ar, this message translates to:
+  /// **'بعض الملفات لم تُرفع. أعد المحاولة أو احذفها.'**
+  String get fixFailedUploads;
+
+  /// No description provided for @uploadInterrupted.
+  ///
+  /// In ar, this message translates to:
+  /// **'انقطع رفع هذا الملف لأن التطبيق أُغلق قبل اكتماله. اختر الملف نفسه مرة أخرى أو احذفه.'**
+  String get uploadInterrupted;
+
+  /// No description provided for @uploadInterruptedShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'انقطع الرفع — اختر الملف مرة أخرى.'**
+  String get uploadInterruptedShort;
+
+  /// No description provided for @chooseFileAgain.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختيار الملف'**
+  String get chooseFileAgain;
+
+  /// No description provided for @fixInterruptedUploads.
+  ///
+  /// In ar, this message translates to:
+  /// **'انقطع رفع بعض ملفات الطباعة. افتح مواصفات الطباعة واختر الملفات مرة أخرى أو احذفها.'**
+  String get fixInterruptedUploads;
 }
 
 class _AppLocalizationsDelegate

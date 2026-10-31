@@ -32,15 +32,31 @@ abstract final class CustomerRoutes {
   static const offer = '/customer/offer';
   static const orderDetails = '/customer/order-details';
   static const orders = '/customer/orders';
+  static const liveTracking = '/customer/live-tracking';
+  static const cancelOrder = '/customer/cancel-order';
+  static const rating = '/customer/rating';
+  static const shareTracking = '/customer/share-tracking';
+  static const publicTracking = '/customer/public-tracking';
   static const notifications = '/customer/notifications';
   static const receipt = '/customer/receipt';
+  static const activityLog = '/customer/activity-log';
+  static const deliveryFailure = '/customer/delivery-failure';
+  static const paymentStatus = '/customer/payment-status';
+  static const assigningDriver = '/customer/assigning-driver';
+  static const driverUnavailable = '/customer/driver-unavailable';
+  static const ratingError = '/customer/rating-error';
+  static const shareLinkReady = '/customer/share-link-ready';
+  static const shareStopped = '/customer/share-stopped';
   static const profile = '/customer/profile';
 
   static const all = [
     languageOnboarding, login, otp, completeProfile, success, home, categories, products, productDetails,
     search, searchResults, aiAssistant, aiProposal, printing, uploadFiles, printSpecs, printPreview, cart, addresses,
     addressForm, priceReview, payment, offer, orderDetails, orders,
-    notifications, receipt, profile,
+    liveTracking, cancelOrder, rating, shareTracking, publicTracking,
+    notifications, receipt, activityLog, deliveryFailure, paymentStatus,
+    assigningDriver, driverUnavailable, ratingError, shareLinkReady, shareStopped,
+    profile,
   ];
 }
 

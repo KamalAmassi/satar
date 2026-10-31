@@ -25,6 +25,20 @@ import 'package:project/customer/features/orders/presentation/views/offer_view.d
 import 'package:project/customer/features/checkout/presentation/views/payment_view.dart';
 import 'package:project/customer/features/orders/presentation/views/orders_view.dart';
 import 'package:project/customer/features/orders/presentation/views/order_details_view.dart';
+import 'package:project/customer/features/tracking/presentation/views/live_tracking_view.dart';
+import 'package:project/customer/features/tracking/presentation/views/cancel_order_view.dart';
+import 'package:project/customer/features/tracking/presentation/views/rating_view.dart';
+import 'package:project/customer/features/tracking/presentation/views/share_tracking_view.dart';
+import 'package:project/customer/features/tracking/presentation/views/public_tracking_view.dart';
+import 'package:project/customer/features/notifications/presentation/views/notifications_view.dart';
+import 'package:project/customer/features/orders/presentation/views/receipt_view.dart';
+import 'package:project/customer/features/orders/presentation/views/activity_log_view.dart';
+import 'package:project/customer/features/tracking/presentation/views/delivery_failure_view.dart';
+import 'package:project/customer/features/tracking/presentation/views/assigning_driver_view.dart';
+import 'package:project/customer/features/tracking/presentation/views/driver_unavailable_view.dart';
+import 'package:project/customer/features/tracking/presentation/views/rating_error_view.dart';
+import 'package:project/customer/features/tracking/presentation/views/share_link_ready_view.dart';
+import 'package:project/customer/features/tracking/presentation/views/share_stopped_view.dart';
 
 abstract final class AppRouter {
   static const initial = SharedRoutes.splash;
@@ -33,106 +47,40 @@ abstract final class AppRouter {
 
   static final List<GetPage<dynamic>> pages = [
     ..._shared,
-    GetPage(
-      name: CustomerRoutes.login,
-      page: () => const LoginView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.otp,
-      page: () => const OtpView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.completeProfile,
-      page: () => const CompleteProfileView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.success,
-      page: () => const SuccessView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.home,
-      page: () => const HomeView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.categories,
-      page: () => const CategoriesView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.products,
-      page: () => const CategoryProductsView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.search,
-      page: () => const SearchView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.searchResults,
-      page: () => const SearchResultsView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.productDetails,
-      page: () => const ProductDetailsView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.aiAssistant,
-      page: () => const AiAssistantView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.printing,
-      page: () => const PrintingView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.uploadFiles,
-      page: () => const UploadFilesView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.printSpecs,
-      page: () => const PrintSpecsView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.cart,
-      page: () => const CartView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.addresses,
-      page: () => const AddressesView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.offer,
-      page: () => const OfferView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.payment,
-      page: () => const PaymentView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.orders,
-      page: () => const OrdersView(),
-      transition: _transition,
-    ),
-    GetPage(
-      name: CustomerRoutes.orderDetails,
-      page: () => const OrderDetailsView(),
-      transition: _transition,
-    ),
+    GetPage(name: CustomerRoutes.login, page: () => const LoginView(), transition: _transition),
+    GetPage(name: CustomerRoutes.otp, page: () => const OtpView(), transition: _transition),
+    GetPage(name: CustomerRoutes.completeProfile, page: () => const CompleteProfileView(), transition: _transition),
+    GetPage(name: CustomerRoutes.success, page: () => const SuccessView(), transition: _transition),
+    GetPage(name: CustomerRoutes.home, page: () => const HomeView(), transition: _transition),
+    GetPage(name: CustomerRoutes.categories, page: () => const CategoriesView(), transition: _transition),
+    GetPage(name: CustomerRoutes.products, page: () => const CategoryProductsView(), transition: _transition),
+    GetPage(name: CustomerRoutes.search, page: () => const SearchView(), transition: _transition),
+    GetPage(name: CustomerRoutes.searchResults, page: () => const SearchResultsView(), transition: _transition),
+    GetPage(name: CustomerRoutes.productDetails, page: () => const ProductDetailsView(), transition: _transition),
+    GetPage(name: CustomerRoutes.aiAssistant, page: () => const AiAssistantView(), transition: _transition),
+    GetPage(name: CustomerRoutes.printing, page: () => const PrintingView(), transition: _transition),
+    GetPage(name: CustomerRoutes.uploadFiles, page: () => const UploadFilesView(), transition: _transition),
+    GetPage(name: CustomerRoutes.printSpecs, page: () => const PrintSpecsView(), transition: _transition),
+    GetPage(name: CustomerRoutes.cart, page: () => const CartView(), transition: _transition),
+    GetPage(name: CustomerRoutes.addresses, page: () => const AddressesView(), transition: _transition),
+    GetPage(name: CustomerRoutes.offer, page: () => const OfferView(), transition: _transition),
+    GetPage(name: CustomerRoutes.payment, page: () => const PaymentView(), transition: _transition),
+    GetPage(name: CustomerRoutes.orders, page: () => const OrdersView(), transition: _transition),
+    GetPage(name: CustomerRoutes.orderDetails, page: () => const OrderDetailsView(), transition: _transition),
+    GetPage(name: CustomerRoutes.liveTracking, page: () => const LiveTrackingView(), transition: _transition),
+    GetPage(name: CustomerRoutes.cancelOrder, page: () => const CancelOrderView(), transition: _transition),
+    GetPage(name: CustomerRoutes.rating, page: () => const RatingView(), transition: _transition),
+    GetPage(name: CustomerRoutes.shareTracking, page: () => const ShareTrackingView(), transition: _transition),
+    GetPage(name: CustomerRoutes.publicTracking, page: () => const PublicTrackingView(), transition: _transition),
+    GetPage(name: CustomerRoutes.notifications, page: () => const NotificationsView(), transition: _transition),
+    GetPage(name: CustomerRoutes.receipt, page: () => const ReceiptView(), transition: _transition),
+    GetPage(name: CustomerRoutes.activityLog, page: () => const ActivityLogView(), transition: _transition),
+    GetPage(name: CustomerRoutes.deliveryFailure, page: () => const DeliveryFailureView(), transition: _transition),
+    GetPage(name: CustomerRoutes.assigningDriver, page: () => const AssigningDriverView(), transition: _transition),
+    GetPage(name: CustomerRoutes.driverUnavailable, page: () => const DriverUnavailableView(), transition: _transition),
+    GetPage(name: CustomerRoutes.ratingError, page: () => const RatingErrorView(), transition: _transition),
+    GetPage(name: CustomerRoutes.shareLinkReady, page: () => const ShareLinkReadyView(), transition: _transition),
+    GetPage(name: CustomerRoutes.shareStopped, page: () => const ShareStoppedView(), transition: _transition),
     for (final route in CustomerRoutes.all.where((r) => ![
           CustomerRoutes.login,
           CustomerRoutes.otp,
@@ -154,6 +102,20 @@ abstract final class AppRouter {
           CustomerRoutes.payment,
           CustomerRoutes.orders,
           CustomerRoutes.orderDetails,
+          CustomerRoutes.liveTracking,
+          CustomerRoutes.cancelOrder,
+          CustomerRoutes.rating,
+          CustomerRoutes.shareTracking,
+          CustomerRoutes.publicTracking,
+          CustomerRoutes.notifications,
+          CustomerRoutes.receipt,
+          CustomerRoutes.activityLog,
+          CustomerRoutes.deliveryFailure,
+          CustomerRoutes.assigningDriver,
+          CustomerRoutes.driverUnavailable,
+          CustomerRoutes.ratingError,
+          CustomerRoutes.shareLinkReady,
+          CustomerRoutes.shareStopped,
         ].contains(r)))
       _placeholder(route),
     for (final route in DriverRoutes.all) _placeholder(route),
@@ -164,7 +126,7 @@ abstract final class AppRouter {
       name: SharedRoutes.splash,
       page: () => const SplashView(),
       binding: WelcomeBinding(),
-      transition: _transition,
+      transition: Transition.fade,
     ),
     GetPage(
       name: SharedRoutes.onboarding,

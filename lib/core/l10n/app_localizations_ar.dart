@@ -88,4 +88,146 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get roleTermsNote =>
       'بالمتابعة أنت توافق على شروط الاستخدام وسياسة الخصوصية';
+
+  @override
+  String get aiAlternatives => 'بدائل مقترحة';
+
+  @override
+  String get aiStepListening => 'عم بسمعك…';
+
+  @override
+  String get aiStepUnderstanding => 'عم بفهم طلبك…';
+
+  @override
+  String get aiStepSearching => 'عم بدور على المنتجات…';
+
+  @override
+  String get aiStop => 'إيقاف';
+
+  @override
+  String get aiCancel => 'إلغاء';
+
+  @override
+  String get aiTooShort => 'التسجيل قصير، جرب مرة ثانية';
+
+  @override
+  String get aiMicError => 'تعذر بدء التسجيل';
+
+  @override
+  String get aiMicPermission => 'لازم تسمح للتطبيق باستخدام المايك';
+
+  @override
+  String get aiOpenSettings => 'الإعدادات';
+
+  @override
+  String get aiNotUnderstood => 'ما فهمت طلبك، جرب مرة ثانية أو اكتبه';
+
+  @override
+  String get aiQuota => 'وصلنا لحد الاستخدام مؤقتاً، جرب بعد شوي أو اكتب طلبك';
+
+  @override
+  String get aiServiceUnavailable => 'المساعد مش متاح هلأ، جرب بعد شوي';
+
+  @override
+  String get aiRetry => 'إعادة المحاولة';
+
+  @override
+  String get aiClose => 'إغلاق';
+
+  @override
+  String get aiUnderstood => 'ما فهمته';
+
+  @override
+  String get aiEditRequest => 'عدّل الطلب';
+
+  @override
+  String aiItemsCount(int count) {
+    return '$count منتجات';
+  }
+
+  @override
+  String get aiAvailable => 'متوفر';
+
+  @override
+  String get aiOpenPrinting => 'افتح الطباعة';
+
+  @override
+  String get aiFinalPricesNote => 'الأسعار النهائية تظهر عند مراجعة الطلب';
+
+  @override
+  String get aiTitle => 'مساعد سطر';
+
+  @override
+  String get aiHeroTitle => 'احكيلي شو بدك';
+
+  @override
+  String get aiHeroSubtitle =>
+      'اكتب طلبك أو احكيلنا بصوتك، وأنا برتّبلك اقتراح قبل ما تضيفه للسلة.';
+
+  @override
+  String get aiInputHint =>
+      'مثلاً: بدي دفترين أزرق وثلاث أقلام سوداء وطباعة A4';
+
+  @override
+  String get aiVoiceStart => 'اضغط واحكي طلبك';
+
+  @override
+  String get aiVoiceListening => 'عم بسمعك… اضغط للإيقاف';
+
+  @override
+  String get aiPrepare => 'جهّز اقتراح';
+
+  @override
+  String get aiEmptyInput => 'اكتب طلبك أو احكيه أول';
+
+  @override
+  String get aiNothingFound => 'ما قدرت أفهم طلبك، جرب تكتبه بشكل ثاني';
+
+  @override
+  String get aiSpeechUnavailable =>
+      'التعرف على الصوت مش متاح، تأكد من إذن المايك أو اكتب طلبك';
+
+  @override
+  String get aiSheetTitle => 'اقتراحي إلك';
+
+  @override
+  String get aiSheetSubtitle => 'عدّل الكميات وبعدين أضفهم للسلة';
+
+  @override
+  String aiAddToCart(int count) {
+    return 'أضف للسلة ($count)';
+  }
+
+  @override
+  String get aiUnavailable => 'غير متوفر';
+
+  @override
+  String aiLimitedStock(int available, int requested) {
+    return 'المتوفر $available فقط من $requested';
+  }
+
+  @override
+  String get aiUseAlternative => 'استبدل';
+
+  @override
+  String aiNotFound(String query) {
+    return 'ما لقينا «$query»';
+  }
+
+  @override
+  String get aiNotFoundHint => 'جرب تكتبه بشكل ثاني أو تصفح الأقسام';
+
+  @override
+  String aiAddedToCart(int count) {
+    return 'انضافت $count منتجات للسلة';
+  }
+
+  @override
+  String get errorNoConnection => 'ما في اتصال بالإنترنت';
+
+  @override
+  String get errorTimeout => 'الاتصال بطيء، جرب مرة ثانية';
+
+  @override
+  String get errorUnknown => 'صار خطأ غير متوقع';
 }

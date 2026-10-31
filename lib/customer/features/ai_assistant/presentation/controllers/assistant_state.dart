@@ -1,0 +1,1 @@
+enum AssistantState { idle, recording, analyzing, results, error }

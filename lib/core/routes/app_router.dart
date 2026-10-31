@@ -3,6 +3,8 @@ import 'package:project/core/animations/app_motion.dart';
 import 'package:project/core/animations/app_page_transition.dart';
 import 'package:project/core/routes/app_routes.dart';
 import 'package:project/core/widgets/placeholder_view.dart';
+import 'package:project/customer/features/ai_assistant/presentation/bindings/ai_assistant_binding.dart';
+import 'package:project/customer/features/ai_assistant/presentation/views/ai_assistant_view.dart';
 import 'package:project/welcome/presentation/bindings/welcome_binding.dart';
 import 'package:project/welcome/presentation/views/onboarding_view.dart';
 import 'package:project/welcome/presentation/views/role_choice_view.dart';
@@ -15,8 +17,10 @@ abstract final class AppRouter {
 
   static final List<GetPage<dynamic>> pages = [
     ..._shared,
+    ..._customer,
     // مؤقتة: استبدل كل سطر بـ GetPage حقيقي عند بناء الميزة.
-    for (final route in CustomerRoutes.all) _placeholder(route),
+    for (final route in CustomerRoutes.all)
+      if (!_customer.any((p) => p.name == route)) _placeholder(route),
     for (final route in DriverRoutes.all) _placeholder(route),
   ];
 
@@ -39,6 +43,16 @@ abstract final class AppRouter {
       name: SharedRoutes.roleChoice,
       page: () => const RoleChoiceView(),
       binding: WelcomeBinding(),
+      customTransition: _transition,
+      transitionDuration: AppMotion.page,
+    ),
+  ];
+
+  static final List<GetPage<dynamic>> _customer = [
+    GetPage(
+      name: CustomerRoutes.aiAssistant,
+      page: () => const AiAssistantView(),
+      binding: AiAssistantBinding(),
       customTransition: _transition,
       transitionDuration: AppMotion.page,
     ),

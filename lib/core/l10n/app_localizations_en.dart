@@ -89,4 +89,151 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get roleTermsNote =>
       'By continuing you agree to the Terms of Use and Privacy Policy';
+
+  @override
+  String get aiAlternatives => 'Close alternatives at a similar price';
+
+  @override
+  String get aiStepListening => 'Listening…';
+
+  @override
+  String get aiStepUnderstanding => 'Understanding your request…';
+
+  @override
+  String get aiStepSearching => 'Searching for products…';
+
+  @override
+  String get aiStop => 'Stop';
+
+  @override
+  String get aiCancel => 'Cancel';
+
+  @override
+  String get aiTooShort => 'The recording is too short, try again';
+
+  @override
+  String get aiMicError => 'Could not start recording';
+
+  @override
+  String get aiMicPermission => 'Please allow the app to use the microphone';
+
+  @override
+  String get aiOpenSettings => 'Settings';
+
+  @override
+  String get aiNotUnderstood =>
+      'I did not understand your request, try again or type it';
+
+  @override
+  String get aiQuota =>
+      'Usage limit reached for now, try again shortly or type your request';
+
+  @override
+  String get aiServiceUnavailable =>
+      'The assistant is unavailable right now, try again shortly';
+
+  @override
+  String get aiRetry => 'Try again';
+
+  @override
+  String get aiClose => 'Close';
+
+  @override
+  String get aiUnderstood => 'What I understood';
+
+  @override
+  String get aiEditRequest => 'Edit request';
+
+  @override
+  String aiItemsCount(int count) {
+    return '$count items';
+  }
+
+  @override
+  String get aiAvailable => 'In stock';
+
+  @override
+  String get aiOpenPrinting => 'Open printing';
+
+  @override
+  String get aiFinalPricesNote =>
+      'Final prices appear when you review the order';
+
+  @override
+  String get aiTitle => 'Satr Assistant';
+
+  @override
+  String get aiHeroTitle => 'Tell me what you need';
+
+  @override
+  String get aiHeroSubtitle =>
+      'Type or say your order, and I will prepare a suggestion before adding anything to your cart.';
+
+  @override
+  String get aiInputHint =>
+      'e.g. two blue notebooks, three black pens and A4 printing';
+
+  @override
+  String get aiVoiceStart => 'Tap and say your order';
+
+  @override
+  String get aiVoiceListening => 'Listening… tap to stop';
+
+  @override
+  String get aiPrepare => 'Prepare suggestion';
+
+  @override
+  String get aiEmptyInput => 'Type or say your order first';
+
+  @override
+  String get aiNothingFound =>
+      'I could not understand your request, try rephrasing it';
+
+  @override
+  String get aiSpeechUnavailable =>
+      'Voice recognition is unavailable. Check microphone permission or type your order';
+
+  @override
+  String get aiSheetTitle => 'My suggestion';
+
+  @override
+  String get aiSheetSubtitle => 'Adjust quantities, then add them to your cart';
+
+  @override
+  String aiAddToCart(int count) {
+    return 'Add to cart ($count)';
+  }
+
+  @override
+  String get aiUnavailable => 'Unavailable';
+
+  @override
+  String aiLimitedStock(int available, int requested) {
+    return 'Only $available available out of $requested';
+  }
+
+  @override
+  String get aiUseAlternative => 'Replace';
+
+  @override
+  String aiNotFound(String query) {
+    return 'No match for “$query”';
+  }
+
+  @override
+  String get aiNotFoundHint => 'Try rephrasing it or browse the categories';
+
+  @override
+  String aiAddedToCart(int count) {
+    return '$count items added to your cart';
+  }
+
+  @override
+  String get errorNoConnection => 'No internet connection';
+
+  @override
+  String get errorTimeout => 'The connection is slow, please try again';
+
+  @override
+  String get errorUnknown => 'Something went wrong';
 }

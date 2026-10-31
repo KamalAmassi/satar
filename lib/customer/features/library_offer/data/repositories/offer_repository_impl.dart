@@ -15,10 +15,12 @@ class OfferRepositoryImpl implements OfferRepository {
       ErrorHandler.guard(() => _remote.offer(orderId));
 
   @override
-  Future<Either<Failure, LibraryOffer>> approve(int orderId, String key) =>
-      ErrorHandler.guard(() => _remote.approve(orderId, key));
+  Future<Either<Failure, LibraryOffer>> approve(
+          int orderId, int offerId, String key) =>
+      ErrorHandler.guard(() => _remote.approve(orderId, offerId, key));
 
   @override
-  Future<Either<Failure, LibraryOffer>> reject(int orderId, {String? reason}) =>
-      ErrorHandler.guard(() => _remote.reject(orderId, reason));
+  Future<Either<Failure, LibraryOffer>> reject(int orderId,
+          {int? offerId, String? reason}) =>
+      ErrorHandler.guard(() => _remote.reject(orderId, offerId, reason));
 }

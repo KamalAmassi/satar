@@ -140,14 +140,14 @@ class OfferController extends GetxController {
     final o = offer.value!;
     acting.value = true;
     final guard = _session.guard();
-    // POST /offer/approve لا يحمل رقم العرض ويعتمد العرض المفتوح حاليًا،
-    // فنتأكد أولًا أن ما يراه الزبون هو نفس العرض على الخادم.
+    // الخادم يرفض الموافقة على عرض قديم (offer_id ← 409 offer_changed)؛
+    // هذا الفحص يوفّر رحلة فاشلة ويعرض العرض الجديد مباشرة.
     if (!await _stillShowingLatest(o, guard)) return;
     if (_approveKeyOfferId != o.id) {
       _approveKey = IdempotencyKey.generate();
       _approveKeyOfferId = o.id;
     }
-    final result = await _repository.approve(orderId, _approveKey!);
+    final result = await _repository.approve(orderId, o.id, _approveKey!);
     if (!guard.isCurrent) return;
     acting.value = false;
     await result.fold(_onDecisionFailure, (o) async => _show(o));
@@ -161,7 +161,7 @@ class OfferController extends GetxController {
     acting.value = true;
     final guard = _session.guard();
     if (!await _stillShowingLatest(o, guard)) return;
-    final result = await _repository.reject(orderId);
+    final result = await _repository.reject(orderId, offerId: o.id);
     if (!guard.isCurrent) return;
     acting.value = false;
     await result.fold(_onDecisionFailure, (o) async => _show(o));

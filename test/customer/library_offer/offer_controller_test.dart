@@ -48,21 +48,27 @@ class _Offers implements OfferRepository {
   final List<Either<Failure, LibraryOffer>> gets = [];
   final List<Either<Failure, LibraryOffer>> approves = [];
   final List<String> approveKeys = [];
+  final List<int> approveOfferIds = [];
+  final List<int?> rejectOfferIds = [];
 
   @override
   Future<Either<Failure, LibraryOffer>> offer(int orderId) async =>
       gets.length == 1 ? gets.first : gets.removeAt(0);
 
   @override
-  Future<Either<Failure, LibraryOffer>> approve(int orderId, String key) async {
+  Future<Either<Failure, LibraryOffer>> approve(
+      int orderId, int offerId, String key) async {
     approveKeys.add(key);
+    approveOfferIds.add(offerId);
     return approves.removeAt(0);
   }
 
   @override
   Future<Either<Failure, LibraryOffer>> reject(int orderId,
-          {String? reason}) async =>
-      Right(LibraryOffer.fromJson(offerJson(status: 'rejected')));
+      {int? offerId, String? reason}) async {
+    rejectOfferIds.add(offerId);
+    return Right(LibraryOffer.fromJson(offerJson(status: 'rejected')));
+  }
 }
 
 void main() {
@@ -166,6 +172,50 @@ void main() {
     expect(repo.approveKeys, isEmpty, reason: 'approve must not be sent');
     expect(c.viewState.value, OfferViewState.changed);
     expect(c.offer.value!.id, 26);
+    expect(c.offer.value!.total.amount, 3300);
+  });
+
+  // Live sandbox 31 Oct: approve without offer_id is now 422; with a stale id
+  // the server answers 409 conflict, reason offer_changed (STR-000028).
+  test('approve and reject send the id of the offer the customer saw',
+      () async {
+    repo.gets.add(Right(LibraryOffer.fromJson(offerJson(id: 40))));
+    final c = await make();
+    repo.approves.add(
+        Right(LibraryOffer.fromJson(offerJson(id: 40, status: 'approved'))));
+    await c.approve();
+    expect(repo.approveOfferIds, [40]);
+
+    Get.reset();
+    repo = _Offers()..gets.add(Right(LibraryOffer.fromJson(offerJson(id: 41))));
+    final r = await make();
+    await r.reject();
+    expect(repo.rejectOfferIds, [41]);
+  });
+
+  test('server offer_changed (revision after our check) shows the new offer',
+      () async {
+    repo.gets.add(Right(LibraryOffer.fromJson(offerJson(id: 40))));
+    final c = await make();
+    // The pre-approve refetch still sees offer 40; the revision lands in the
+    // gap, so only the server can catch it.
+    repo.gets
+      ..clear()
+      ..add(Right(LibraryOffer.fromJson(offerJson(id: 40))))
+      ..add(Right(LibraryOffer.fromJson(offerJson(id: 41)
+        ..['delivery_fee'] = {'amount': 2500}
+        ..['total'] = {'amount': 3300})));
+    repo.approves.add(const Left(ServerFailure(
+      code: ApiErrorCodes.conflict,
+      statusCode: 409,
+      details: {'reason': 'offer_changed', 'offer_id': 41, 'seen_offer_id': 40},
+    )));
+
+    await c.approve();
+
+    expect(repo.approveOfferIds, [40]);
+    expect(c.viewState.value, OfferViewState.changed);
+    expect(c.offer.value!.id, 41);
     expect(c.offer.value!.total.amount, 3300);
   });
 

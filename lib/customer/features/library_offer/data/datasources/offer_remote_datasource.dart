@@ -4,8 +4,8 @@ import 'package:project/customer/features/library_offer/domain/entities/library_
 
 abstract class OfferRemoteDataSource {
   Future<LibraryOffer> offer(int orderId);
-  Future<LibraryOffer> approve(int orderId, String key);
-  Future<LibraryOffer> reject(int orderId, String? reason);
+  Future<LibraryOffer> approve(int orderId, int offerId, String key);
+  Future<LibraryOffer> reject(int orderId, int? offerId, String? reason);
 }
 
 class OfferRemoteDataSourceImpl implements OfferRemoteDataSource {
@@ -20,20 +20,23 @@ class OfferRemoteDataSourceImpl implements OfferRemoteDataSource {
   }
 
   @override
-  Future<LibraryOffer> approve(int orderId, String key) async {
+  Future<LibraryOffer> approve(int orderId, int offerId, String key) async {
     final res = await _api.dio.post<dynamic>(
       'v1/orders/$orderId/offer/approve',
-      data: const <String, dynamic>{},
+      data: {'offer_id': offerId},
       options: Options(headers: {'Idempotency-Key': key}),
     );
     return LibraryOffer.fromJson(ApiClient.unwrapMap(res));
   }
 
   @override
-  Future<LibraryOffer> reject(int orderId, String? reason) async {
+  Future<LibraryOffer> reject(int orderId, int? offerId, String? reason) async {
     final res = await _api.dio.post<dynamic>(
       'v1/orders/$orderId/offer/reject',
-      data: {if (reason != null && reason.isNotEmpty) 'reason': reason},
+      data: {
+        if (offerId != null) 'offer_id': offerId,
+        if (reason != null && reason.isNotEmpty) 'reason': reason,
+      },
     );
     return LibraryOffer.fromJson(ApiClient.unwrapMap(res));
   }

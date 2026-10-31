@@ -71,11 +71,13 @@ class _Offers implements OfferRepository {
       Right(LibraryOffer.fromJson(_offer()));
 
   @override
-  Future<Either<Failure, LibraryOffer>> approve(int orderId, String key) =>
+  Future<Either<Failure, LibraryOffer>> approve(
+          int orderId, int offerId, String key) =>
       throw UnimplementedError();
 
   @override
-  Future<Either<Failure, LibraryOffer>> reject(int orderId, {String? reason}) =>
+  Future<Either<Failure, LibraryOffer>> reject(int orderId,
+          {int? offerId, String? reason}) =>
       throw UnimplementedError();
 }
 

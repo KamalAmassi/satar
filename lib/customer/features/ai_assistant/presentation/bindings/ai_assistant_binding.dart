@@ -11,12 +11,18 @@ import 'package:project/customer/features/ai_assistant/domain/repositories/ai_as
 import 'package:project/customer/features/ai_assistant/domain/usecases/suggest_from_audio_usecase.dart';
 import 'package:project/customer/features/ai_assistant/domain/usecases/suggest_products_usecase.dart';
 import 'package:project/customer/features/ai_assistant/presentation/controllers/ai_assistant_controller.dart';
+import 'package:project/customer/features/cart/domain/repositories/cart_repository.dart';
+import 'package:project/customer/features/cart/domain/usecases/add_to_cart_usecase.dart';
+import 'package:project/customer/features/cart/domain/usecases/get_cart_count_usecase.dart';
 import 'package:project/customer/features/cart/presentation/bindings/cart_binding.dart';
 
 class AiAssistantBinding extends Bindings {
   @override
   void dependencies() {
     CartBinding().dependencies();
+
+    Get.lazyPut(() => AddToCartUseCase(Get.find<CartRepository>()));
+    Get.lazyPut(() => GetCartCountUseCase(Get.find<CartRepository>()));
 
     Get.lazyPut<CatalogRemoteDataSource>(
           () => CatalogRemoteDataSourceImpl(Get.find<Dio>()),

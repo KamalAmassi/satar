@@ -8,6 +8,6 @@ extension FailureX on Failure {
     if (text != null && text.isNotEmpty) return text;
     if (this is NetworkFailure) return l10n.errorNoConnection;
     if (this is TimeoutFailure) return l10n.errorTimeout;
-    return l10n.errorUnknown;
+    return l10n.errorGeneral;
   }
 }

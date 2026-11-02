@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:project/app/bindings/app_binding.dart';
+import 'package:project/core/config/app_env.dart';
 import 'package:project/core/l10n/app_localizations.dart';
 import 'package:project/core/routes/app_router.dart';
 import 'package:project/core/theme/app_theme.dart';
@@ -13,7 +15,6 @@ Future<void> main() async {
   final prefs = await SharedPreferences.getInstance();
   Get.put<SharedPreferences>(prefs, permanent: true);
 
-  // مؤقت: يُستبدل بـ core/network عند بنائه.
   Get.put<Dio>(
     Dio(
       BaseOptions(
@@ -30,8 +31,7 @@ Future<void> main() async {
     ),
     permanent: true,
   );
-  await dotenv.load(fileName: '.env');
-
+  await dotenv.load(fileName: '.env', isOptional: true);
   runApp(const SatrApp());
 }
 
@@ -46,9 +46,10 @@ class SatrApp extends StatelessWidget {
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       themeMode: ThemeMode.light,
-      locale: const Locale('ar'),
+      locale: Locale(AppEnv.locale),
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
+      initialBinding: AppBinding(),
       initialRoute: AppRouter.initial,
       getPages: AppRouter.pages,
       unknownRoute: AppRouter.unknown,

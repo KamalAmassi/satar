@@ -14,15 +14,16 @@ class PageIndicator extends StatelessWidget {
       children: List.generate(count, (i) {
         final active = i == current;
         return AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          margin: const EdgeInsets.symmetric(horizontal: 3),
-          width: active ? 24 : 8,
-          height: 8,
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeOutCubic,
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          width: active ? 32 : 12,
+          height: 3,
           decoration: BoxDecoration(
             color: active
-                ? AppColors.primary
-                : AppColors.secondary.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(4),
+                ? AppColors.ink
+                : AppColors.ink.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(2),
           ),
         );
       }),

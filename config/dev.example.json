@@ -1,0 +1,7 @@
+{
+  "SATR_PROJECT_KEY": "pk_test_REPLACE_ME",
+  "SATR_BASE_URL": "https://masar.toldpath.com",
+  "SATR_DEV_MEMBER": "your-dev-handle",
+  "SATR_INITIAL_ROUTE": "/dev/purchasing",
+  "SATR_LOCALE": "ar"
+}

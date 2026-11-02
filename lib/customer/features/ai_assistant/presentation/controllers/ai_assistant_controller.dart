@@ -104,8 +104,8 @@ class AiAssistantController extends GetxController with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState lifecycle) {
-    if (lifecycle != AppLifecycleState.resumed && isRecording) {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed && isRecording) {
       cancelRecording();
     }
   }
@@ -231,7 +231,8 @@ class AiAssistantController extends GetxController with WidgetsBindingObserver {
     } else {
       final lastUserMsg = messages.lastWhereOrNull((m) => m.type == ChatMessageType.userText);
       if (lastUserMsg?.text != null) {
-        await _analyze(() => _suggestFromText(lastUserMsg!.text!), fallbackTranscript: lastUserMsg!.text!);
+        final text = lastUserMsg!.text!;
+        await _analyze(() => _suggestFromText(text), fallbackTranscript: text);
       } else {
         await submitText();
       }

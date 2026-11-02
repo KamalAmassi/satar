@@ -1,11 +1,10 @@
 import 'dart:convert';
 
-import 'package:project/customer/features/cart/data/models/cart_item_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class CartLocalDataSource {
-  List<CartItemModel> getItems();
-  Future<void> saveItems(List<CartItemModel> items);
+  Map<String, dynamic>? read(int userId);
+  Future<void> write(int userId, Map<String, dynamic> json);
 }
 
 class CartLocalDataSourceImpl implements CartLocalDataSource {
@@ -13,22 +12,17 @@ class CartLocalDataSourceImpl implements CartLocalDataSource {
 
   final SharedPreferences _prefs;
 
-  static const _key = 'cart_items';
+  /// مفتاح لكل مستخدم حتى لا تظهر سلة حساب في حساب آخر.
+  static String _key(int userId) => 'customer_cart_v1_$userId';
 
   @override
-  List<CartItemModel> getItems() {
-    final raw = _prefs.getString(_key);
-    if (raw == null) return const [];
-    return (jsonDecode(raw) as List<dynamic>)
-        .map((e) => CartItemModel.fromJson(Map<String, dynamic>.from(e as Map)))
-        .toList();
+  Map<String, dynamic>? read(int userId) {
+    final raw = _prefs.getString(_key(userId));
+    if (raw == null) return null;
+    return Map<String, dynamic>.from(jsonDecode(raw) as Map);
   }
 
   @override
-  Future<void> saveItems(List<CartItemModel> items) async {
-    await _prefs.setString(
-      _key,
-      jsonEncode(items.map((e) => e.toJson()).toList()),
-    );
-  }
+  Future<void> write(int userId, Map<String, dynamic> json) =>
+      _prefs.setString(_key(userId), jsonEncode(json));
 }

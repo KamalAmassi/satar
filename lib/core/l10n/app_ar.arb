@@ -73,14 +73,416 @@
   "aiUnavailable": "غير متوفر",
   "aiLimitedStock": "المتوفر {available} فقط من {requested}",
   "@aiLimitedStock": { "placeholders": { "available": { "type": "int" }, "requested": { "type": "int" } } },
-  "aiAlternatives": "بدائل مقترحة",
   "aiUseAlternative": "استبدل",
   "aiNotFound": "ما لقينا «{query}»",
   "@aiNotFound": { "placeholders": { "query": { "type": "String" } } },
   "aiNotFoundHint": "جرب تكتبه بشكل ثاني أو تصفح الأقسام",
   "aiAddedToCart": "انضافت {count} منتجات للسلة",
   "@aiAddedToCart": { "placeholders": { "count": { "type": "int" } } },
+
   "errorNoConnection": "ما في اتصال بالإنترنت",
-  "errorTimeout": "الاتصال بطيء، جرب مرة ثانية",
-  "errorUnknown": "صار خطأ غير متوقع"
+  "errorTimeout": "انتهت مهلة الاتصال. حاول مرة أخرى.",
+  "errorSessionExpired": "انتهت جلستك. سجّل الدخول مرة أخرى.",
+  "errorRateLimited": "طلبات كثيرة خلال وقت قصير. انتظر قليلًا ثم حاول.",
+  "errorRateLimitedSeconds": "طلبات كثيرة خلال وقت قصير. حاول بعد {seconds} ثانية.",
+  "@errorRateLimitedSeconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "errorAppNotConfigured": "التطبيق غير مهيأ للاتصال بالخادم حاليًا.",
+  "errorOutOfZone": "هذا العنوان خارج منطقة التوصيل. اختر عنوانًا آخر.",
+  "errorOutOfStock": "الكمية المطلوبة غير متوفرة حاليًا.",
+  "errorOutOfStockAvailable": "الكمية غير متوفرة. المتاح الآن: {count}.",
+  "@errorOutOfStockAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorStateChanged": "تغيّرت حالة الطلب. حدّثنا البيانات، راجعها ثم تابع.",
+  "remove": "حذف",
+  "reject": "ارفض",
+  "quoteExpiredBody": "حدّث السعر والتوفر قبل تأكيد الطلب.",
+  "quoteUsedBody": "راجع طلباتك قبل محاولة إنشاء طلب جديد.",
+  "dismiss": "إغلاق",
+  "increase": "زيادة",
+  "decrease": "إنقاص",
+  "deliveryFee": "رسوم التوصيل",
+  "printingServicesTitle": "خدمات الطباعة",
+  "printingHeroEyebrow": "من الملف للورق",
+  "printingHeroTitle": "ملفاتك علينا!",
+  "printingHeroBody": "ارفع ملفك، اختار المواصفات، وخلي الطباعة علينا.",
+  "printingServiceBw": "أبيض وأسود {paper}",
+  "@printingServiceBw": {
+    "placeholders": {
+      "paper": {
+        "type": "String"
+      }
+    }
+  },
+  "printingServiceColor": "طباعة ملونة {paper}",
+  "@printingServiceColor": {
+    "placeholders": {
+      "paper": {
+        "type": "String"
+      }
+    }
+  },
+  "perPrintedSide": "{price} / وجه مطبوع",
+  "@perPrintedSide": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "perCopy": "{price} / نسخة",
+  "@perCopy": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "printingFinalPriceNote": "راجع عرض السعر النهائي قبل تأكيد الطلب.",
+  "printingStart": "ابدأ بطلب طباعة",
+  "printSpecsTitle": "مواصفات الملفات",
+  "printSpecsHint": "اختار مواصفات كل ملف، وراجع السعر قبل تأكيد طلبك.",
+  "whatToPrint": "شو بدك تطبع؟",
+  "supportedFiles": "الملفات المدعومة",
+  "supportedFileTypes": "PDF، JPG، PNG، WebP",
+  "maxFileSize": "الحد الأقصى للحجم",
+  "maxPerFile": "{size} لكل ملف",
+  "@maxPerFile": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "maxFiles": "عدد الملفات المسموح",
+  "tapToChooseFile": "اضغط لاختيار ملف",
+  "addAnotherFile": "أضف ملف ثاني بمواصفات مختلفة",
+  "fileLimitBody": "وصلت لحد الملفات ({max}). احذف ملفًا قبل إضافة ملف طباعة جديد.",
+  "@fileLimitBody": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "uploadTooLargeTitle": "الملف أكبر من الحجم المسموح",
+  "uploadTooLargeBody": "حجم كل ملف لازم يكون {size} أو أقل. صغّر الملف وحاول مرة ثانية.",
+  "@uploadTooLargeBody": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "uploadUnsupportedTitle": "نوع الملف غير مدعوم",
+  "uploadUnsupportedBody": "ارفع ملف بصيغة PDF أو JPG أو PNG أو WebP.",
+  "uploadEmptyBody": "الملف فارغ. اختر ملفًا آخر.",
+  "chooseAnotherFile": "اختيار ملف ثاني",
+  "uploadingPercent": "جاري الرفع… {percent}%",
+  "@uploadingPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "uploadFailed": "تعذّر رفع الملف.",
+  "pagesCount": "{count, plural, =1{صفحة واحدة} =2{صفحتان} few{{count} صفحات} many{{count} صفحة} other{{count} صفحة}}",
+  "@pagesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paperSize": "حجم الورق",
+  "printColor": "اللون",
+  "printColorBw": "أبيض وأسود",
+  "printColorColor": "ملون",
+  "printSides": "الطباعة",
+  "printSidesSingle": "وجه واحد",
+  "printSidesDouble": "وجهان",
+  "binding": "التجليد",
+  "pageRange": "نطاق الصفحات",
+  "pageRangeAllHint": "الكل",
+  "pageRangeHelper": "اتركه فارغًا لطباعة الكل، أو اكتب نطاقًا مثل 1-5 وافصل بين الأجزاء بفاصلة. عدد صفحات الملف: {pages}.",
+  "@pageRangeHelper": {
+    "placeholders": {
+      "pages": {
+        "type": "int"
+      }
+    }
+  },
+  "pageRangeInvalid": "راجع نطاق الصفحات: اكتب نطاقًا مثل 1-5 وافصل بين الأجزاء بفاصلة، ضمن عدد صفحات الملف.",
+  "copies": "عدد النسخ",
+  "pagesTimesCopies": "الصفحات: {pages} · النسخ: {copies}",
+  "@pagesTimesCopies": {
+    "placeholders": {
+      "pages": {
+        "type": "int"
+      },
+      "copies": {
+        "type": "int"
+      }
+    }
+  },
+  "fileNotes": "ملاحظات لهذا الملف",
+  "fileNotesHint": "أي تفاصيل إضافية؟",
+  "estimateForFile": "التقدير لهذا الملف",
+  "estimateLabel": "التقدير",
+  "reviewPrice": "مراجعة السعر",
+  "cartTitle": "سلّتك",
+  "cartEmptyTitle": "سلّتك فاضية",
+  "cartEmptyBody": "أضف منتجات أو ملفات طباعة للمتابعة.",
+  "startShopping": "ابدأ التسوق",
+  "productsSection": "المنتجات",
+  "printingSection": "الطباعة",
+  "productNumber": "منتج رقم {id}",
+  "@productNumber": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "pricedByLibrary": "تسعّره المكتبة",
+  "productUnavailable": "هذا المنتج غير متوفر حاليًا.",
+  "onlyAvailable": "المتوفر حاليًا {count} فقط. عدّل الكمية.",
+  "@onlyAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chooseOption": "اختر {label}",
+  "@chooseOption": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "illustrativePrice": "سعر توضيحي",
+  "printingIllustrative": "الطباعة (تقدير)",
+  "notesForLibrary": "ملاحظات للمكتبة",
+  "notesForLibraryHint": "أي تفاصيل بتحب تضيفها؟",
+  "ifOutOfStock": "لو المنتج خلص",
+  "deliveryByAddress": "تُحسب حسب العنوان",
+  "totalBeforeDelivery": "الإجمالي قبل التوصيل",
+  "finalPriceAtReview": "الأسعار هنا للعرض. السعر النهائي يظهر في مراجعة الطلب.",
+  "continueToDelivery": "تابع للتوصيل",
+  "waitForUploads": "انتظر اكتمال رفع الملفات قبل المتابعة.",
+  "fixFailedUploads": "بعض الملفات لم تُرفع. أعد المحاولة أو احذفها.",
+  "uploadInterrupted": "انقطع رفع هذا الملف لأن التطبيق أُغلق قبل اكتماله. اختر الملف نفسه مرة أخرى أو احذفه.",
+  "uploadInterruptedShort": "انقطع الرفع — اختر الملف مرة أخرى.",
+  "chooseFileAgain": "اختيار الملف",
+  "fixInterruptedUploads": "انقطع رفع بعض ملفات الطباعة. افتح مواصفات الطباعة واختر الملفات مرة أخرى أو احذفها.",
+  "total": "الإجمالي",
+  "discount": "الخصم",
+  "payment": "الدفع",
+  "orderCode": "رقم الطلب",
+  "orderStatus": "حالة الطلب",
+  "viewOrder": "عرض الطلب",
+  "viewMyOrders": "عرض طلباتي",
+  "deliveryTitle": "عنوان التوصيل",
+  "whereToDeliver": "وين نوصّلك؟",
+  "addAddress": "أضف عنوان",
+  "noAddresses": "لا توجد عناوين محفوظة. أضف عنوانًا للمتابعة.",
+  "addressNumber": "عنوان {id}",
+  "@addressNumber": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "insideDeliveryArea": "داخل منطقة التوصيل",
+  "outsideDeliveryArea": "خارج منطقة التوصيل",
+  "recipientNameOptional": "اسم المستلم (اختياري)",
+  "recipientNameHint": "الاسم",
+  "recipientPhoneOptional": "رقم الهاتف (اختياري)",
+  "phoneInvalid": "رقم الهاتف غير صحيح.",
+  "deliveryNotes": "ملاحظات التوصيل",
+  "deliveryNotesHint": "علامة مميزة أو تفاصيل الوصول",
+  "deliveryFeeAtReview": "رسوم التوصيل والإجمالي النهائي تظهر في مراجعة الطلب.",
+  "continueToPayment": "متابعة للدفع",
+  "paymentMethodTitle": "طريقة الدفع",
+  "howToPay": "كيف بتحب تدفع؟",
+  "payCashOnDelivery": "نقدًا عند التسليم",
+  "payBankTransfer": "تحويل بنكي أو محفظة",
+  "paymentMethodNote": "يظهر مبلغ التحصيل والتفاصيل قبل تأكيد الطلب.",
+  "transferAfterOrderNote": "ارفع إشعار التحويل بعد أن تؤكد المكتبة سعر الطلب.",
+  "reviewOrder": "مراجعة الطلب",
+  "reviewBeforeConfirm": "راجع طلبك قبل التأكيد",
+  "orderType": "نوع الطلب",
+  "orderTypeProducts": "منتجات",
+  "orderTypePrinting": "طباعة",
+  "orderTypeMixed": "منتجات وطباعة",
+  "quoteValidFor": "التسعيرة صالحة لمدة {minutes}:{seconds}",
+  "@quoteValidFor": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "libraryConfirmsNote": "بعد التأكيد تراجع المكتبة طلبك وترسل لك عرض السعر النهائي للموافقة.",
+  "confirmOrder": "تأكيد الطلب",
+  "quoteLoadingTitle": "جاري حساب السعر",
+  "quoteLoadingBody": "بنطلب السعر والتوفر الحاليين.",
+  "quoteFailedTitle": "تعذّر حساب السعر",
+  "quoteFailedBody": "راجع الاتصال والعنوان وخيارات الطلب، ثم حاول مجددًا.",
+  "quoteNotReady": "أكمل السلة والعنوان وطريقة الدفع وانتظر رفع الملفات قبل طلب السعر.",
+  "fixHighlightedItems": "صحّح العناصر المحددة في السلة ثم حاول مجددًا.",
+  "backToCart": "العودة للسلة",
+  "changeAddress": "تغيير العنوان",
+  "quoteExpiredTitle": "انتهت صلاحية التسعيرة",
+  "quoteStaleTitle": "تغيّر طلبك",
+  "quoteStaleBody": "عدّلت السلة أو التوصيل بعد التسعيرة. اطلب سعرًا جديدًا وراجعه.",
+  "quoteUsedTitle": "تم استخدام هذه التسعيرة",
+  "refreshQuote": "تحديث التسعيرة",
+  "priceChangedBody": "تغيّر السعر. راجع السعر الجديد قبل المتابعة.",
+  "paymentMethodChangedBody": "غيّرت طريقة الدفع، فأصدرنا تسعيرة جديدة لها. المبلغ لم يتغيّر.",
+  "previousPrice": "السعر السابق",
+  "currentPrice": "السعر الحالي",
+  "acceptNewPrice": "أوافق على السعر الجديد",
+  "submittingTitle": "جاري إنشاء طلبك",
+  "submittingBody": "بنثبت تفاصيل الطلب والسعر.",
+  "uncertainTitle": "ما قدرنا نتأكد من النتيجة",
+  "uncertainBody": "ربما أُنشئ طلبك. تحقق مرة أخرى أو راجع طلباتك قبل إعادة المحاولة حتى لا يتكرر الطلب.",
+  "checkAgain": "تحقق مرة أخرى",
+  "checkMyOrders": "تحقق من طلباتي",
+  "orderCreatedTitle": "تم إنشاء الطلب",
+  "orderCreatedBody": "تابع حالة الطلب لمعرفة الخطوة التالية.",
+  "orderAwaitingPaymentTitle": "تم إنشاء طلبك",
+  "orderCreatedTransferBody": "ستراجع المكتبة الطلب، ثم حوّل المبلغ وارفع الإشعار عند فتح الدفع.",
+  "viewTransferDetails": "عرض بيانات التحويل",
+  "copy": "نسخ",
+  "copied": "تم النسخ",
+  "copyLink": "نسخ الرابط",
+  "transferTitle": "الدفع بالتحويل",
+  "transferHeadline": "حوّل المبلغ وارفع الإشعار",
+  "transferSubtitle": "أكمل التحويل خارج سطر ثم ارفع إشعاره.",
+  "correctionTitle": "تصحيح إشعار الدفع",
+  "correctionSubtitle": "طلبت المكتبة تصحيحًا. ارفع إشعارًا جديدًا حسب الملاحظة.",
+  "libraryNote": "ملاحظة المكتبة",
+  "previousReceipt": "الإشعار السابق",
+  "amountDue": "المبلغ المطلوب",
+  "recipientAccount": "الحساب المستلم",
+  "noTransferAccounts": "لا توجد بيانات حساب حاليًا. تواصل مع المكتبة.",
+  "wallet": "محفظة",
+  "bank": "بنك",
+  "uploadReceipt": "ارفع إشعار التحويل",
+  "receiptTypes": "صورة أو PDF · حتى {size}",
+  "@receiptTypes": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "chooseReceipt": "اختيار الإشعار",
+  "replaceReceipt": "استبدال",
+  "receiptPreview": "معاينة الإشعار",
+  "submitReceipt": "إرسال إشعار الدفع",
+  "resubmitReceipt": "إعادة إرسال الإشعار",
+  "receiptNotApproval": "بعد الإرسال: قيد مراجعة المكتبة — لا يعني اعتماد الدفع.",
+  "receiptSentTitle": "تم إرسال الإشعار",
+  "receiptUnderReviewTitle": "الإشعار قيد المراجعة",
+  "receiptUnderReviewBody": "تراجع المكتبة الإشعار قبل اعتماد الدفع. لا يمكن إرسال إشعار آخر أثناء المراجعة.",
+  "refreshStatus": "تحديث الحالة",
+  "paymentStateChanged": "تغيّرت حالة الدفع. حدّثنا الشاشة بآخر حالة.",
+  "transferNotOpenTitle": "الدفع لم يُفتح بعد",
+  "transferNotOpenBody": "تراجع المكتبة طلبك. يُفتح رفع الإشعار عندما يصبح الطلب بانتظار الدفع.",
+  "transferNeedsOfferBody": "أرسلت المكتبة عرض السعر. وافق عليه أولًا ليُفتح الدفع.",
+  "reviewLibraryOffer": "مراجعة عرض المكتبة",
+  "paymentConfirmedTitle": "تم اعتماد الدفع",
+  "paymentConfirmedBody": "اعتمدت المكتبة الدفع ويتابع الطلب خطواته.",
+  "notTransferOrderTitle": "هذا الطلب ليس بالتحويل",
+  "notTransferOrderBody": "لا يحتاج هذا الطلب إشعار تحويل.",
+  "libraryOfferTitle": "عرض المكتبة",
+  "offerValidFor": "العرض صالح لمدة {time}",
+  "@offerValidFor": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewPriceAndSubstitutes": "راجع السعر والبدائل",
+  "offerIntro": "المكتبة راجعت طلبك وجهّزت العرض التالي.",
+  "itemUnavailable": "{name} غير متوفر",
+  "@itemUnavailable": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "qtyTimesUnit": "{qty} × {unit}",
+  "@qtyTimesUnit": {
+    "placeholders": {
+      "qty": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "suggestedSubstitute": "البديل المقترح: {name}",
+  "@suggestedSubstitute": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "samePrice": "نفس السعر",
+  "priceHigherBy": "أغلى بـ {amount}",
+  "@priceHigherBy": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "priceLowerBy": "أرخص بـ {amount}",
+  "@priceLowerBy": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "acceptSubstitutes": "أوافق على التعديلات المقترحة (البنود غير المتوفرة والبدائل)",
+  "productsAndPrinting": "المنتجات والطباعة",
+  "approvePrice": "وافق على السعر",
+  "rejectOfferTitle": "رفض العرض؟",
+  "rejectOfferBody": "رفض العرض يلغي الطلب. إذا كنت دفعت مبلغًا فتواصل مع المكتبة؛ الاسترداد ليس تلقائيًا.",
+  "offerNotReadyTitle": "المكتبة تراجع طلبك",
+  "offerNotReadyBody": "سيظهر عرض السعر هنا عندما تجهّزه المكتبة.",
+  "refreshOffer": "تحديث العرض",
+  "offerExpiredTitle": "انتهت صلاحية العرض",
+  "offerExpiredBody": "ما بتقدر توافق على هذا العرض. تواصل مع المكتبة أو حدّث العرض.",
+  "offerChangedTitle": "تم تحديث العرض",
+  "offerChangedBody": "حدّث العرض وراجع البنود قبل الموافقة.",
+  "offerApprovedTitle": "تمت الموافقة على العرض",
+  "offerApprovedBody": "يتابع طلبك خطواته. تابع حالته من طلباتك.",
+  "offerRejectedTitle": "تم رفض العرض",
+  "offerRejectedBody": "أُلغي الطلب. للاستفسار عن أي مبلغ مدفوع تواصل مع المكتبة."
 }

@@ -12,6 +12,7 @@ abstract final class AppColors {
   static const Color background = Color(0xFFF8FAFC);
   static const Color surface = Color(0xFFFFFFFF);
   static const Color surfaceVariant = Color(0xFFF1F5F9);
+  static const Color surfaceTint = Color(0xFFE2E8F0);
   static const Color border = Color(0xFFE2E8F0);
   static const Color textPrimary = Color(0xFF0F172A);
   static const Color textSecondary = Color(0xFF64748B);
@@ -29,6 +30,15 @@ abstract final class AppColors {
   static const Color warning = Color(0xFFF59E0B);
   static const Color error = Color(0xFFE02424);
   static const Color info = Color(0xFF0EA5E9);
+
+  // Satr Brand 2026
+  static const Color paper = Color(0xFFFBF6EE);
+  static const Color ink = Color(0xFF30142A);
+  static const Color inkFaded = Color(0x2030142A);
+  static const Color stamp = Color(0xFFC0392B);
+  static const Color paperLine = Color(0x1530142A);
+  static const Color paperMargin = Color(0x25C0392B);
+
   static const Color illustrationBg = Color(0xFFF1E6D6);
   static const Color cream = Color(0xFFFBF6EE);
   static const Color sand = Color(0xFFF1DDB5);

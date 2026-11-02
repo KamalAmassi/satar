@@ -2,14 +2,15 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:project/core/errors/api_error_codes.dart';
 import 'package:project/core/errors/failure.dart';
 
 /// يحوّل أخطاء Dio إلى Failure. يُستخدم في RepositoryImpl فقط.
 abstract final class ErrorHandler {
   /// غلاف جاهز: يُنفّذ العملية ويعيد Either.
   static Future<Either<Failure, T>> guard<T>(
-      Future<T> Function() action,
-      ) async {
+    Future<T> Function() action,
+  ) async {
     try {
       return Right(await action());
     } on DioException catch (e) {
@@ -26,19 +27,19 @@ abstract final class ErrorHandler {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
+      case DioExceptionType.transformTimeout:
         return const TimeoutFailure();
       case DioExceptionType.connectionError:
         return const NetworkFailure();
       case DioExceptionType.badResponse:
         return _fromResponse(e.response);
       case DioExceptionType.cancel:
+        return const CancelledFailure();
       case DioExceptionType.badCertificate:
       case DioExceptionType.unknown:
+        if (e.error is Failure) return e.error as Failure;
         if (e.error is SocketException) return const NetworkFailure();
         return const UnknownFailure();
-      case DioExceptionType.transformTimeout:
-        // TODO: Handle this case.
-        throw UnimplementedError();
     }
   }
 
@@ -65,10 +66,15 @@ abstract final class ErrorHandler {
 
     if (status == 401) return UnauthorizedFailure(message: message);
 
-    if (status == 422 || code == 'validation_failed') {
+    // 422 وحدها لا تعني خطأ نموذج: out_of_stock و out_of_zone و
+    // invalid_transition تصل أيضًا بـ 422 ويجب أن تحتفظ برمزها.
+    if (code == ApiErrorCodes.validationFailed ||
+        (status == 422 && code == null)) {
       return ValidationFailure(
         message: message,
         fieldErrors: _parseFields(details?['fields']),
+        requestId: requestId,
+        details: details,
       );
     }
 

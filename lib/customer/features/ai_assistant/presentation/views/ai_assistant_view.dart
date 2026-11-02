@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:project/core/animations/app_motion.dart';
 import 'package:project/core/animations/entrance.dart';
 import 'package:project/core/constants/app_colors.dart';
 import 'package:project/core/constants/app_sizes.dart';

@@ -5,23 +5,26 @@ import 'package:project/core/routes/app_routes.dart';
 import 'package:project/core/widgets/placeholder_view.dart';
 import 'package:project/customer/features/ai_assistant/presentation/bindings/ai_assistant_binding.dart';
 import 'package:project/customer/features/ai_assistant/presentation/views/ai_assistant_view.dart';
+import 'package:project/customer/features/purchasing_pages.dart';
+import 'package:project/dev/dev_routes.dart';
 import 'package:project/welcome/presentation/bindings/welcome_binding.dart';
 import 'package:project/welcome/presentation/views/onboarding_view.dart';
 import 'package:project/welcome/presentation/views/role_choice_view.dart';
 import 'package:project/welcome/presentation/views/splash_view.dart';
 
 abstract final class AppRouter {
-  static const initial = SharedRoutes.splash;
+  static String get initial => DevRoutes.initialOverride ?? SharedRoutes.splash;
 
   static final _transition = AppPageTransition();
 
   static final List<GetPage<dynamic>> pages = [
     ..._shared,
+    ...PurchasingPages.pages(transition: Transition.fadeIn),
     ..._customer,
-    // مؤقتة: استبدل كل سطر بـ GetPage حقيقي عند بناء الميزة.
     for (final route in CustomerRoutes.all)
-      if (!_customer.any((p) => p.name == route)) _placeholder(route),
+      if (!PurchasingPages.routes.contains(route) && !_customer.any((p) => p.name == route)) _placeholder(route),
     for (final route in DriverRoutes.all) _placeholder(route),
+    if (DevRoutes.enabled) ...DevRoutes.pages,
   ];
 
   static final List<GetPage<dynamic>> _shared = [

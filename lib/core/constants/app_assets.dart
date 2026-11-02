@@ -8,5 +8,5 @@ abstract final class AppAssets {
   static const onboarding1 = '$_images/onboarding1.png';
   static const onboarding2 = '$_images/onboarding2.png';
   static const onboarding3 = '$_images/onboarding3.png';
-  static const roleHero = '$_images/role_hero.png';
+  static const roleHero = '$_images/Satr_logo.png';
 }

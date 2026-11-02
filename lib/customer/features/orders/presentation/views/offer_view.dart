@@ -36,7 +36,6 @@ class OfferView extends GetView<OfferController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Timer Banner
               Container(
                 padding: const EdgeInsets.all(AppSizes.md),
                 decoration: BoxDecoration(
@@ -58,12 +57,9 @@ class OfferView extends GetView<OfferController> {
                 ),
               ),
               const SizedBox(height: AppSizes.lg),
-
               Text('راجع السعر والبدائل', style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700, color: AppColors.primary)),
               Text('المكتبة راجعت طلبك ووجدت العرض التالي:', style: textTheme.bodySmall?.copyWith(color: AppColors.textSecondary)),
               const SizedBox(height: AppSizes.md),
-
-              // Offer Item 1
               Container(
                 padding: const EdgeInsets.all(AppSizes.md),
                 decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(AppSizes.radiusMd), border: Border.all(color: AppColors.border)),
@@ -79,27 +75,6 @@ class OfferView extends GetView<OfferController> {
                     ),
                     const SizedBox(height: 4),
                     Text('45 صفحة • وجهان • ملون', style: textTheme.bodySmall?.copyWith(color: AppColors.textSecondary)),
-                  ],
-                ),
-              ),
-              const SizedBox(height: AppSizes.md),
-
-              // Offer Item 2 (Alternative)
-              Container(
-                padding: const EdgeInsets.all(AppSizes.md),
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(AppSizes.radiusMd), border: Border.all(color: AppColors.border)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('دفتر الغلاف التجاري غير متوفر', style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700, color: AppColors.primary)),
-                        Checkbox(value: true, onChanged: (_) {}, activeColor: AppColors.primary),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text('البديل المقترح: غلاف مقوى فاخر بنفس السعر', style: textTheme.bodySmall?.copyWith(color: AppColors.secondary, fontWeight: FontWeight.w600)),
                   ],
                 ),
               ),

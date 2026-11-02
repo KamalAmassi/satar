@@ -29,6 +29,9 @@ abstract final class CustomerRoutes {
   static const addressForm = '/customer/address-form';
   static const priceReview = '/customer/price-review';
   static const payment = '/customer/payment';
+  static const paymentCorrection = '/customer/payment-correction';
+  static const paymentReview = '/customer/payment-review';
+  static const paymentApproved = '/customer/payment-approved';
   static const offer = '/customer/offer';
   static const orderDetails = '/customer/order-details';
   static const orders = '/customer/orders';
@@ -52,7 +55,7 @@ abstract final class CustomerRoutes {
   static const all = [
     languageOnboarding, login, otp, completeProfile, success, home, categories, products, productDetails,
     search, searchResults, aiAssistant, aiProposal, printing, uploadFiles, printSpecs, printPreview, cart, addresses,
-    addressForm, priceReview, payment, offer, orderDetails, orders,
+    addressForm, priceReview, payment, paymentCorrection, paymentReview, paymentApproved, offer, orderDetails, orders,
     liveTracking, cancelOrder, rating, shareTracking, publicTracking,
     notifications, receipt, activityLog, deliveryFailure, paymentStatus,
     assigningDriver, driverUnavailable, ratingError, shareLinkReady, shareStopped,

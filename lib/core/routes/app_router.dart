@@ -23,6 +23,9 @@ import 'package:project/customer/features/cart/presentation/views/cart_view.dart
 import 'package:project/customer/features/addresses/presentation/views/addresses_view.dart';
 import 'package:project/customer/features/orders/presentation/views/offer_view.dart';
 import 'package:project/customer/features/checkout/presentation/views/payment_view.dart';
+import 'package:project/customer/features/checkout/presentation/views/payment_correction_view.dart';
+import 'package:project/customer/features/checkout/presentation/views/payment_review_view.dart';
+import 'package:project/customer/features/checkout/presentation/views/payment_approved_view.dart';
 import 'package:project/customer/features/orders/presentation/views/orders_view.dart';
 import 'package:project/customer/features/orders/presentation/views/order_details_view.dart';
 import 'package:project/customer/features/tracking/presentation/views/live_tracking_view.dart';
@@ -65,6 +68,9 @@ abstract final class AppRouter {
     GetPage(name: CustomerRoutes.addresses, page: () => const AddressesView(), transition: _transition),
     GetPage(name: CustomerRoutes.offer, page: () => const OfferView(), transition: _transition),
     GetPage(name: CustomerRoutes.payment, page: () => const PaymentView(), transition: _transition),
+    GetPage(name: CustomerRoutes.paymentCorrection, page: () => const PaymentCorrectionView(), transition: _transition),
+    GetPage(name: CustomerRoutes.paymentReview, page: () => const PaymentReviewView(), transition: _transition),
+    GetPage(name: CustomerRoutes.paymentApproved, page: () => const PaymentApprovedView(), transition: _transition),
     GetPage(name: CustomerRoutes.orders, page: () => const OrdersView(), transition: _transition),
     GetPage(name: CustomerRoutes.orderDetails, page: () => const OrderDetailsView(), transition: _transition),
     GetPage(name: CustomerRoutes.liveTracking, page: () => const LiveTrackingView(), transition: _transition),
@@ -100,6 +106,9 @@ abstract final class AppRouter {
           CustomerRoutes.addresses,
           CustomerRoutes.offer,
           CustomerRoutes.payment,
+          CustomerRoutes.paymentCorrection,
+          CustomerRoutes.paymentReview,
+          CustomerRoutes.paymentApproved,
           CustomerRoutes.orders,
           CustomerRoutes.orderDetails,
           CustomerRoutes.liveTracking,

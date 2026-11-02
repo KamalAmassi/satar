@@ -1,0 +1,12 @@
+{
+  "SATR_PROJECT_KEY": "pk_test_REPLACE_ME",
+  "SATR_BASE_URL": "https://masar.toldpath.com",
+  "SATR_DEV_MEMBER": "your-dev-handle",
+  "SATR_LOCALE": "ar",
+  "GEMINI_API_KEY": "",
+  "SATR_PICKUP_LAT": "31.90",
+  "SATR_PICKUP_LNG": "35.20",
+  "SATR_PICKUP_LABEL": "المكتبة",
+  "SATR_PICKUP_DETAILS": "",
+  "SATR_DEFAULT_COUNTRY_CODE": ""
+}

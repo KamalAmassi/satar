@@ -12,14 +12,21 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl:
-  dio:
+  dio: ^5.11.1
   dartz:
   shared_preferences:
   lucide_icons_flutter: ^1.0.3
   get: ^4.6.6
   equatable:
-
+  country_code_picker: ^3.0.0
   cupertino_icons: ^1.0.8
+  get_storage: ^2.1.1
+  geolocator: ^13.0.0
+  image_picker: ^1.1.0
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  url_launcher: ^6.3.0
+  google_maps_flutter: ^2.19.0
 
 dev_dependencies:
   flutter_test:

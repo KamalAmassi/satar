@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:project/app/bindings/initial_binding.dart';
 import 'package:project/core/l10n/app_localizations.dart';
 import 'package:project/core/routes/app_router.dart';
 import 'package:project/core/theme/app_theme.dart';
@@ -9,6 +11,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   Get.put<SharedPreferences>(prefs, permanent: true);
+  await GetStorage.init();
   runApp(const SatrApp());
 }
 
@@ -29,6 +32,7 @@ class SatrApp extends StatelessWidget {
       initialRoute: AppRouter.initial,
       getPages: AppRouter.pages,
       unknownRoute: AppRouter.unknown,
+      initialBinding: InitialBinding(),
     );
   }
 }

@@ -33,7 +33,7 @@ class OnboardingView extends GetView<OnboardingController> {
                 vertical: AppSizes.sm,
               ),
               child: Obx(
-                    () => Row(
+                () => Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
@@ -75,7 +75,7 @@ class OnboardingView extends GetView<OnboardingController> {
                 AppSizes.xl,
               ),
               child: Obx(
-                    () => Column(
+                () => Column(
                   children: [
                     PageIndicator(
                       count: OnboardingController.pageCount,

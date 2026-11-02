@@ -3,42 +3,67 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:project/core/errors/failure.dart';
+import 'package:project/core/network/api_exception.dart';
 
-/// يحوّل أخطاء Dio إلى Failure. يُستخدم في RepositoryImpl فقط.
+/// يحوّل أخطاء طبقة الشبكة إلى Failure حتى لا تتعامل بقية الطبقات مع Dio.
 abstract final class ErrorHandler {
-  /// غلاف جاهز: يُنفّذ العملية ويعيد Either.
   static Future<Either<Failure, T>> guard<T>(
-      Future<T> Function() action,
-      ) async {
+    Future<T> Function() action,
+  ) async {
     try {
       return Right(await action());
-    } on DioException catch (e) {
-      return Left(fromDio(e));
-    } on Failure catch (f) {
-      return Left(f);
+    } on ApiException catch (error) {
+      return Left(fromApiException(error));
+    } on DioException catch (error) {
+      return Left(fromDio(error));
+    } on Failure catch (failure) {
+      return Left(failure);
     } catch (_) {
-      return const Left(UnknownFailure());
+      return const Left(UnknownFailure(message: 'حدث خطأ غير متوقع.'));
     }
   }
 
-  static Failure fromDio(DioException e) {
-    switch (e.type) {
+  static Failure fromApiException(ApiException error) {
+    if (error.statusCode == 401) {
+      return UnauthorizedFailure(message: error.message);
+    }
+
+    if (error.statusCode == 422) {
+      return ValidationFailure(
+        message: error.message,
+        fieldErrors: _parseFields(error.fields),
+      );
+    }
+
+    if (error.statusCode == null) {
+      return UnknownFailure(message: error.message);
+    }
+
+    return ServerFailure(
+      message: error.message,
+      code: error.code,
+      statusCode: error.statusCode,
+      requestId: error.requestId,
+      details: error.fields,
+    );
+  }
+
+  static Failure fromDio(DioException error) {
+    switch (error.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return const TimeoutFailure();
+      case DioExceptionType.transformTimeout:
+        return const TimeoutFailure(message: 'انتهت مهلة الاتصال. حاول مرة أخرى.');
       case DioExceptionType.connectionError:
-        return const NetworkFailure();
+        return const NetworkFailure(message: 'تعذر الاتصال بالخادم. تحقق من الإنترنت.');
       case DioExceptionType.badResponse:
-        return _fromResponse(e.response);
+        return _fromResponse(error.response);
       case DioExceptionType.cancel:
       case DioExceptionType.badCertificate:
       case DioExceptionType.unknown:
-        if (e.error is SocketException) return const NetworkFailure();
+        if (error.error is SocketException) return const NetworkFailure();
         return const UnknownFailure();
-      case DioExceptionType.transformTimeout:
-        // TODO: Handle this case.
-        throw UnimplementedError();
     }
   }
 
@@ -52,11 +77,11 @@ abstract final class ErrorHandler {
     Map<String, dynamic>? details;
 
     if (data is Map) {
-      message = data['message'] as String?;
-      requestId = data['request_id'] as String?;
+      message = data['message']?.toString();
+      requestId = data['request_id']?.toString();
       final error = data['error'];
       if (error is Map) {
-        code = error['code'] as String?;
+        code = error['code']?.toString();
         if (error['details'] is Map) {
           details = Map<String, dynamic>.from(error['details'] as Map);
         }

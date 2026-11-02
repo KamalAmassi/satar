@@ -40,20 +40,31 @@ abstract final class CustomerRoutes {
 /// تطبيق السائق
 abstract final class DriverRoutes {
   static const login = '/driver/login';
+
+  /// الـ shell (4 تابات: الرئيسية / المتاح / المهمة / حسابي).
+  /// للانتقال لتاب: Get.offAllNamed(home, arguments: {'tab': 2})
   static const home = '/driver/home';
+
   static const availableOrders = '/driver/available-orders';
   static const orderDetails = '/driver/order-details';
+  static const taskDetails = '/driver/task-details';
   static const currentTask = '/driver/current-task';
+  static const pickupConfirmation = '/driver/pickup-confirmation';
   static const mapNavigation = '/driver/map';
   static const deliveryConfirmation = '/driver/delivery-confirmation';
+  static const deliverySuccess = '/driver/delivery-success';
   static const deliveryFailure = '/driver/delivery-failure';
+  static const failureRecorded = '/driver/failure-recorded';
   static const tasksHistory = '/driver/tasks-history';
   static const earningsCash = '/driver/earnings-cash';
   static const notifications = '/driver/notifications';
+  static const profile = '/driver/profile';
+  static const locationRequired = '/driver/location-required';
 
   static const all = [
-    login, home, availableOrders, orderDetails, currentTask, mapNavigation,
-    deliveryConfirmation, deliveryFailure, tasksHistory, earningsCash,
-    notifications,
+    login, home, availableOrders, orderDetails, taskDetails, currentTask,
+    pickupConfirmation, mapNavigation, deliveryConfirmation, deliverySuccess,
+    deliveryFailure, failureRecorded, tasksHistory, earningsCash,
+    notifications, profile, locationRequired,
   ];
 }

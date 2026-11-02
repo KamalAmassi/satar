@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:project/core/errors/api_error_codes.dart';
-import 'package:equatable/equatable.dart';
 
 /// الفشل الموحّد الذي تعيده طبقة data. الـ presentation لا تعرف Dio ولا JSON.
 abstract class Failure extends Equatable {

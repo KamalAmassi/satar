@@ -30,6 +30,10 @@ class RemoteConfig extends Equatable {
     this.zones = const [],
     this.polling = const {},
     this.statusLabels = const {},
+    this.maintenance = false,
+    this.maintenanceNotice,
+    this.minVersionCode = 0,
+    this.storeUrl,
   });
 
   final String? supportPhone;
@@ -50,6 +54,12 @@ class RemoteConfig extends Equatable {
   final List<List<({double lat, double lng})>> zones;
   final Map<String, dynamic> polling;
   final Map<String, String> statusLabels;
+
+  /// وضع الصيانة وتحديث التطبيق الإجباري (افتراضيًا معطّلان إن لم يُرسلهما الخادم).
+  final bool maintenance;
+  final String? maintenanceNotice;
+  final int minVersionCode;
+  final String? storeUrl;
 
   bool hasModule(String key) => modules.isEmpty || modules.contains(key);
 
@@ -77,7 +87,12 @@ class RemoteConfig extends Equatable {
     final catalogCart = _map(_map(modules['catalog'])['cart']);
     final project = _map(json['project']);
     final driver = _map(json['driver']);
+    final maint = json['maintenance'];
     return RemoteConfig(
+      maintenance: maint is bool ? maint : (maint is Map ? maint['enabled'] == true : false),
+      maintenanceNotice: maint is Map ? maint['message'] as String? : json['maintenance_notice'] as String?,
+      minVersionCode: (json['min_version_code'] as num?)?.toInt() ?? 0,
+      storeUrl: json['store_url'] as String?,
       supportPhone: project['support_phone'] as String?,
       termsUrl: json['terms_url'] as String?,
       minAppVersion: json['min_app_version'] as String?,

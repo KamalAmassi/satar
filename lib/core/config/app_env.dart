@@ -21,6 +21,8 @@ abstract final class AppEnv {
   /// نسخة التطبيق المرسلة في X-App-Version (يقارنها الخادم بـ min_app_version).
   static const String appVersion = String.fromEnvironment('SATR_APP_VERSION', defaultValue: '1.0.0');
 
+  static const int versionCode = int.fromEnvironment('SATR_APP_VERSION_CODE', defaultValue: 1);
+
   static bool get hasProjectKey => projectKey.isNotEmpty;
 
   /// مفاتيح pk_test_ و pk_preview_ تعمل على بيئة التجربة فقط.

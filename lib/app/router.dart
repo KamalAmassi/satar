@@ -11,6 +11,7 @@ import 'package:project/customer/features/cart/presentation/cart_page.dart';
 import 'package:project/customer/features/catalog/presentation/catalog_page.dart';
 import 'package:project/customer/features/checkout/presentation/checkout_page.dart';
 import 'package:project/customer/features/entry/presentation/entry_page.dart';
+import 'package:project/customer/features/entry/presentation/session_expired_page.dart';
 import 'package:project/customer/features/orders/presentation/orders_page.dart';
 import 'package:project/customer/features/orders/presentation/rate_page.dart';
 import 'package:project/customer/features/orders/presentation/receipt_page.dart';

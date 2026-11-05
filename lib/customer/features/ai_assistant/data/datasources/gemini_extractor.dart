@@ -16,7 +16,6 @@ abstract class GeminiExtractor {
 class GeminiRestExtractor implements GeminiExtractor {
   GeminiRestExtractor(this._dio);
 
-  /// Dio منفصل عن الـ Dio الخاص بالسيرفر (لا نرسل X-Project-Key لـ Google).
   final Dio _dio;
 
   static const _systemPrompt = r'''

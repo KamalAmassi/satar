@@ -979,4 +979,474 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get offerRejectedBody =>
       'أُلغي الطلب. للاستفسار عن أي مبلغ مدفوع تواصل مع المكتبة.';
+
+  @override
+  String get vibrationSettingTitle => 'الاهتزاز';
+
+  @override
+  String get vibrationSettingSub => 'اهتزاز خفيف عند اللمس وتأكيد الإجراءات';
+
+  @override
+  String get stepperIncrease => 'زيادة الكمية';
+
+  @override
+  String get stepperDecrease => 'إنقاص الكمية';
+
+  @override
+  String voiceRecordingPill(String time) {
+    return 'يسجّل · $time';
+  }
+
+  @override
+  String voiceRecordingSemantics(String time) {
+    return 'جارٍ التسجيل، مضى $time. نحن نستمع إليك.';
+  }
+
+  @override
+  String productImageSemantics(String name) {
+    return 'صورة $name';
+  }
+
+  @override
+  String get productImageOpen => 'فتح صورة المنتج بملء الشاشة';
+
+  @override
+  String get imageViewerClose => 'إغلاق';
+
+  @override
+  String imageViewerPage(int current, int total) {
+    return 'الصورة $current من $total';
+  }
+
+  @override
+  String get celebrationOrderPlaced => 'تم بنجاح! أُرسل طلبك إلى المكتبة.';
+
+  @override
+  String get celebrationDelivered => 'تم التسليم بنجاح. أحسنت!';
+
+  @override
+  String get celebrationOrderDelivered => 'تم تسليم طلبك.';
+
+  @override
+  String get driverLocationLive => 'موقع السائق مباشر';
+
+  @override
+  String driverLocationStale(int minutes) {
+    return 'آخر موقع للسائق قبل $minutes دقيقة. قد يكون في منطقة ضعيفة التغطية.';
+  }
+
+  @override
+  String get driverLocationNone => 'بانتظار أول موقع للسائق.';
+
+  @override
+  String driverEtaShort(int minutes) {
+    return 'نحو $minutes دقيقة';
+  }
+
+  @override
+  String get driverMarkerSemantics => 'موقع السائق على الخريطة';
+
+  @override
+  String get driverOrderUnavailableTitle => 'هذا الطلب لم يعد متاحًا';
+
+  @override
+  String get driverOrderUnavailableText =>
+      'ربما أُلغي أو تغيّر. سنعرض لك طلبات أخرى قريبة.';
+
+  @override
+  String get driverAvailableOrders => 'الطلبات المتاحة';
+
+  @override
+  String get driverAcceptOfflineTitle => 'أنت غير متصل';
+
+  @override
+  String get driverAcceptOfflineText => 'فعّل الاتصال لتتمكن من قبول الطلبات.';
+
+  @override
+  String get driverGoOnline => 'اتصل الآن';
+
+  @override
+  String get driverAcceptInvalidTitle => 'لا يمكن قبول هذا الطلب الآن';
+
+  @override
+  String get driverAcceptInvalidText =>
+      'قد تكون لديك مهمة جارية، أو تغيّرت حالة الطلب.';
+
+  @override
+  String get driverSessionExpiredTitle => 'انتهت جلستك';
+
+  @override
+  String get driverSessionExpiredText => 'سجّل الدخول من جديد للمتابعة.';
+
+  @override
+  String get driverSignIn => 'تسجيل الدخول';
+
+  @override
+  String get driverNetworkTitle => 'تعذّر الاتصال';
+
+  @override
+  String get commonRetry => 'أعد المحاولة';
+
+  @override
+  String get commonOk => 'حسنًا';
+
+  @override
+  String get commonClose => 'إغلاق';
+
+  @override
+  String get otpTitle => 'تأكيد رقمك';
+
+  @override
+  String get otpHeadline => 'أدخل رمز التحقق';
+
+  @override
+  String otpSubtitle(String phone) {
+    return 'أرسلنا رمزًا برسالة نصية إلى $phone.';
+  }
+
+  @override
+  String otpCodeSemantics(int length) {
+    return 'رمز التحقق، $length أرقام';
+  }
+
+  @override
+  String get otpVerify => 'تأكيد';
+
+  @override
+  String get otpResend => 'إعادة إرسال الرمز';
+
+  @override
+  String otpResendIn(int seconds) {
+    return 'إعادة الإرسال بعد $seconds ث';
+  }
+
+  @override
+  String get otpChangeNumber => 'تغيير الرقم';
+
+  @override
+  String get otpResent => 'أُرسل رمز جديد.';
+
+  @override
+  String get otpErrInvalid => 'الرمز غير صحيح. تحقق منه وحاول مجددًا.';
+
+  @override
+  String get otpErrExpired => 'انتهت صلاحية الرمز. اطلب رمزًا جديدًا.';
+
+  @override
+  String get otpErrTooMany => 'محاولات كثيرة. انتظر قليلًا ثم حاول.';
+
+  @override
+  String get otpErrPhone => 'لا يمكن إرسال رمز إلى هذا الرقم.';
+
+  @override
+  String get otpErrNetwork => 'تعذّر الاتصال. تحقق من الإنترنت وحاول مجددًا.';
+
+  @override
+  String get otpErrUnavailable => 'التحقق غير متاح الآن. حاول لاحقًا.';
+
+  @override
+  String get otpDevMockNotice =>
+      'للمطورين فقط: مفاتيح Twilio ناقصة، لذا يُستخدم الرمز التجريبي 1234.';
+
+  @override
+  String get driverOtpTitle => 'تأكيد هويتك';
+
+  @override
+  String get driverLoginBrand => 'سطر | السائق';
+
+  @override
+  String get driverLoginHeadline => 'مرحباً بعودتك';
+
+  @override
+  String get driverLoginSubtitle => 'سجّل الدخول لتبدأ باستلام مهام التوصيل.';
+
+  @override
+  String get driverLoginPhone => 'رقم الجوال';
+
+  @override
+  String get driverLoginPassword => 'كلمة المرور';
+
+  @override
+  String get driverLoginPhoneInvalid => 'أدخل رقم جوال صحيحًا، مثل 0599123456.';
+
+  @override
+  String get driverLoginPasswordRequired => 'أدخل كلمة المرور.';
+
+  @override
+  String get driverLoginBadCredentials =>
+      'رقم الجوال أو كلمة المرور غير صحيحة.';
+
+  @override
+  String get driverLoginSubmit => 'دخول';
+
+  @override
+  String get driverLoginShowPassword => 'إظهار كلمة المرور';
+
+  @override
+  String get driverLoginHidePassword => 'إخفاء كلمة المرور';
+
+  @override
+  String get driverLoginForgot => 'نسيت كلمة المرور؟';
+
+  @override
+  String get driverLoginForgotText => 'تواصل مع مشغّل سطر ليعيد ضبطها.';
+
+  @override
+  String get driverLoginSupport => 'التواصل مع الدعم';
+
+  @override
+  String get driverLoginSupportText => 'تواصل مع مشغّل سطر للمساعدة في حسابك.';
+
+  @override
+  String driverLoginVersion(String version) {
+    return 'الإصدار $version';
+  }
+
+  @override
+  String get driverDeliverCta => 'تسليم الطلب';
+
+  @override
+  String get driverFailDeliveryCta => 'تعذّر التسليم';
+
+  @override
+  String get driverDeliverTitle => 'تأكيد التسليم';
+
+  @override
+  String get driverDeliverHint => 'اطلب من الزبون كود التسليم الظاهر في تطبيقه';
+
+  @override
+  String get driverDeliverConfirm => 'تأكيد التسليم';
+
+  @override
+  String get driverDeliverPaste => 'لصق الكود';
+
+  @override
+  String get driverDeliverCollect => 'حصّل من الزبون';
+
+  @override
+  String get driverDeliverErrWrong =>
+      'كود التسليم غير صحيح. تأكد منه مع الزبون وأعد المحاولة.';
+
+  @override
+  String get driverDeliverErrTooMany =>
+      'محاولات كثيرة. انتظر قليلًا ثم أعد المحاولة.';
+
+  @override
+  String get driverDeliverErrState =>
+      'لم يعد هذا الطلب قابلًا للتسليم. حدّث المهمة.';
+
+  @override
+  String get driverDeliverErrNetwork =>
+      'تعذّر الاتصال. تحقق من الإنترنت وأعد المحاولة.';
+
+  @override
+  String get driverDeliverErrSession => 'انتهت جلستك. سجّل الدخول من جديد.';
+
+  @override
+  String get driverDeliverRefresh => 'حدّث المهمة';
+
+  @override
+  String get orderDeliveryCodeTitle => 'كود التسليم';
+
+  @override
+  String get orderDeliveryCodeCaption =>
+      'أعطِ هذا الكود للسائق عند الاستلام فقط';
+
+  @override
+  String get driverSettingsTitle => 'الإعدادات';
+
+  @override
+  String get driverSettingsOnline => 'متصل';
+
+  @override
+  String get driverSettingsOffline => 'غير متصل';
+
+  @override
+  String driverSettingsRatingCount(String rating, int count) {
+    return '$rating · $count تقييمًا';
+  }
+
+  @override
+  String get driverSettingsMyData => 'بياناتي';
+
+  @override
+  String get driverSettingsName => 'الاسم';
+
+  @override
+  String get driverSettingsPhone => 'رقم الجوال';
+
+  @override
+  String get driverSettingsVehicle => 'المركبة';
+
+  @override
+  String get driverSettingsZone => 'المنطقة';
+
+  @override
+  String get driverSettingsCash => 'النقد معك';
+
+  @override
+  String get driverSettingsCashNearLimit =>
+      'اقتربت من الحد الأقصى للنقد. سلّم النقد قريبًا.';
+
+  @override
+  String get driverSettingsLanguage => 'اللغة';
+
+  @override
+  String get driverSettingsLoadErrorTitle => 'تعذّر تحميل بياناتك';
+
+  @override
+  String get driverSettingsLoadErrorText => 'تحقق من الاتصال ثم أعد المحاولة.';
+
+  @override
+  String get driverSettingsRetry => 'أعد المحاولة';
+
+  @override
+  String get driverSettingsNotifications => 'الإشعارات';
+
+  @override
+  String get driverSettingsNotifHistory => 'سجل الإشعارات';
+
+  @override
+  String get driverSettingsLogout => 'تسجيل الخروج';
+
+  @override
+  String get driverSettingsLogoutSub => 'ستصبح غير متصل';
+
+  @override
+  String get driverSettingsLogoutTitle => 'تسجيل الخروج؟';
+
+  @override
+  String get driverSettingsLogoutText => 'سيصبح حسابك غير متصل ولن تصلك طلبات.';
+
+  @override
+  String get driverSettingsCancel => 'إلغاء';
+
+  @override
+  String get vehicleMotorcycle => 'دراجة نارية';
+
+  @override
+  String get vehicleCar => 'سيارة';
+
+  @override
+  String get vehicleBicycle => 'دراجة هوائية';
+
+  @override
+  String get vehicleVan => 'فان';
+
+  @override
+  String get vehicleTukTuk => 'توك توك';
+
+  @override
+  String get vehicleOnFoot => 'مشيًا';
+
+  @override
+  String get pushToggleTitle => 'تفعيل الإشعارات';
+
+  @override
+  String get pushToggleSub => 'تنبيهات الطلبات والتحديثات من سطر';
+
+  @override
+  String get pushUnsupported => 'غير متاحة على هذا الجهاز';
+
+  @override
+  String get pushDenied => 'الإشعارات مرفوضة من إعدادات النظام';
+
+  @override
+  String get pushOpenSystem => 'فتح إعدادات النظام';
+
+  @override
+  String get pushToggleError => 'تعذّر تحديث إعداد الإشعارات';
+
+  @override
+  String get pushRetry => 'أعد المحاولة';
+
+  @override
+  String get notificationsTitle => 'الإشعارات';
+
+  @override
+  String get notificationsReadAll => 'قراءة الكل';
+
+  @override
+  String cartBadgeLabel(int count) {
+    return 'السلة، $count عناصر';
+  }
+
+  @override
+  String get voiceModeTitle => 'الوضع الصوتي التفاعلي';
+
+  @override
+  String get voiceModeTooltip => 'الوضع الصوتي';
+
+  @override
+  String get listeningState => 'أنصت إليك...';
+
+  @override
+  String get thinkingState => 'يفكر في إجابتك...';
+
+  @override
+  String get speakingState => 'يتحدث الآن...';
+
+  @override
+  String get finishVoiceSession => 'إنهاء المحادثة والمراجعة';
+
+  @override
+  String get voiceConfirmAdd => 'تأكيد وإضافة للسلة';
+
+  @override
+  String get voiceContinue => 'متابعة المحادثة';
+
+  @override
+  String get voiceTapToResume => 'اضغط للمتابعة';
+
+  @override
+  String get voiceMicDenied => 'نحتاج إذن الميكروفون لنتحدث معك.';
+
+  @override
+  String get voiceOpenSettings => 'فتح الإعدادات';
+
+  @override
+  String get voiceUnsupported => 'الوضع الصوتي غير متاح على هذا الجهاز';
+
+  @override
+  String get voiceArabicVoiceMissing =>
+      'لم نجد صوتًا عربيًا على جهازك. ثبّته من إعدادات النظام ثم أعد المحاولة.';
+
+  @override
+  String get voiceQuotaMessage => 'المساعد مشغول حاليًا، جرّب بعد قليل.';
+
+  @override
+  String get voiceNetworkMessage =>
+      'تعذّر الاتصال، تأكد من الإنترنت وجرّب مرة ثانية.';
+
+  @override
+  String get voiceNoItems => 'ما في أصناف للمراجعة بعد.';
+
+  @override
+  String get voiceGreeting => 'أهلًا، أنا قلم. شو بدك اليوم؟';
+
+  @override
+  String get voiceBackToText => 'العودة للمساعد النصي';
+
+  @override
+  String get voiceSummaryTitle => 'مراجعة الأصناف';
+
+  @override
+  String get voiceTotal => 'المجموع';
+
+  @override
+  String get voiceInStock => 'متوفر';
+
+  @override
+  String get voiceOutOfStock => 'غير متوفر';
+
+  @override
+  String get voiceCloseLabel => 'إغلاق';
+
+  @override
+  String get voiceAddedToCart => 'أُضيفت الأصناف إلى السلة';
+
+  @override
+  String voiceProposedCount(int count) {
+    return '$count أصناف مقترحة';
+  }
 }

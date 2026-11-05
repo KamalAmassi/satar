@@ -2,16 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:project/core/design/widgets.dart';
-import 'package:project/features/account/account.dart';
-import 'package:project/features/assistant/assistant.dart';
-import 'package:project/features/cart/cart.dart';
-import 'package:project/features/catalog/catalog.dart';
-import 'package:project/features/checkout/checkout.dart';
-import 'package:project/features/driver/driver.dart';
-import 'package:project/features/entry/entry.dart';
-import 'package:project/features/orders/orders.dart';
-import 'package:project/features/payment/payment.dart';
-import 'package:project/features/printing/printing.dart';
+import 'package:project/core/otp/presentation/otp_verification_view.dart';
+import 'package:project/customer/features/account/presentation/account_page.dart';
+import 'package:project/customer/features/ai_assistant/presentation/assistant_page.dart';
+import 'package:project/customer/features/ai_assistant/presentation/bindings/voice_binding.dart';
+import 'package:project/customer/features/ai_assistant/presentation/views/voice_page.dart';
+import 'package:project/customer/features/cart/presentation/cart_page.dart';
+import 'package:project/customer/features/catalog/presentation/catalog_page.dart';
+import 'package:project/customer/features/checkout/presentation/checkout_page.dart';
+import 'package:project/customer/features/entry/presentation/entry_page.dart';
+import 'package:project/customer/features/orders/presentation/orders_page.dart';
+import 'package:project/customer/features/payment/presentation/payment_page.dart';
+import 'package:project/customer/features/printing/presentation/printing_page.dart';
+import 'package:project/driver/features/auth/presentation/driver_login_page.dart';
+import 'package:project/driver/features/auth/presentation/driver_settings_page.dart';
+import 'package:project/driver/features/orders/presentation/driver_page.dart';
 
 GetPage<dynamic> _p(String name, Widget Function() page) => GetPage(name: name, page: page);
 
@@ -24,6 +29,7 @@ abstract final class AppRouter {
     _p('/onboarding', () => const OnboardingScreen()),
     _p('/auth/phone', () => const PhoneScreen()),
     _p('/auth/otp', () => const OtpScreen()),
+    _p('/otp', () => const OtpVerificationView()),
     _p('/auth/welcome', () => const WelcomeNameScreen()),
     // استكشاف
     _p('/home', () => const HomeScreen()),
@@ -34,6 +40,7 @@ abstract final class AppRouter {
     // سلة ومساعد
     _p('/cart', () => const CartScreen()),
     _p('/assistant', () => const AssistantScreen()),
+    GetPage<dynamic>(name: '/customer/ai-voice', page: () => const VoicePage(), binding: VoiceBinding()),
     // طباعة
     _p('/print', () => const PrintLandingScreen()),
     _p('/print/upload', () => const PrintUploadScreen()),

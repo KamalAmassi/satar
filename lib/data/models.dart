@@ -15,13 +15,15 @@ DateTime? jd(Object? v) => v == null ? null : DateTime.tryParse('$v')?.toLocal()
 double? jn(Object? v) => v is num ? v.toDouble() : double.tryParse('$v');
 
 class UserModel {
-  const UserModel({required this.id, this.name, required this.phone, this.avatarUrl, this.locale = 'ar'});
+  const UserModel({required this.id, this.name, required this.phone, this.avatarUrl, this.locale = 'ar', this.hasFcmToken});
+  final bool? hasFcmToken;
   final int id;
   final String? name;
   final String phone;
   final String? avatarUrl;
   final String locale;
   factory UserModel.fromJson(Map<String, dynamic> j) => UserModel(
+      hasFcmToken: j['has_fcm_token'] as bool?,
       id: j['id'] as int,
       name: j['name'] as String?,
       phone: j['phone'] as String? ?? '',
@@ -605,11 +607,14 @@ class CancelReason {
 // ------------------------------------------------------------------- driver
 
 class DriverModel {
-  const DriverModel({required this.id, required this.name, required this.phone, this.vehicleType = 'motorcycle', this.locale = 'ar', this.isOnline = false, this.rating = 0, this.ratingCount = 0, required this.cashOnHand, required this.maxCash, this.avatarUrl});
+  const DriverModel({required this.id, required this.name, required this.phone, this.vehicleType = 'motorcycle', this.locale = 'ar', this.isOnline = false, this.rating = 0, this.ratingCount = 0, required this.cashOnHand, required this.maxCash, this.avatarUrl, this.zoneId, this.zoneName, this.hasFcmToken});
+  final bool? hasFcmToken;
   final int id;
   final String name;
   final String phone;
   final String vehicleType;
+  final int? zoneId;
+  final String? zoneName;
   final String locale;
   final bool isOnline;
   final double rating;
@@ -629,7 +634,10 @@ class DriverModel {
       ratingCount: jm(j['rating'])['count'] as int? ?? 0,
       cashOnHand: Money.fromJson(j['cash_on_hand']),
       maxCash: Money.fromJson(j['max_cash']),
-      avatarUrl: j['avatar_url'] as String?);
+      avatarUrl: j['avatar_url'] as String?,
+      zoneId: j['zone_id'] as int?,
+      hasFcmToken: j['has_fcm_token'] as bool?,
+      zoneName: j['zone'] is Map ? jm(j['zone'])['name'] as String? : null);
 }
 
 class NextActionModel {
@@ -674,6 +682,7 @@ class DriverOrderModel {
     this.customerPhone,
     this.note,
     this.nextAction,
+    this.actions = const [],
     this.vendorName,
     this.createdAt,
     this.failureReason,
@@ -697,6 +706,9 @@ class DriverOrderModel {
   final String? customerPhone;
   final String? note;
   final NextActionModel? nextAction;
+
+  /// كل الإجراءات المتاحة من الخادم (actions[]) — nextAction هو الأساسي منها.
+  final List<NextActionModel> actions;
   final String? vendorName;
   final DateTime? createdAt;
   final String? failureReason;
@@ -706,7 +718,7 @@ class DriverOrderModel {
     final cust = jm(j['customer']);
     final na = j['next_action'];
     return DriverOrderModel(
-      id: j['id'] as int,
+      id: jn(j['id'])?.toInt() ?? 0,
       code: j['code'] as String? ?? '',
       status: StatusModel.fromJson(j['status']),
       isMine: j['is_mine'] as bool? ?? false,
@@ -719,12 +731,13 @@ class DriverOrderModel {
       collect: Money.fromJson(pay['collect']),
       deliveryFee: Money.fromJson(j['delivery_fee']),
       earning: Money.fromJson(j['earning']),
-      itemsCount: j['items_count'] as int?,
-      items: [for (final i in jl(j['items'])) (i['name'] as String? ?? '', i['qty'] as int? ?? 1)],
+      itemsCount: jn(j['items_count'])?.toInt(),
+      items: [for (final i in jl(j['items'])) (i['name'] as String? ?? '', jn(i['qty'])?.toInt() ?? 1)],
       customerName: cust['name'] as String?,
       customerPhone: cust['phone'] as String?,
       note: j['note'] as String?,
       nextAction: na is Map ? NextActionModel.fromJson(Map<String, dynamic>.from(na)) : null,
+      actions: [for (final a in (j['actions'] is List ? j['actions'] as List : const [])) if (a is Map) NextActionModel.fromJson(Map<String, dynamic>.from(a))],
       vendorName: jm(j['vendor'])['name'] as String?,
       createdAt: jd(j['created_at']),
       failureReason: jm(j['fields'])['delivery_failure_reason'] as String?,

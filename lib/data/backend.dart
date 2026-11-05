@@ -57,6 +57,11 @@ class Backend {
         await _d.put<dynamic>(driver ? 'v1/driver/me/fcm-token' : 'v1/me/fcm-token', data: {'token': token});
       });
 
+  /// إلغاء التسجيل غير موثّق — بديل ثانٍ بعد {"token": null}.
+  Future<Either<Failure, void>> deleteFcmToken({bool driver = false}) => _run(() async {
+        await _d.delete<dynamic>(driver ? 'v1/driver/me/fcm-token' : 'v1/me/fcm-token');
+      });
+
   // ---------------------------------------------------------------- addresses
 
   Future<Either<Failure, List<AddressModel>>> addresses() => _run(() async => [for (final a in _list(await _d.get<dynamic>('v1/addresses'))) AddressModel.fromJson(a)]);
@@ -185,7 +190,7 @@ class Backend {
       });
 
   Future<Either<Failure, void>> driverLogout() => _run(() async {
-        await _d.post<dynamic>('v1/driver/auth/logout');
+        await _d.post<dynamic>('v1/driver/auth/logout', data: const <String, dynamic>{});
       });
 
   Future<Either<Failure, DriverModel>> driverMe() => _run(() async => DriverModel.fromJson(ApiClient.unwrapMap(await _d.get<dynamic>('v1/driver/me'))));
@@ -230,10 +235,9 @@ class Backend {
   Future<Either<Failure, List<DriverOrderModel>>> driverHistory({int perPage = 30}) =>
       _run(() async => [for (final o in _list(await _d.get<dynamic>('v1/driver/orders/history', queryParameters: {'per_page': perPage}))) DriverOrderModel.fromJson(o)]);
 
-  Future<Either<Failure, DriverOrderModel>> driverOrder(int id) => _run(() async => DriverOrderModel.fromJson(ApiClient.unwrapMap(await _d.get<dynamic>('v1/driver/orders/$id'))));
 
   Future<Either<Failure, DriverOrderModel>> driverAccept(int id, String key) => _run(() async {
-        final r = await _d.post<dynamic>('v1/driver/orders/$id/accept', options: Options(headers: {'Idempotency-Key': key}));
+        final r = await _d.post<dynamic>('v1/driver/orders/$id/accept', data: const <String, dynamic>{}, options: Options(headers: {'Idempotency-Key': key}));
         return DriverOrderModel.fromJson(ApiClient.unwrapMap(r));
       });
 
@@ -254,7 +258,8 @@ class Backend {
         return DriverOrderModel.fromJson(ApiClient.unwrapMap(r));
       });
 
-  Future<Either<Failure, DriverOrderModel>> driverDeliver(int id, {String? otp, List<int>? uploadIds, String? note, Map<String, dynamic>? fields, required String key}) => _run(() async {
+  /// يعيد null إن نجح الطلب لكن data ليست طلبًا (المستدعي يعيد الجلب).
+  Future<Either<Failure, DriverOrderModel?>> driverDeliver(int id, {String? otp, List<int>? uploadIds, String? note, Map<String, dynamic>? fields, required String key}) => _run(() async {
         final r = await _d.post<dynamic>('v1/driver/orders/$id/deliver',
             data: {
               if (otp != null) 'otp': otp,
@@ -263,7 +268,12 @@ class Backend {
               if (fields != null && fields.isNotEmpty) 'fields': fields,
             },
             options: Options(headers: {'Idempotency-Key': key}));
-        return DriverOrderModel.fromJson(ApiClient.unwrapMap(r));
+        final body = r.data;
+        final data = body is Map ? body['data'] : null;
+        if (data is Map && data['id'] != null) return DriverOrderModel.fromJson(Map<String, dynamic>.from(data));
+        if (data is Map && data['order'] is Map) return DriverOrderModel.fromJson(Map<String, dynamic>.from(data['order'] as Map));
+        if (body is Map && body['success'] == true) return null;
+        throw const UnknownFailure();
       });
 
   Future<Either<Failure, EarningsModel>> driverEarnings(String period) =>

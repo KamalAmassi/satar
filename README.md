@@ -24,6 +24,20 @@ flutter run \
 | `SATR_PICKUP_LAT/LNG/LABEL/DETAILS` | نقطة استلام التسعيرة (قرار مفتوح في التصميم) |
 | `SATR_APP_ID` | معرّف التطبيق لرابط تحديث المتجر |
 
+## إعداد الأسرار محليًا (للفريق)
+
+ملفات الأسرار غير موجودة في المستودع. انسخ ملفات الأمثلة واملأ قيمك الخاصة:
+
+```bash
+cp .env.example .env
+cp config/dev.example.json config/dev.json
+flutter run --dart-define-from-file=config/dev.json
+```
+
+- ضع ملف `android/app/google-services.json` الخاص بمشروع Firebase يدويًا (من مسؤول المشروع).
+- ممنوع رفع `.env` أو `config/dev.json` أو `google-services.json` أو `key.properties` أو `*.jks`؛ كلها مدرجة في `.gitignore`.
+- لا تضع مفاتيح حقيقية داخل ملفات `*.example`؛ استخدم `YOUR_API_KEY_HERE`.
+
 ## البنية
 
 ```

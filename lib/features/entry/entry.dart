@@ -11,6 +11,7 @@ import 'package:project/core/design/tokens.dart';
 import 'package:project/core/design/widgets.dart';
 import 'package:project/core/errors/api_error_codes.dart';
 import 'package:project/core/errors/failure.dart';
+import 'package:project/core/services/push/push_service.dart';
 import 'package:project/core/storage/session_store.dart';
 import 'package:project/customer/features/cart/presentation/bindings/cart_binding.dart';
 import 'package:project/data/backend.dart';
@@ -65,6 +66,7 @@ class SplashController extends GetxController {
       }
       if (session.isSignedIn) {
         Get.offAllNamed(session.isDriver ? '/driver/home' : '/home');
+        PushService.maybe?.handleInitialMessage();
       } else {
         Get.offAllNamed('/role');
       }
@@ -371,6 +373,7 @@ class AuthController extends GetxController {
     }, (auth) async {
       await _session.signIn(token: auth.token, userId: auth.user.id);
       await _session.setRole('customer');
+      PushService.maybe?.onSessionStarted();
       CartBinding.ensureCart().ensureLoaded();
       if (auth.isNewUser || (auth.user.name ?? '').isEmpty) {
         Get.offAllNamed('/auth/welcome');

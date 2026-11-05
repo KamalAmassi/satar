@@ -48,3 +48,11 @@ app.*.map.json
 
 # Local build settings with secrets (see config/dev.example.json)
 /config/dev.json
+google-services.json
+**/google-services.json
+
+# Secrets / signing (never commit)
+key.properties
+*.jks
+*.keystore
+**/GoogleService-Info.plist

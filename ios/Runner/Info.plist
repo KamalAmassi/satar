@@ -51,6 +51,8 @@
 	<string>نستخدم الكاميرا لتصوير إشعار التحويل وإثبات التسليم.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>نستخدم الميكروفون للمساعد الصوتي فقط.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>نستخدم التعرّف على الكلام لفهم طلبك الصوتي في المساعد فقط.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>نحتاج الوصول للصور لاختيار ما تريد طباعته أو رفعه.</string>
 </dict>

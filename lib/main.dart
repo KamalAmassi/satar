@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/app/bindings/app_binding.dart';
@@ -10,12 +12,28 @@ import 'package:project/core/design/icons.dart';
 import 'package:project/core/design/shell.dart';
 import 'package:project/core/design/tokens.dart';
 import 'package:project/core/l10n/app_localizations.dart';
+import 'package:project/core/services/push/push_service.dart';
+import 'package:project/core/utils/haptics.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   Get.put<SharedPreferences>(prefs, permanent: true);
+  Haptics.init(prefs);
+
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    // معالج الخلفية top-level يُسجَّل مرة قبل runApp (أندرويد/iOS فقط).
+    if (pushPlatformSupported) FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  } catch (_) {
+    // تعامل آمن مع المنصات غير المهيأة أو في حالة رمي UnsupportedError
+  }
+  // PushService يُسجَّل في AppBinding ويبدأ بعد تهيئة Firebase.
   runApp(SatrApp(initialLocale: prefs.getString('locale') ?? AppEnv.locale));
 }
 

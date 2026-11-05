@@ -1,6 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:project/core/extensions/context_extensions.dart';
+import 'package:project/core/widgets/driver_status_chip.dart';
+import 'package:project/core/widgets/live_driver_layer.dart';
+import 'package:project/core/widgets/success_badge.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
@@ -14,6 +18,7 @@ import 'package:project/core/design/widgets.dart';
 import 'package:project/core/errors/api_error_codes.dart';
 import 'package:project/core/errors/failure.dart';
 import 'package:project/core/routes/route_args.dart';
+import 'package:project/core/services/push/notification_router.dart';
 import 'package:project/data/models.dart';
 import 'package:project/features/catalog/catalog.dart';
 import 'package:project/features/common.dart';
@@ -371,12 +376,13 @@ class OrderDetailScreen extends StatelessWidget {
           ])),
           if ((o.deliveryCode ?? '').isNotEmpty) ...[
             const SizedBox(height: 16),
-            Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('رمز التسليم · أعطه للسائق عند الاستلام', style: T.cap(c.tx2)), const SizedBox(height: 6), CodeBox(o.deliveryCode!, bg: c.sf, size: 26)])),
+            DeliveryCodePanel(o.deliveryCode!),
           ],
         ]);
       case 'delivered':
         return Card2(color: c.okSoft, child: DefaultTextStyle(style: TextStyle(fontFamily: Fonts.ui, color: c.okInk), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(children: [SIcon('checkC', size: 24, color: c.okInk), const SizedBox(width: 10), Text('تم تسليم طلبك', style: T.h3(c.okInk))]),
+          // نسخة هادئة: علامة فقط، تُرسم مرة واحدة أول مرة يُرى فيها الطلب مُسلَّمًا (محفوظة عبر الجلسات).
+          Row(children: [SuccessBadge(eventKey: 'order-delivered:${o.id}', persist: true, calm: true, size: 28, semanticsLabel: context.l10n.celebrationOrderDelivered), const SizedBox(width: 10), Flexible(child: ExcludeSemantics(child: Text('تم تسليم طلبك', style: T.h3(c.okInk))))]),
           const SizedBox(height: 8),
           if (o.ratingStars == 0 && o.can('rate')) Text('كيف كانت تجربتك مع السائق؟', style: T.sm(c.okInk)) else Text('شكرًا لتقييمك.', style: T.sm(c.okInk)),
           const SizedBox(height: 8),
@@ -557,13 +563,22 @@ class TrackingController extends GetxController {
 
 /// خريطة حقيقية (OSM) بعلامات بتصميم المعتمد: المكتبة، وجهة التسليم، السائق.
 class RouteMap extends StatelessWidget {
-  const RouteMap({super.key, required this.height, this.pickup, this.drop, this.driver, this.tail = const [], this.radius = 0});
+  const RouteMap({super.key, required this.height, this.pickup, this.drop, this.driver, this.tail = const [], this.radius = 0, this.driverHeading, this.driverSeenAt, this.live = true});
   final double height;
   final LatLng? pickup;
   final LatLng? drop;
   final LatLng? driver;
   final List<LatLng> tail;
   final double radius;
+
+  /// اتجاه السائق بالدرجات إن توفر (وإلا يُستنتج من الحركة).
+  final double? driverHeading;
+
+  /// وقت آخر موقع للسائق (للقِدم والتعتيم).
+  final DateTime? driverSeenAt;
+
+  /// false بعد انتهاء الطلب: علامة بلا نبض.
+  final bool live;
   @override
   Widget build(BuildContext context) {
     final c = context.sc;
@@ -579,10 +594,11 @@ class RouteMap extends StatelessWidget {
             TileLayer(urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', userAgentPackageName: 'com.example.project'),
             if (tail.length > 1) PolylineLayer(polylines: [Polyline(points: tail, color: c.pri, strokeWidth: 5)]),
             MarkerLayer(markers: [
-              if (pickup != null) Marker(point: pickup!, width: 26, height: 26, child: Container(decoration: BoxDecoration(color: c.amber, borderRadius: BorderRadius.circular(8)), child: Center(child: SIcon('home', size: 16, color: const Color(0xFF2A1626))))),
+              if (pickup != null) Marker(point: pickup!, width: 26, height: 26, child: Container(decoration: BoxDecoration(color: c.amber, borderRadius: BorderRadius.circular(8)), child: Center(child: SIcon('home', size: 16, color: c.amberInk)))),
               if (drop != null) Marker(point: drop!, width: 40, height: 46, alignment: Alignment.topCenter, child: SIcon('pin', size: 40, color: c.pri)),
-              if (driver != null) Marker(point: driver!, width: 36, height: 36, child: Container(decoration: BoxDecoration(color: c.pri, shape: BoxShape.circle, border: Border.all(color: c.sf, width: 3)), child: Center(child: SIcon('nav', size: 16, color: c.onPri)))),
             ]),
+            // طبقة مستقلة: انزلاق السائق ونبضه لا يعيدان بناء العلامات الأخرى.
+            if (driver != null) LiveDriverLayer(key: const ValueKey('live-driver'), position: driver!, heading: driverHeading, seenAt: driverSeenAt, live: live),
           ],
         ),
       ),
@@ -602,15 +618,15 @@ class TrackingScreen extends StatelessWidget {
       if (d == null) {
         return Page2(top: const TopBar(title: 'تتبّع الطلب'), center: true, body: ctl.loading.value ? const Skel(h: 200, r: 20) : EmptyState(ill: 'route', title: 'التتبع غير متاح الآن', text: ctl.failure.value == null ? 'سيظهر موقع السائق عند بدء التوصيل.' : failureText(ctl.failure.value!), cta: SBtn('أعد المحاولة', full: true, onTap: ctl.poll)));
       }
-      final stale = !d.hasLocation || d.isStale();
       final driverPt = d.hasLocation ? LatLng(d.driverLat!, d.driverLng!) : null;
+      final live = !d.status.isTerminal;
       return Page2(
         top: TopBar(title: 'تتبّع الطلب', right: SIconBtn('share', onTap: o == null ? null : () => shareSheet(context, o))),
         flush: true,
         body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           Stack(children: [
-            RouteMap(height: 360, pickup: d.pickupLat == null ? null : LatLng(d.pickupLat!, d.pickupLng!), drop: d.dropLat == null ? null : LatLng(d.dropLat!, d.dropLng!), driver: driverPt, tail: [for (final p in d.tail) LatLng(p.$1, p.$2)]),
-            Positioned(top: 12, left: 16, right: 16, child: Note('cream', icon: stale ? 'alert' : null, child: stale ? Row(children: [Expanded(child: Text(d.hasLocation ? 'آخر موقع للسائق قبل ${DateTime.now().difference(d.lastSeenAt!).inMinutes} دقائق. قد يكون في منطقة ضعيفة التغطية.' : 'لا يوجد موقع للسائق بعد. سيظهر عند وصول أول تحديث.'))]) : Row(children: [const LiveDot(), const SizedBox(width: 12), const Text('يتحدّث الموقع تلقائيًا كل بضع ثوانٍ')]))),
+            RouteMap(height: 360, pickup: d.pickupLat == null ? null : LatLng(d.pickupLat!, d.pickupLng!), drop: d.dropLat == null ? null : LatLng(d.dropLat!, d.dropLng!), driver: driverPt, driverSeenAt: d.lastSeenAt, live: live, tail: [for (final p in d.tail) LatLng(p.$1, p.$2)]),
+            PositionedDirectional(top: 12, start: 16, end: 16, child: DriverStatusChip(hasLocation: d.hasLocation, seenAt: d.lastSeenAt, etaMinutes: d.etaMinutes, live: live)),
           ]),
           Transform.translate(
             offset: const Offset(0, -20),
@@ -630,7 +646,7 @@ class TrackingScreen extends StatelessWidget {
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('${d.driverName} · ${kVehicleLabels[d.vehicleType] ?? ''}', style: T.h3(c.tx, size: 15.5)), Row(children: [SIcon('star', size: 14, color: c.amber, filled: true), const SizedBox(width: 4), Text('${d.rating.toStringAsFixed(1)} (${d.ratingCount})', style: T.sm(c.tx))])])),
                     SIconBtn('phone', tonal: true, size: 22, onTap: () => callPhone(d.driverPhone)),
                   ])),
-                if ((o?.deliveryCode ?? '').isNotEmpty) ...[const SizedBox(height: 24), Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('رمز التسليم', style: T.cap(c.tx2)), const SizedBox(height: 6), CodeBox(o!.deliveryCode!, bg: c.sf)]))],
+                if ((o?.deliveryCode ?? '').isNotEmpty && !o!.status.isTerminal && !const {'delivered', 'completed', 'cancelled', 'canceled'}.contains(o.status.key)) ...[const SizedBox(height: 24), DeliveryCodePanel(o.deliveryCode!)],
                 const SizedBox(height: 24),
                 Text('الموقع تقريبي ويُحدَّث دوريًا، وليس بثًا لحظيًا.', textAlign: TextAlign.center, style: T.sm(c.tx2)),
               ]),
@@ -872,7 +888,7 @@ class NotificationsScreen extends StatelessWidget {
       return Page2(
         tab: 'home',
         role: driver ? TabRole.driver : TabRole.customer,
-        top: TopBar(title: 'الإشعارات', right: SBtn('قراءة الكل', kind: BtnKind.ghost, size: BtnSize.xs, onTap: ctl.readAll)),
+        top: TopBar(title: context.l10n.notificationsTitle, right: SBtn(context.l10n.notificationsReadAll, kind: BtnKind.ghost, size: BtnSize.xs, onTap: ctl.readAll)),
         onRefresh: ctl.load,
         body: ctl.loading.value
             ? Column(children: [for (var i = 0; i < 4; i++) const Padding(padding: EdgeInsets.symmetric(vertical: 10), child: Row(children: [Skel(w: 44, h: 44, r: 14), SizedBox(width: 14), Expanded(child: Skel(h: 36))]))])
@@ -881,12 +897,36 @@ class NotificationsScreen extends StatelessWidget {
                 : Column(children: [
                     for (var i = 0; i < ctl.list.length; i++)
                       LiTile('bell', ctl.list[i].title, sub: '${ctl.list[i].body}\n${timeLabel(ctl.list[i].createdAt)}', first: i == 0, iconBg: ctl.list[i].unread ? c.plumSoft : c.sf2, end: ctl.list[i].unread ? PinDot(color: c.coral) : const SizedBox.shrink(), onTap: () async {
-                        backend.notificationOpened(ctl.list[i].id, driver: driver);
-                        final oid = ctl.list[i].orderId;
-                        if (oid != null && !driver) Get.toNamed('/order', arguments: {'order_id': oid});
+                        final n = ctl.list[i];
+                        backend.notificationOpened(n.id, driver: driver);
+                        NotificationRouter.route({...n.data, 'event': n.event}, role: driver ? 'driver' : 'customer');
                       }),
                   ]),
       );
     });
+  }
+}
+
+/// كود التسليم للزبون: أرقام كبيرة + نسخ + تنبيه بإعطائه للسائق عند الاستلام فقط.
+class DeliveryCodePanel extends StatelessWidget {
+  const DeliveryCodePanel(this.code, {super.key});
+  final String code;
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sc;
+    final l = context.l10n;
+    return Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      Row(children: [
+        Expanded(child: Text(l.orderDeliveryCodeTitle, style: T.h3(c.tx, size: 15))),
+        SBtn(l.copy, kind: BtnKind.sec, size: BtnSize.xs, icon: 'copy', onTap: () {
+          Clipboard.setData(ClipboardData(text: code));
+          showToast(l.copied, icon: 'copy');
+        }),
+      ]),
+      const SizedBox(height: 8),
+      CodeBox(code, bg: c.sf, size: 34),
+      const SizedBox(height: 8),
+      Text(l.orderDeliveryCodeCaption, style: T.cap(c.tx2)),
+    ]));
   }
 }

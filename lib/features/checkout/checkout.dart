@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:project/core/extensions/context_extensions.dart';
+import 'package:project/core/widgets/success_badge.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -13,6 +15,7 @@ import 'package:project/core/design/tokens.dart';
 import 'package:project/core/design/widgets.dart';
 import 'package:project/core/errors/api_error_codes.dart';
 import 'package:project/core/errors/failure.dart';
+import 'package:project/core/utils/haptics.dart';
 import 'package:project/core/routes/route_nav.dart';
 import 'package:project/customer/features/checkout/domain/entities/checkout_address.dart';
 import 'package:project/customer/features/checkout/domain/entities/checkout_details.dart';
@@ -300,6 +303,8 @@ class _QuoteScreenState extends State<QuoteScreen> {
         leaveFlowTo('/order-placed', kCheckoutFlow);
       } else if (s == SubmitState.uncertain) {
         Get.offNamed('/order-uncertain');
+      } else if (s == SubmitState.rejected) {
+        Haptics.error();
       }
     });
   }
@@ -387,6 +392,7 @@ class _QuoteScreenState extends State<QuoteScreen> {
             q == null ? 'أكّد الطلب' : (ctl.needsPriceAcceptance.value ? 'أوافق على السعر الجديد · ${(q.total.amount / 100).toStringAsFixed(2)} ₪' : 'أكّد الطلب · ${(q.total.amount / 100).toStringAsFixed(2)} ₪'),
             full: true,
             loading: sub,
+            hapticOnPress: false,
             disabled: q == null || (!ctl.needsPriceAcceptance.value && !ctl.canConfirm),
             onTap: () {
               if (ctl.needsPriceAcceptance.value) {
@@ -413,8 +419,9 @@ class OrderPlacedScreen extends StatelessWidget {
     final o = ctl.createdOrder.value;
     return Page2(
       center: true,
+      // الشارة تتولى الاهتزاز والإعلان مرة واحدة لكل طلب (بدل HapticOnMount).
       body: Column(mainAxisSize: MainAxisSize.min, children: [
-        const Ill('done', width: 200),
+        SuccessBadge(eventKey: o == null ? null : 'order-placed:${o.id}', semanticsLabel: context.l10n.celebrationOrderPlaced),
         const SizedBox(height: 24),
         if (o != null) STag(o.code, kind: 'plum'),
         const SizedBox(height: 8),

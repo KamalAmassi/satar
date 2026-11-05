@@ -1,5 +1,9 @@
 import 'dart:async';
 
+import 'package:project/core/animations/fly_to_cart/cart_target.dart';
+import 'package:project/core/animations/fly_to_cart/fly_to_cart.dart';
+import 'package:project/core/animations/fly_to_cart/fly_to_cart_button.dart';
+import 'package:project/core/design/pressable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/core/config/remote_config_repository.dart';
@@ -8,8 +12,12 @@ import 'package:project/core/design/illustrations.dart';
 import 'package:project/core/design/shell.dart';
 import 'package:project/core/design/tokens.dart';
 import 'package:project/core/design/widgets.dart';
+import 'package:project/core/extensions/context_extensions.dart';
+import 'package:project/core/widgets/image_viewer.dart';
+import 'package:project/core/widgets/product_hero.dart';
 import 'package:project/core/errors/failure.dart';
 import 'package:project/core/storage/session_store.dart';
+import 'package:project/core/utils/haptics.dart';
 import 'package:project/customer/features/cart/domain/entities/cart_product_line.dart';
 import 'package:project/data/models.dart';
 import 'package:project/features/common.dart';
@@ -26,28 +34,43 @@ String catIcon(CategoryModel c, int i) {
 }
 
 /// إضافة سريعة للمنتجات بلا خيارات مطلوبة؛ غير ذلك تُفتح صفحة المنتج.
-void quickAdd(ProductModel p) {
+/// مع [context] و[sourceKey]: تطير صورة المنتج إلى أيقونة السلة بعد نجاح الإضافة.
+void quickAdd(ProductModel p, {BuildContext? context, GlobalKey? sourceKey}) {
   if (p.hasRequiredOptions || p.isInspection || p.isService) {
     Get.toNamed('/product', arguments: {'id': p.id});
     return;
   }
-  cartCtl.addProduct(CartItemRequest(productId: p.id), maxQty: p.maxQty);
+  final line = cartCtl.addProduct(CartItemRequest(productId: p.id), maxQty: p.maxQty);
+  if (line == null) return;
+  if (context != null && sourceKey != null && context.mounted) {
+    FlyToCart.run(context, sourceKey: sourceKey, image: FlyToCart.productImage(context, sourceKey, p.imageUrl));
+  } else {
+    Haptics.confirm();
+  }
   showToast('أضيف «${p.name}» إلى السلة', actionLabel: 'عرض', onAction: () => Get.toNamed('/cart'));
 }
 
+/// وسائط فتح صفحة المنتج: id للمتحكم، والبقية للواجهة فقط (Hero + معاينة فورية أثناء التحميل).
+Map<String, Object?> productRouteArgs(ProductModel p, String heroScope) =>
+    {'id': p.id, 'image': p.imageUrl, 'name': p.name, 'heroScope': heroScope};
+
 /// بطاقة منتج (pcard).
 class ProductCard extends StatelessWidget {
-  const ProductCard(this.p, {super.key, this.width});
+  const ProductCard(this.p, {super.key, this.width, this.heroScope = 'card'});
   final ProductModel p;
   final double? width;
+
+  /// نطاق وسم Hero: مختلف لكل قائمة كي لا يتكرر الوسم في الشاشة نفسها.
+  final String heroScope;
   @override
   Widget build(BuildContext context) {
     final c = context.sc;
     final disc = p.discountPct;
-    return SizedBox(
+    return FlyToCartSource(builder: (context, flyKey) => SizedBox(
       width: width,
       child: GestureDetector(
-        onTap: () => Get.toNamed('/product', arguments: {'id': p.id}),
+        onTapDown: (_) => precacheProductImage(context, p.imageUrl),
+        onTap: () => Get.toNamed('/product', arguments: productRouteArgs(p, heroScope)),
         behavior: HitTestBehavior.opaque,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           AspectRatio(
@@ -55,7 +78,7 @@ class ProductCard extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(Rad.l),
               child: Stack(fit: StackFit.expand, children: [
-                ProductArt(imageUrl: p.imageUrl, name: p.name, seed: p.id),
+                KeyedSubtree(key: flyKey, child: ProductHero(tag: productHeroTag(heroScope, p.id), radius: Rad.l, child: ProductArt(imageUrl: p.imageUrl, name: p.name, seed: p.id))),
                 if (disc != null) PositionedDirectional(top: 10, start: 10, child: STag('خصم $disc٪')),
                 if (!p.inStock)
                   Container(
@@ -81,24 +104,31 @@ class ProductCard extends StatelessWidget {
             ),
             if (p.inStock)
               GestureDetector(
-                onTap: () => quickAdd(p),
-                child: Container(width: 44, height: 44, decoration: BoxDecoration(color: c.pri, shape: BoxShape.circle), child: Center(child: SIcon('plus', size: 22, color: c.onPri))),
+                onTap: () => quickAdd(p, context: context, sourceKey: flyKey),
+                child: PressableScale(child: Container(width: 44, height: 44, decoration: BoxDecoration(color: c.pri, shape: BoxShape.circle), child: Center(child: SIcon('plus', size: 22, color: c.onPri)))),
               ),
           ]),
         ]),
       ),
-    );
+    ));
   }
 }
 
 class CartBadgeButton extends StatelessWidget {
   const CartBadgeButton({super.key});
   @override
-  Widget build(BuildContext context) => Obx(() {
-        cartCtl.revision.value;
-        final n = cartCtl.itemCount;
-        return SIconBtn('bag', badge: n > 0 ? '$n' : null, onTap: () => Get.toNamed('/cart'));
-      });
+  Widget build(BuildContext context) => CartTargetAnchor(
+        child: Obx(() {
+          cartCtl.revision.value;
+          final n = cartCtl.itemCount;
+          return Semantics(
+            label: context.l10n.cartBadgeLabel(n),
+            button: true,
+            excludeSemantics: true,
+            child: SIconBtn('bag', badge: n > 0 ? '$n' : null, onTap: () => Get.toNamed('/cart')),
+          );
+        }),
+      );
 }
 
 Widget stickyCartOverlay() => Obx(() {
@@ -270,7 +300,7 @@ class HomeScreen extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: ctl.products.length,
                 separatorBuilder: (_, __) => const SizedBox(width: 14),
-                itemBuilder: (_, i) => ProductCard(ctl.products[i], width: 150),
+                itemBuilder: (_, i) => ProductCard(ctl.products[i], width: 150, heroScope: 'home'),
               ),
             ),
             SizedBox(height: cartCtl.isEmpty ? 0 : 60),
@@ -506,7 +536,7 @@ class ProductsScreen extends StatelessWidget {
         floating: stickyCartOverlay(),
         scroll: false,
         body: RefreshIndicator(
-          onRefresh: ctl.load,
+          onRefresh: hapticRefresh(ctl.load),
           child: ListView(controller: ctl.scroll, padding: const EdgeInsets.only(bottom: 90), children: [
             _SearchField(label: 'ابحث في ${ctl.title}', onTap: () => Get.toNamed('/search', arguments: {'category': ctl.category})),
             const SizedBox(height: 16),
@@ -534,7 +564,7 @@ class ProductsScreen extends StatelessWidget {
                 crossAxisSpacing: 14,
                 mainAxisSpacing: 14,
                 childAspectRatio: .56,
-                children: [for (final p in l) ProductCard(p)],
+                children: [for (final p in l) ProductCard(p, heroScope: 'grid')],
               ),
             if (ctl.loadingMore.value)
               Padding(padding: const EdgeInsets.all(16), child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: context.sc.tx3)), const SizedBox(width: 8), Text('جارٍ تحميل المزيد…', style: T.sm(context.sc.tx3))])),
@@ -703,12 +733,13 @@ class SearchScreen extends StatelessWidget {
             Eyebrow('${ctl.results.length} نتائج'),
             for (var i = 0; i < ctl.results.length; i++)
               InkWell(
-                onTap: () => Get.toNamed('/product', arguments: {'id': ctl.results[i].id}),
+                onTapDown: (_) => precacheProductImage(context, ctl.results[i].imageUrl),
+                onTap: () => Get.toNamed('/product', arguments: productRouteArgs(ctl.results[i], 'search')),
                 child: Container(
                   decoration: BoxDecoration(border: i == 0 ? null : Border(top: BorderSide(color: c.ln))),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   child: Row(children: [
-                    ProdThumb(imageUrl: ctl.results[i].imageUrl, name: ctl.results[i].name, seed: ctl.results[i].id),
+                    ProdThumb(imageUrl: ctl.results[i].imageUrl, name: ctl.results[i].name, seed: ctl.results[i].id, heroTag: productHeroTag('search', ctl.results[i].id)),
                     const SizedBox(width: 14),
                     Expanded(child: _Highlight(ctl.results[i].name, q)),
                     Mny(ctl.results[i].price.amount),
@@ -815,14 +846,17 @@ class ProductController extends GetxController {
 
   int get unit => (product.value?.price.amount ?? 0) + extra;
 
-  void add() {
+  /// مفتاح صورة التفاصيل: مصدر «الطيران إلى السلة».
+  final imageKey = GlobalKey(debugLabel: 'product-image');
+
+  void add({BuildContext? context}) {
     final p = product.value;
     if (p == null) return;
     if (missingRequired) {
       showErrors.value = true;
       return;
     }
-    cartCtl.addProduct(
+    final line = cartCtl.addProduct(
       CartItemRequest(
         productId: p.id,
         quantity: qty.value,
@@ -831,6 +865,12 @@ class ProductController extends GetxController {
       ),
       maxQty: p.maxQty,
     );
+    if (line == null) return;
+    if (context != null && context.mounted) {
+      FlyToCart.run(context, sourceKey: imageKey, image: FlyToCart.productImage(context, imageKey, p.imageUrl, decodeWidth: largeImageCacheWidth(context)));
+    } else {
+      Haptics.confirm();
+    }
     showToast('أضيف إلى السلة · ${qty.value} × ${p.name}', actionLabel: 'عرض السلة', onAction: () => Get.toNamed('/cart'));
     qty.value = 1;
   }
@@ -842,33 +882,78 @@ class ProductController extends GetxController {
   }
 }
 
+/// صندوق صورة التفاصيل: نفس النوع في حالتي التحميل والعرض كي يبقى Hero ثابتًا دون إعادة إنشاء.
+class _ProductImageBox extends StatelessWidget {
+  const _ProductImageBox({required this.tag, required this.id, required this.url, required this.name, this.service = false, this.overlay, this.onOpen, this.flyKey});
+  final GlobalKey? flyKey;
+  final Object tag;
+  final int id;
+  final String? url;
+  final String name;
+  final bool service;
+  final Widget? overlay;
+  final VoidCallback? onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sc;
+    final l = context.l10n;
+    final art = service && url == null
+        ? Center(child: Ill('tools', width: 230))
+        : ProductArt(imageUrl: url, name: name, seed: id, fit: true, decodeWidth: largeImageCacheWidth(context), semanticLabel: name.isEmpty ? null : l.productImageSemantics(name));
+    final box = Container(
+      height: 240,
+      width: double.infinity,
+      decoration: BoxDecoration(color: c.hero, borderRadius: BorderRadius.circular(Rad.xl)),
+      clipBehavior: Clip.antiAlias,
+      child: Stack(fit: StackFit.expand, children: [
+        ProductHero(tag: tag, radius: Rad.xl, child: art),
+        if (overlay != null) overlay!,
+      ]),
+    );
+    // البنية نفسها دائمًا (حتى بلا onOpen) كي لا يُعاد إنشاء Hero إن انتهى التحميل أثناء الطيران.
+    return Semantics(
+      button: onOpen != null,
+      hint: onOpen == null ? null : l.productImageOpen,
+      child: GestureDetector(onTap: onOpen, behavior: HitTestBehavior.opaque, child: KeyedSubtree(key: flyKey, child: box)),
+    );
+  }
+}
+
 class ProductScreen extends StatelessWidget {
   const ProductScreen({super.key});
   @override
   Widget build(BuildContext context) {
     final c = context.sc;
     final ctl = Get.put(ProductController());
+    // وسائط الواجهة من المسار نفسه (لا من Get.arguments الذي يتبع أعلى مسار).
+    final args = ModalRoute.settingsOf(context)?.arguments ?? Get.arguments;
+    final a = args is Map ? args : const {};
+    final heroTag = productHeroTag(a['heroScope'] as String? ?? 'details', ctl.id);
+    final previewUrl = a['image'] as String?;
+    final previewName = a['name'] as String? ?? '';
     return Obx(() {
       final p = ctl.product.value;
       final top = Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: SizedBox(height: 56, child: Row(children: [SIconBtn('back', tonal: true, onTap: () => Get.back()), const Spacer(), const CartBadgeButton()])));
-      if (ctl.loading.value) return Page2(top: top, body: const Column(children: [Skel(h: 240, r: 28), SizedBox(height: 24), Skel(h: 24), SizedBox(height: 12), Skel(w: 120, h: 24)]));
+      // صورة Hero ظاهرة من الإطار الأول (حتى أثناء التحميل) كي يجد الطيران وجهته.
+      if (ctl.loading.value) return Page2(top: top, body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [_ProductImageBox(tag: heroTag, id: ctl.id, url: previewUrl, name: previewName, flyKey: ctl.imageKey), const SizedBox(height: 24), const Skel(h: 24), const SizedBox(height: 12), const Skel(w: 120, h: 24)]));
       if (p == null) return Page2(top: top, center: true, body: EmptyState(ill: 'offline', title: 'تعذّر عرض المنتج', text: failureText(ctl.failure.value ?? const UnknownFailure()), cta: SBtn('أعد المحاولة', onTap: ctl.load, full: true)));
       final oos = !p.inStock;
       final price = ctl.unit;
       return Page2(
         top: top,
         body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Container(
-            height: 240,
-            width: double.infinity,
-            decoration: BoxDecoration(color: c.hero, borderRadius: BorderRadius.circular(Rad.xl)),
-            clipBehavior: Clip.antiAlias,
-            child: p.isService && p.imageUrl == null
-                ? Center(child: Ill('tools', width: 230))
-                : Stack(fit: StackFit.expand, children: [
-                    ProductArt(imageUrl: p.imageUrl, name: p.name, seed: p.id, fit: true),
-                    if (oos) Container(color: c.bg.withValues(alpha: .62), alignment: Alignment.center, child: Container(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6), decoration: BoxDecoration(color: c.tx, borderRadius: BorderRadius.circular(999)), child: Text('غير متوفر حاليًا', style: TextStyle(fontFamily: Fonts.ui, fontSize: 13, fontWeight: FontWeight.w700, color: c.bg)))),
-                  ]),
+          _ProductImageBox(
+            flyKey: ctl.imageKey,
+            tag: heroTag,
+            id: p.id,
+            url: p.imageUrl,
+            name: p.name,
+            service: p.isService,
+            overlay: oos ? Container(color: c.bg.withValues(alpha: .62), alignment: Alignment.center, child: Container(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6), decoration: BoxDecoration(color: c.tx, borderRadius: BorderRadius.circular(999)), child: Text('غير متوفر حاليًا', style: TextStyle(fontFamily: Fonts.ui, fontSize: 13, fontWeight: FontWeight.w700, color: c.bg)))) : null,
+            onOpen: (p.imageUrl ?? '').isEmpty
+                ? null
+                : () => ProductImageViewer.open(context, urls: [p.imageUrl!], name: p.name, heroTag: heroTag, placeholderCacheWidth: largeImageCacheWidth(context)),
           ),
           const SizedBox(height: 24),
           if (p.isService) const STag('خدمة', kind: 'soft'),
@@ -916,11 +1001,11 @@ class ProductScreen extends StatelessWidget {
           child: oos
               ? Column(mainAxisSize: MainAxisSize.min, children: [SBtn('اطلب بديلًا من المساعد', icon: 'sparkles', full: true, onTap: () => goTab('/assistant')), const SizedBox(height: 8), const SBtn('غير متوفر', kind: BtnKind.sec, full: true, disabled: true)])
               : p.isInspection
-                  ? SBtn('اطلب تسعيرة', full: true, onTap: ctl.add)
+                  ? SBtn('اطلب تسعيرة', full: true, onTap: () => ctl.add(context: context))
                   : Row(children: [
                       Stepper2(value: ctl.qty.value, lg: true, maxed: ctl.qty.value >= p.maxQty, onInc: () => ctl.qty.value = (ctl.qty.value + 1).clamp(1, p.maxQty), onDec: () => ctl.qty.value = (ctl.qty.value - 1).clamp(1, p.maxQty)),
                       const SizedBox(width: 14),
-                      Expanded(child: SBtn('أضف إلى السلة · ${(price * ctl.qty.value / 100).toStringAsFixed(2)} ₪', full: true, onTap: ctl.add, disabled: ctl.missingRequired && ctl.showErrors.value)),
+                      Expanded(child: SBtn('أضف إلى السلة · ${(price * ctl.qty.value / 100).toStringAsFixed(2)} ₪', full: true, onTap: () => ctl.add(context: context), disabled: ctl.missingRequired && ctl.showErrors.value)),
                     ]),
         ),
       );

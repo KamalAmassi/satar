@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:project/core/design/icons.dart';
 import 'package:project/core/design/illustrations.dart';
+import 'package:project/core/design/motion.dart';
+import 'package:project/core/design/pressable.dart';
 import 'package:project/core/design/tokens.dart';
+import 'package:project/core/l10n/app_localizations.dart';
+import 'package:project/core/utils/haptics.dart';
+import 'package:project/core/widgets/product_hero.dart';
 
 /// ===== مكوّنات التصميم المعتمد (ui.js + app.css) =====
 
@@ -65,7 +70,8 @@ class SBtn extends StatelessWidget {
       this.icon,
       this.full = false,
       this.loading = false,
-      this.disabled = false});
+      this.disabled = false,
+      this.hapticOnPress = true});
 
   final String label;
   final VoidCallback? onTap;
@@ -75,6 +81,10 @@ class SBtn extends StatelessWidget {
   final bool full;
   final bool loading;
   final bool disabled;
+
+  /// false للأزرار التي تُبلّغ نتيجة غير متزامنة: تستدعي هي Haptics.confirm/
+  /// success/error بنفسها فلا تتكرر النبضة.
+  final bool hapticOnPress;
 
   @override
   Widget build(BuildContext context) {
@@ -119,19 +129,23 @@ class SBtn extends StatelessWidget {
         ],
       ],
     );
+    final live = !(off || loading);
     return Opacity(
       opacity: off ? .42 : 1,
-      child: Material(
-        color: bg,
-        borderRadius: BorderRadius.circular(r),
-        child: InkWell(
+      child: PressableScale(
+        enabled: live,
+        child: Material(
+          color: bg,
           borderRadius: BorderRadius.circular(r),
-          onTap: (off || loading) ? null : onTap,
-          child: Container(
-            constraints: BoxConstraints(minHeight: h, minWidth: full ? double.infinity : 0),
-            padding: EdgeInsets.symmetric(horizontal: kind == BtnKind.ghost ? 12 : px),
-            alignment: Alignment.center,
-            child: child,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(r),
+            onTap: live ? () => Haptics.press(onTap!, haptic: hapticOnPress) : null,
+            child: Container(
+              constraints: BoxConstraints(minHeight: h, minWidth: full ? double.infinity : 0),
+              padding: EdgeInsets.symmetric(horizontal: kind == BtnKind.ghost ? 12 : px),
+              alignment: Alignment.center,
+              child: child,
+            ),
           ),
         ),
       ),
@@ -160,16 +174,19 @@ class SIconBtn extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Material(
-            color: bg ?? (tonal ? c.sf2 : Colors.transparent),
-            shape: const CircleBorder(),
-            child: InkWell(
-              customBorder: const CircleBorder(),
-              onTap: onTap,
-              child: SizedBox(
-                width: box,
-                height: box,
-                child: Center(child: SIcon(icon, size: size, color: fg ?? c.tx)),
+          PressableScale(
+            enabled: onTap != null,
+            child: Material(
+              color: bg ?? (tonal ? c.sf2 : Colors.transparent),
+              shape: const CircleBorder(),
+              child: InkWell(
+                customBorder: const CircleBorder(),
+                onTap: onTap == null ? null : () => Haptics.press(onTap!),
+                child: SizedBox(
+                  width: box,
+                  height: box,
+                  child: Center(child: SIcon(icon, size: size, color: fg ?? c.tx)),
+                ),
               ),
             ),
           ),
@@ -177,7 +194,13 @@ class SIconBtn extends StatelessWidget {
             PositionedDirectional(
               top: 5,
               start: 4,
-              child: Container(
+              // تغيّر الرقم ⇒ نبضة تكبير قصيرة (بلا حركة عند تقليل الحركة).
+              child: AnimatedSwitcher(
+                duration: (MediaQuery.maybeDisableAnimationsOf(context) ?? false) ? Duration.zero : Motion.short,
+                switchInCurve: Curves.easeOutBack,
+                transitionBuilder: (child, a) => ScaleTransition(scale: a, child: child),
+                child: Container(
+                key: ValueKey(badge),
                 constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
                 padding: const EdgeInsets.symmetric(horizontal: 5),
                 decoration: BoxDecoration(
@@ -190,6 +213,7 @@ class SIconBtn extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                         height: 1,
                         color: Colors.white)),
+                ),
               ),
             ),
         ],
@@ -236,25 +260,33 @@ class SChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.sc;
     final fg = on ? c.onPri : c.tx;
-    return Material(
-      color: on ? c.pri : c.sf2,
-      borderRadius: BorderRadius.circular(999),
-      child: InkWell(
+    return PressableScale(
+      enabled: onTap != null,
+      child: Material(
+        color: on ? c.pri : c.sf2,
         borderRadius: BorderRadius.circular(999),
-        onTap: onTap,
-        child: Container(
-          height: height,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            if (leading != null) ...[leading!, const SizedBox(width: 6)],
-            if (icon != null) ...[SIcon(icon!, size: 18, color: fg), const SizedBox(width: 6)],
-            Text(label,
-                style: TextStyle(
-                    fontFamily: Fonts.ui,
-                    fontSize: 14.5,
-                    fontWeight: on ? FontWeight.w600 : FontWeight.w500,
-                    color: fg)),
-          ]),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(999),
+          onTap: onTap == null
+              ? null
+              : () {
+                  Haptics.select();
+                  onTap!();
+                },
+          child: Container(
+            height: height,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              if (leading != null) ...[leading!, const SizedBox(width: 6)],
+              if (icon != null) ...[SIcon(icon!, size: 18, color: fg), const SizedBox(width: 6)],
+              Text(label,
+                  style: TextStyle(
+                      fontFamily: Fonts.ui,
+                      fontSize: 14.5,
+                      fontWeight: on ? FontWeight.w600 : FontWeight.w500,
+                      color: fg)),
+            ]),
+          ),
         ),
       ),
     );
@@ -420,7 +452,7 @@ class Card2 extends StatelessWidget {
         width: double.infinity,
         child: child);
     if (onTap == null) return inner;
-    return GestureDetector(onTap: onTap, behavior: HitTestBehavior.opaque, child: inner);
+    return PressableScale(child: GestureDetector(onTap: onTap, behavior: HitTestBehavior.opaque, child: inner));
   }
 }
 
@@ -439,7 +471,7 @@ class Panel extends StatelessWidget {
         padding: padding,
         decoration: BoxDecoration(color: color ?? c.sf2, borderRadius: BorderRadius.circular(radius)),
         child: child);
-    return onTap == null ? w : GestureDetector(onTap: onTap, behavior: HitTestBehavior.opaque, child: w);
+    return onTap == null ? w : PressableScale(child: GestureDetector(onTap: onTap, behavior: HitTestBehavior.opaque, child: w));
   }
 }
 
@@ -529,32 +561,68 @@ class Stepper2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.sc;
+    final l = AppLocalizations.of(context);
     final d = lg ? 46.0 : 40.0;
-    Widget b(String icon, VoidCallback? fn, bool dis) => Opacity(
-          opacity: dis ? .35 : 1,
-          child: Container(
-            width: d,
-            height: d,
-            decoration: BoxDecoration(
-                color: c.sf, shape: BoxShape.circle, boxShadow: dis ? null : c.cardShadow),
-            child: InkWell(
-                customBorder: const CircleBorder(),
-                onTap: dis ? null : fn,
-                child: Center(child: SIcon(icon, size: 18, color: c.tx))),
+    // منطقة لمس ≥ 48dp مع بقاء الدائرة المرئية بنفس الحجم.
+    final hit = lg ? 52.0 : 48.0;
+    Widget b(String icon, String? label, VoidCallback? fn, bool atLimit) {
+      final dis = fn == null || atLimit;
+      return Semantics(
+        button: true,
+        enabled: !dis,
+        label: label,
+        excludeSemantics: true,
+        onTap: dis ? null : fn,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          // عند الحد يبقى الزر قابلًا للمس ليعطي إشارة خطأ فقط، دون تغيير القيمة.
+          onTap: fn == null
+              ? null
+              : () {
+                  if (atLimit) {
+                    Haptics.error();
+                    return;
+                  }
+                  Haptics.select();
+                  fn();
+                },
+          child: PressableScale(
+            enabled: !dis,
+            child: SizedBox(
+              width: hit,
+              height: hit,
+              child: Center(
+                child: Opacity(
+                  opacity: dis ? .35 : 1,
+                  child: Container(
+                    width: d,
+                    height: d,
+                    decoration: BoxDecoration(
+                        color: c.sf, shape: BoxShape.circle, boxShadow: dis ? null : c.cardShadow),
+                    child: Center(child: SIcon(icon, size: 18, color: c.tx)),
+                  ),
+                ),
+              ),
+            ),
           ),
-        );
+        ),
+      );
+    }
+
     return Container(
-      padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(color: c.sf2, borderRadius: BorderRadius.circular(999)),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
-        b('plus', onInc, maxed || onInc == null),
+        b('plus', l?.stepperIncrease, onInc, maxed),
         SizedBox(
             width: 38,
-            child: Text('$value',
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontFamily: Fonts.ui, fontWeight: FontWeight.w700, fontSize: 16)
-                    .copyWith(color: c.tx, fontFeatures: const [FontFeature.tabularFigures()]))),
-        b('minus', onDec, value <= min || onDec == null),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text('$value',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontFamily: Fonts.ui, fontWeight: FontWeight.w700, fontSize: 16)
+                      .copyWith(color: c.tx, fontFeatures: const [FontFeature.tabularFigures()])),
+            )),
+        b('minus', l?.stepperDecrease, onDec, value <= min),
       ]),
     );
   }
@@ -613,22 +681,39 @@ class SSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.sc;
-    return GestureDetector(
-      onTap: onChanged == null ? null : () => onChanged!(!on),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: 50,
-        height: 30,
-        padding: const EdgeInsets.all(3),
-        alignment: on ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
-        decoration: BoxDecoration(color: on ? c.pri : c.sf3, borderRadius: BorderRadius.circular(15)),
-        child: Container(
-          width: 24,
-          height: 24,
-          decoration: BoxDecoration(
-              color: on ? c.onPri : Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: const [BoxShadow(color: Color(0x4D000000), blurRadius: 3, offset: Offset(0, 1))]),
+    final reduce = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+    return Semantics(
+      toggled: on,
+      enabled: onChanged != null,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onChanged == null
+            ? null
+            : () {
+                Haptics.select();
+                onChanged!(!on);
+              },
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 50, minHeight: 48),
+          child: Center(
+            widthFactor: 1,
+            child: AnimatedContainer(
+              duration: reduce ? Duration.zero : Motion.short,
+              width: 50,
+              height: 30,
+              padding: const EdgeInsets.all(3),
+              alignment: on ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
+              decoration: BoxDecoration(color: on ? c.pri : c.sf3, borderRadius: BorderRadius.circular(15)),
+              child: Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                    color: on ? c.onPri : Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: const [BoxShadow(color: Color(0x4D000000), blurRadius: 3, offset: Offset(0, 1))]),
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -643,7 +728,12 @@ class SCheck extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.sc;
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap == null
+          ? null
+          : () {
+              Haptics.select();
+              onTap!();
+            },
       child: Container(
         width: 24,
         height: 24,
@@ -754,14 +844,22 @@ class OptCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.sc;
+    final live = !dis && onTap != null;
     return Opacity(
       opacity: dis ? .5 : 1,
-      child: Material(
+      child: PressableScale(
+       enabled: live,
+       child: Material(
         color: on ? c.plumSoft : c.sf,
         borderRadius: BorderRadius.circular(Rad.m),
         child: InkWell(
           borderRadius: BorderRadius.circular(Rad.m),
-          onTap: dis ? null : onTap,
+          onTap: live
+              ? () {
+                  Haptics.select();
+                  onTap!();
+                }
+              : null,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             decoration: BoxDecoration(
@@ -797,6 +895,7 @@ class OptCard extends StatelessWidget {
             ]),
           ),
         ),
+       ),
       ),
     );
   }
@@ -815,14 +914,22 @@ class OptTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.sc;
+    final live = !dis && onTap != null;
     return Opacity(
       opacity: dis ? .5 : 1,
-      child: Material(
+      child: PressableScale(
+       enabled: live,
+       child: Material(
         color: on ? c.plumSoft : c.sf,
         borderRadius: BorderRadius.circular(Rad.m),
         child: InkWell(
           borderRadius: BorderRadius.circular(Rad.m),
-          onTap: dis ? null : onTap,
+          onTap: live
+              ? () {
+                  Haptics.select();
+                  onTap!();
+                }
+              : null,
           child: Container(
             constraints: BoxConstraints(minHeight: compact ? 0 : 98),
             padding: EdgeInsets.symmetric(horizontal: 6, vertical: compact ? 6 : 14),
@@ -836,6 +943,7 @@ class OptTile extends StatelessWidget {
             ]),
           ),
         ),
+       ),
       ),
     );
   }
@@ -856,7 +964,10 @@ class Seg extends StatelessWidget {
         for (final it in items)
           Expanded(
             child: GestureDetector(
-              onTap: () => onChanged(it.$1),
+              onTap: () {
+                if (it.$1 != value) Haptics.select();
+                onChanged(it.$1);
+              },
               behavior: HitTestBehavior.opaque,
               child: Container(
                 constraints: const BoxConstraints(minHeight: 44),
@@ -904,6 +1015,9 @@ class Fld extends StatefulWidget {
     this.formatters,
     this.autofocus = false,
     this.textAlign,
+    this.focusNode,
+    this.textInputAction,
+    this.autofillHints,
   });
   final String? label;
   final String? hint;
@@ -926,21 +1040,39 @@ class Fld extends StatefulWidget {
   final bool autofocus;
   final TextAlign? textAlign;
 
+  /// اختياري: للتحكم بترتيب التركيز من الخارج (لا يُتخلَّص منه هنا).
+  final FocusNode? focusNode;
+  final TextInputAction? textInputAction;
+  final Iterable<String>? autofillHints;
+
   @override
   State<Fld> createState() => _FldState();
 }
 
 class _FldState extends State<Fld> {
-  final _focus = FocusNode();
+  FocusNode? _own;
+  FocusNode get _focus => widget.focusNode ?? (_own ??= FocusNode());
   @override
   void initState() {
     super.initState();
-    _focus.addListener(() => setState(() {}));
+    _focus.addListener(_onFocus);
+  }
+
+  void _onFocus() => setState(() {});
+
+  @override
+  void didUpdateWidget(Fld old) {
+    super.didUpdateWidget(old);
+    if (old.focusNode != widget.focusNode) {
+      (old.focusNode ?? _own)?.removeListener(_onFocus);
+      _focus.addListener(_onFocus);
+    }
   }
 
   @override
   void dispose() {
-    _focus.dispose();
+    _focus.removeListener(_onFocus);
+    _own?.dispose();
     super.dispose();
   }
 
@@ -995,6 +1127,8 @@ class _FldState extends State<Fld> {
                 maxLength: widget.maxLength,
                 obscureText: widget.obscure,
                 keyboardType: widget.keyboard,
+                textInputAction: widget.textInputAction,
+                autofillHints: widget.autofillHints,
                 inputFormatters: widget.formatters,
                 textDirection: widget.ltr ? TextDirection.ltr : null,
                 textAlign: widget.textAlign ?? (widget.ltr ? TextAlign.start : TextAlign.start),
@@ -1102,8 +1236,9 @@ class _SkelState extends State<Skel> with SingleTickerProviderStateMixin {
 }
 
 class ProgressBar extends StatelessWidget {
-  const ProgressBar(this.value, {super.key});
+  const ProgressBar(this.value, {super.key, this.color});
   final double value;
+  final Color? color;
   @override
   Widget build(BuildContext context) {
     final c = context.sc;
@@ -1116,7 +1251,7 @@ class ProgressBar extends StatelessWidget {
           FractionallySizedBox(
               widthFactor: value.clamp(0.0, 1.0),
               alignment: AlignmentDirectional.centerStart,
-              child: Container(decoration: BoxDecoration(color: c.pri, borderRadius: BorderRadius.circular(3)))),
+              child: Container(decoration: BoxDecoration(color: color ?? c.pri, borderRadius: BorderRadius.circular(3)))),
         ]),
       ),
     );
@@ -1423,37 +1558,56 @@ class PinDot extends StatelessWidget {
 
 /// صورة مصغّرة للمنتج (.thumb)
 class ProdThumb extends StatelessWidget {
-  const ProdThumb({super.key, this.imageUrl, required this.name, this.seed = 0, this.size = 64});
+  const ProdThumb({super.key, this.imageUrl, required this.name, this.seed = 0, this.size = 64, this.heroTag});
   final String? imageUrl;
   final String name;
   final int seed;
   final double size;
+
+  /// وسم Hero اختياري (انظر productHeroTag).
+  final Object? heroTag;
   @override
-  Widget build(BuildContext context) => ClipRRect(
-        borderRadius: BorderRadius.circular(14),
-        child: SizedBox(
-          width: size,
-          height: size,
-          child: ProductArt(imageUrl: imageUrl, name: name, seed: seed),
-        ),
+  Widget build(BuildContext context) => SizedBox(
+        width: size,
+        height: size,
+        child: ProductHero(tag: heroTag, radius: Rad.m, child: ProductArt(imageUrl: imageUrl, name: name, seed: seed)),
       );
 }
 
 /// صورة المنتج من الخادم إن وُجدت، وإلا الرسم البديل المعتمد.
+/// عنصر نائب هادئ ثم ظهور تدريجي بعد التحميل، وفك ترميز بحجم العرض فقط.
 class ProductArt extends StatelessWidget {
-  const ProductArt({super.key, this.imageUrl, required this.name, this.seed = 0, this.fit = false});
+  const ProductArt({super.key, this.imageUrl, required this.name, this.seed = 0, this.fit = false, this.decodeWidth, this.semanticLabel});
   final String? imageUrl;
   final String name;
   final int seed;
   final bool fit;
+
+  /// عرض فك الترميز بالبكسل؛ null ⇒ يُحسب من عرض التخطيط.
+  final int? decodeWidth;
+  final String? semanticLabel;
   @override
   Widget build(BuildContext context) {
     final fallback = ProductCover(kind: ProductCover.kindFor(name), tone: ProductCover.toneFor(seed), fit: fit);
     if (imageUrl == null || imageUrl!.isEmpty) return fallback;
-    return Image.network(imageUrl!,
+    final c = context.sc;
+    return LayoutBuilder(builder: (context, box) {
+      final w = decodeWidth ?? productImageCacheWidth(box.maxWidth, MediaQuery.devicePixelRatioOf(context));
+      return Image.network(
+        imageUrl!,
         fit: BoxFit.cover,
+        cacheWidth: w,
+        semanticLabel: semanticLabel,
+        excludeFromSemantics: semanticLabel == null,
         errorBuilder: (_, __, ___) => fallback,
-        loadingBuilder: (_, child, p) => p == null ? child : fallback);
+        frameBuilder: (_, child, frame, sync) => sync
+            ? child
+            : Stack(fit: StackFit.expand, children: [
+                ColoredBox(color: c.sf2),
+                AnimatedOpacity(opacity: frame == null ? 0 : 1, duration: Motion.imageFade, curve: Curves.easeOut, child: child),
+              ]),
+      );
+    });
   }
 }
 

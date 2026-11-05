@@ -5,6 +5,14 @@ import 'package:get/get.dart';
 import 'package:project/core/design/icons.dart';
 import 'package:project/core/design/tokens.dart';
 import 'package:project/core/design/widgets.dart';
+import 'package:project/core/l10n/app_localizations.dart';
+import 'package:project/core/utils/haptics.dart';
+
+/// يغلّف onRefresh بنبضة خفيفة واحدة عند بدء التحديث (لا شيء أثناء السحب).
+Future<void> Function() hapticRefresh(Future<void> Function() onRefresh) => () {
+      Haptics.tap();
+      return onRefresh();
+    };
 
 /// ThemeData مبني على الرموز المعتمدة.
 abstract final class SatrTheme {
@@ -177,7 +185,7 @@ class Page2 extends StatelessWidget {
         ? Center(child: SingleChildScrollView(padding: pad, child: body))
         : (scroll ? SingleChildScrollView(padding: pad, physics: const AlwaysScrollableScrollPhysics(), child: body) : Padding(padding: pad, child: body));
     if (onRefresh != null && scroll && !center) {
-      content = RefreshIndicator(onRefresh: onRefresh!, color: c.pri, backgroundColor: c.sf, child: content);
+      content = RefreshIndicator(onRefresh: hapticRefresh(onRefresh!), color: c.pri, backgroundColor: c.sf, child: content);
     }
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: (c.dark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark).copyWith(statusBarColor: Colors.transparent),
@@ -202,7 +210,10 @@ Widget _tabButton(BuildContext context, {required String icon, required String l
   final c = context.sc;
   return Expanded(
     child: GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        if (!on) Haptics.select();
+        onTap();
+      },
       behavior: HitTestBehavior.opaque,
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 52),
@@ -247,7 +258,10 @@ class CustomerTabs extends StatelessWidget {
           if (t.$1 == 'ai')
             Expanded(
               child: GestureDetector(
-                onTap: () => goTab(t.$4),
+                onTap: () {
+                  if (active != 'ai') Haptics.select();
+                  goTab(t.$4);
+                },
                 behavior: HitTestBehavior.opaque,
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(minHeight: 52),
@@ -294,6 +308,7 @@ class DriverTabs extends StatelessWidget {
       ('av', 'box', 'المتاحة', '/driver/available'),
       ('hist', 'orders', 'السجل', '/driver/history'),
       ('earn', 'wallet', 'الأرباح', '/driver/earnings'),
+      ('set', 'user', AppLocalizations.of(context)!.driverSettingsTitle, '/driver/profile'),
     ];
     return Container(
       padding: EdgeInsets.fromLTRB(4, 6, 4, 6 + MediaQuery.of(context).padding.bottom),

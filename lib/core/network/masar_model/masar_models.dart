@@ -293,6 +293,8 @@ class AppNotification {
   final DateTime? openedAt;
   final DateTime createdAt;
 
+  bool get unread => readAt == null;
+
   factory AppNotification.fromJson(Map<String, dynamic> json) => AppNotification(
         id: (json['id'] as num).toInt(),
         event: json['event'] as String,

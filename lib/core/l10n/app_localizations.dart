@@ -1813,6 +1813,870 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'أُلغي الطلب. للاستفسار عن أي مبلغ مدفوع تواصل مع المكتبة.'**
   String get offerRejectedBody;
+
+  /// Settings row title for the haptic feedback toggle
+  ///
+  /// In ar, this message translates to:
+  /// **'الاهتزاز'**
+  String get vibrationSettingTitle;
+
+  /// Settings row subtitle for the haptic feedback toggle
+  ///
+  /// In ar, this message translates to:
+  /// **'اهتزاز خفيف عند اللمس وتأكيد الإجراءات'**
+  String get vibrationSettingSub;
+
+  /// Screen reader label for the quantity stepper plus button
+  ///
+  /// In ar, this message translates to:
+  /// **'زيادة الكمية'**
+  String get stepperIncrease;
+
+  /// Screen reader label for the quantity stepper minus button
+  ///
+  /// In ar, this message translates to:
+  /// **'إنقاص الكمية'**
+  String get stepperDecrease;
+
+  /// No description provided for @voiceRecordingPill.
+  ///
+  /// In ar, this message translates to:
+  /// **'يسجّل · {time}'**
+  String voiceRecordingPill(String time);
+
+  /// No description provided for @voiceRecordingSemantics.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ التسجيل، مضى {time}. نحن نستمع إليك.'**
+  String voiceRecordingSemantics(String time);
+
+  /// No description provided for @productImageSemantics.
+  ///
+  /// In ar, this message translates to:
+  /// **'صورة {name}'**
+  String productImageSemantics(String name);
+
+  /// No description provided for @productImageOpen.
+  ///
+  /// In ar, this message translates to:
+  /// **'فتح صورة المنتج بملء الشاشة'**
+  String get productImageOpen;
+
+  /// No description provided for @imageViewerClose.
+  ///
+  /// In ar, this message translates to:
+  /// **'إغلاق'**
+  String get imageViewerClose;
+
+  /// No description provided for @imageViewerPage.
+  ///
+  /// In ar, this message translates to:
+  /// **'الصورة {current} من {total}'**
+  String imageViewerPage(int current, int total);
+
+  /// No description provided for @celebrationOrderPlaced.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم بنجاح! أُرسل طلبك إلى المكتبة.'**
+  String get celebrationOrderPlaced;
+
+  /// No description provided for @celebrationDelivered.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التسليم بنجاح. أحسنت!'**
+  String get celebrationDelivered;
+
+  /// No description provided for @celebrationOrderDelivered.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تسليم طلبك.'**
+  String get celebrationOrderDelivered;
+
+  /// No description provided for @driverLocationLive.
+  ///
+  /// In ar, this message translates to:
+  /// **'موقع السائق مباشر'**
+  String get driverLocationLive;
+
+  /// No description provided for @driverLocationStale.
+  ///
+  /// In ar, this message translates to:
+  /// **'آخر موقع للسائق قبل {minutes} دقيقة. قد يكون في منطقة ضعيفة التغطية.'**
+  String driverLocationStale(int minutes);
+
+  /// No description provided for @driverLocationNone.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار أول موقع للسائق.'**
+  String get driverLocationNone;
+
+  /// No description provided for @driverEtaShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'نحو {minutes} دقيقة'**
+  String driverEtaShort(int minutes);
+
+  /// No description provided for @driverMarkerSemantics.
+  ///
+  /// In ar, this message translates to:
+  /// **'موقع السائق على الخريطة'**
+  String get driverMarkerSemantics;
+
+  /// No description provided for @driverOrderUnavailableTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الطلب لم يعد متاحًا'**
+  String get driverOrderUnavailableTitle;
+
+  /// No description provided for @driverOrderUnavailableText.
+  ///
+  /// In ar, this message translates to:
+  /// **'ربما أُلغي أو تغيّر. سنعرض لك طلبات أخرى قريبة.'**
+  String get driverOrderUnavailableText;
+
+  /// No description provided for @driverAvailableOrders.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطلبات المتاحة'**
+  String get driverAvailableOrders;
+
+  /// No description provided for @driverAcceptOfflineTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنت غير متصل'**
+  String get driverAcceptOfflineTitle;
+
+  /// No description provided for @driverAcceptOfflineText.
+  ///
+  /// In ar, this message translates to:
+  /// **'فعّل الاتصال لتتمكن من قبول الطلبات.'**
+  String get driverAcceptOfflineText;
+
+  /// No description provided for @driverGoOnline.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصل الآن'**
+  String get driverGoOnline;
+
+  /// No description provided for @driverAcceptInvalidTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يمكن قبول هذا الطلب الآن'**
+  String get driverAcceptInvalidTitle;
+
+  /// No description provided for @driverAcceptInvalidText.
+  ///
+  /// In ar, this message translates to:
+  /// **'قد تكون لديك مهمة جارية، أو تغيّرت حالة الطلب.'**
+  String get driverAcceptInvalidText;
+
+  /// No description provided for @driverSessionExpiredTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهت جلستك'**
+  String get driverSessionExpiredTitle;
+
+  /// No description provided for @driverSessionExpiredText.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجّل الدخول من جديد للمتابعة.'**
+  String get driverSessionExpiredText;
+
+  /// No description provided for @driverSignIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الدخول'**
+  String get driverSignIn;
+
+  /// No description provided for @driverNetworkTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر الاتصال'**
+  String get driverNetworkTitle;
+
+  /// No description provided for @commonRetry.
+  ///
+  /// In ar, this message translates to:
+  /// **'أعد المحاولة'**
+  String get commonRetry;
+
+  /// No description provided for @commonOk.
+  ///
+  /// In ar, this message translates to:
+  /// **'حسنًا'**
+  String get commonOk;
+
+  /// No description provided for @commonClose.
+  ///
+  /// In ar, this message translates to:
+  /// **'إغلاق'**
+  String get commonClose;
+
+  /// No description provided for @otpTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد رقمك'**
+  String get otpTitle;
+
+  /// No description provided for @otpHeadline.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل رمز التحقق'**
+  String get otpHeadline;
+
+  /// No description provided for @otpSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرسلنا رمزًا برسالة نصية إلى {phone}.'**
+  String otpSubtitle(String phone);
+
+  /// No description provided for @otpCodeSemantics.
+  ///
+  /// In ar, this message translates to:
+  /// **'رمز التحقق، {length} أرقام'**
+  String otpCodeSemantics(int length);
+
+  /// No description provided for @otpVerify.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد'**
+  String get otpVerify;
+
+  /// No description provided for @otpResend.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة إرسال الرمز'**
+  String get otpResend;
+
+  /// No description provided for @otpResendIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة الإرسال بعد {seconds} ث'**
+  String otpResendIn(int seconds);
+
+  /// No description provided for @otpChangeNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير الرقم'**
+  String get otpChangeNumber;
+
+  /// No description provided for @otpResent.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُرسل رمز جديد.'**
+  String get otpResent;
+
+  /// No description provided for @otpErrInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرمز غير صحيح. تحقق منه وحاول مجددًا.'**
+  String get otpErrInvalid;
+
+  /// No description provided for @otpErrExpired.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهت صلاحية الرمز. اطلب رمزًا جديدًا.'**
+  String get otpErrExpired;
+
+  /// No description provided for @otpErrTooMany.
+  ///
+  /// In ar, this message translates to:
+  /// **'محاولات كثيرة. انتظر قليلًا ثم حاول.'**
+  String get otpErrTooMany;
+
+  /// No description provided for @otpErrPhone.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يمكن إرسال رمز إلى هذا الرقم.'**
+  String get otpErrPhone;
+
+  /// No description provided for @otpErrNetwork.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر الاتصال. تحقق من الإنترنت وحاول مجددًا.'**
+  String get otpErrNetwork;
+
+  /// No description provided for @otpErrUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'التحقق غير متاح الآن. حاول لاحقًا.'**
+  String get otpErrUnavailable;
+
+  /// No description provided for @otpDevMockNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'للمطورين فقط: مفاتيح Twilio ناقصة، لذا يُستخدم الرمز التجريبي 1234.'**
+  String get otpDevMockNotice;
+
+  /// No description provided for @driverOtpTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد هويتك'**
+  String get driverOtpTitle;
+
+  /// No description provided for @driverLoginBrand.
+  ///
+  /// In ar, this message translates to:
+  /// **'سطر | السائق'**
+  String get driverLoginBrand;
+
+  /// No description provided for @driverLoginHeadline.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرحباً بعودتك'**
+  String get driverLoginHeadline;
+
+  /// No description provided for @driverLoginSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجّل الدخول لتبدأ باستلام مهام التوصيل.'**
+  String get driverLoginSubtitle;
+
+  /// No description provided for @driverLoginPhone.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الجوال'**
+  String get driverLoginPhone;
+
+  /// No description provided for @driverLoginPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور'**
+  String get driverLoginPassword;
+
+  /// No description provided for @driverLoginPhoneInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل رقم جوال صحيحًا، مثل 0599123456.'**
+  String get driverLoginPhoneInvalid;
+
+  /// No description provided for @driverLoginPasswordRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل كلمة المرور.'**
+  String get driverLoginPasswordRequired;
+
+  /// No description provided for @driverLoginBadCredentials.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الجوال أو كلمة المرور غير صحيحة.'**
+  String get driverLoginBadCredentials;
+
+  /// No description provided for @driverLoginSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'دخول'**
+  String get driverLoginSubmit;
+
+  /// No description provided for @driverLoginShowPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'إظهار كلمة المرور'**
+  String get driverLoginShowPassword;
+
+  /// No description provided for @driverLoginHidePassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء كلمة المرور'**
+  String get driverLoginHidePassword;
+
+  /// No description provided for @driverLoginForgot.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسيت كلمة المرور؟'**
+  String get driverLoginForgot;
+
+  /// No description provided for @driverLoginForgotText.
+  ///
+  /// In ar, this message translates to:
+  /// **'تواصل مع مشغّل سطر ليعيد ضبطها.'**
+  String get driverLoginForgotText;
+
+  /// No description provided for @driverLoginSupport.
+  ///
+  /// In ar, this message translates to:
+  /// **'التواصل مع الدعم'**
+  String get driverLoginSupport;
+
+  /// No description provided for @driverLoginSupportText.
+  ///
+  /// In ar, this message translates to:
+  /// **'تواصل مع مشغّل سطر للمساعدة في حسابك.'**
+  String get driverLoginSupportText;
+
+  /// No description provided for @driverLoginVersion.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإصدار {version}'**
+  String driverLoginVersion(String version);
+
+  /// No description provided for @driverDeliverCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسليم الطلب'**
+  String get driverDeliverCta;
+
+  /// No description provided for @driverFailDeliveryCta.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر التسليم'**
+  String get driverFailDeliveryCta;
+
+  /// No description provided for @driverDeliverTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد التسليم'**
+  String get driverDeliverTitle;
+
+  /// No description provided for @driverDeliverHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اطلب من الزبون كود التسليم الظاهر في تطبيقه'**
+  String get driverDeliverHint;
+
+  /// No description provided for @driverDeliverConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد التسليم'**
+  String get driverDeliverConfirm;
+
+  /// No description provided for @driverDeliverPaste.
+  ///
+  /// In ar, this message translates to:
+  /// **'لصق الكود'**
+  String get driverDeliverPaste;
+
+  /// No description provided for @driverDeliverCollect.
+  ///
+  /// In ar, this message translates to:
+  /// **'حصّل من الزبون'**
+  String get driverDeliverCollect;
+
+  /// No description provided for @driverDeliverErrWrong.
+  ///
+  /// In ar, this message translates to:
+  /// **'كود التسليم غير صحيح. تأكد منه مع الزبون وأعد المحاولة.'**
+  String get driverDeliverErrWrong;
+
+  /// No description provided for @driverDeliverErrTooMany.
+  ///
+  /// In ar, this message translates to:
+  /// **'محاولات كثيرة. انتظر قليلًا ثم أعد المحاولة.'**
+  String get driverDeliverErrTooMany;
+
+  /// No description provided for @driverDeliverErrState.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يعد هذا الطلب قابلًا للتسليم. حدّث المهمة.'**
+  String get driverDeliverErrState;
+
+  /// No description provided for @driverDeliverErrNetwork.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر الاتصال. تحقق من الإنترنت وأعد المحاولة.'**
+  String get driverDeliverErrNetwork;
+
+  /// No description provided for @driverDeliverErrSession.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهت جلستك. سجّل الدخول من جديد.'**
+  String get driverDeliverErrSession;
+
+  /// No description provided for @driverDeliverRefresh.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدّث المهمة'**
+  String get driverDeliverRefresh;
+
+  /// No description provided for @orderDeliveryCodeTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'كود التسليم'**
+  String get orderDeliveryCodeTitle;
+
+  /// No description provided for @orderDeliveryCodeCaption.
+  ///
+  /// In ar, this message translates to:
+  /// **'أعطِ هذا الكود للسائق عند الاستلام فقط'**
+  String get orderDeliveryCodeCaption;
+
+  /// No description provided for @driverSettingsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعدادات'**
+  String get driverSettingsTitle;
+
+  /// No description provided for @driverSettingsOnline.
+  ///
+  /// In ar, this message translates to:
+  /// **'متصل'**
+  String get driverSettingsOnline;
+
+  /// No description provided for @driverSettingsOffline.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير متصل'**
+  String get driverSettingsOffline;
+
+  /// No description provided for @driverSettingsRatingCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{rating} · {count} تقييمًا'**
+  String driverSettingsRatingCount(String rating, int count);
+
+  /// No description provided for @driverSettingsMyData.
+  ///
+  /// In ar, this message translates to:
+  /// **'بياناتي'**
+  String get driverSettingsMyData;
+
+  /// No description provided for @driverSettingsName.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسم'**
+  String get driverSettingsName;
+
+  /// No description provided for @driverSettingsPhone.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الجوال'**
+  String get driverSettingsPhone;
+
+  /// No description provided for @driverSettingsVehicle.
+  ///
+  /// In ar, this message translates to:
+  /// **'المركبة'**
+  String get driverSettingsVehicle;
+
+  /// No description provided for @driverSettingsZone.
+  ///
+  /// In ar, this message translates to:
+  /// **'المنطقة'**
+  String get driverSettingsZone;
+
+  /// No description provided for @driverSettingsCash.
+  ///
+  /// In ar, this message translates to:
+  /// **'النقد معك'**
+  String get driverSettingsCash;
+
+  /// No description provided for @driverSettingsCashNearLimit.
+  ///
+  /// In ar, this message translates to:
+  /// **'اقتربت من الحد الأقصى للنقد. سلّم النقد قريبًا.'**
+  String get driverSettingsCashNearLimit;
+
+  /// No description provided for @driverSettingsLanguage.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللغة'**
+  String get driverSettingsLanguage;
+
+  /// No description provided for @driverSettingsLoadErrorTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر تحميل بياناتك'**
+  String get driverSettingsLoadErrorTitle;
+
+  /// No description provided for @driverSettingsLoadErrorText.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحقق من الاتصال ثم أعد المحاولة.'**
+  String get driverSettingsLoadErrorText;
+
+  /// No description provided for @driverSettingsRetry.
+  ///
+  /// In ar, this message translates to:
+  /// **'أعد المحاولة'**
+  String get driverSettingsRetry;
+
+  /// No description provided for @driverSettingsNotifications.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإشعارات'**
+  String get driverSettingsNotifications;
+
+  /// No description provided for @driverSettingsNotifHistory.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل الإشعارات'**
+  String get driverSettingsNotifHistory;
+
+  /// No description provided for @driverSettingsLogout.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الخروج'**
+  String get driverSettingsLogout;
+
+  /// No description provided for @driverSettingsLogoutSub.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستصبح غير متصل'**
+  String get driverSettingsLogoutSub;
+
+  /// No description provided for @driverSettingsLogoutTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الخروج؟'**
+  String get driverSettingsLogoutTitle;
+
+  /// No description provided for @driverSettingsLogoutText.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيصبح حسابك غير متصل ولن تصلك طلبات.'**
+  String get driverSettingsLogoutText;
+
+  /// No description provided for @driverSettingsCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء'**
+  String get driverSettingsCancel;
+
+  /// No description provided for @vehicleMotorcycle.
+  ///
+  /// In ar, this message translates to:
+  /// **'دراجة نارية'**
+  String get vehicleMotorcycle;
+
+  /// No description provided for @vehicleCar.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيارة'**
+  String get vehicleCar;
+
+  /// No description provided for @vehicleBicycle.
+  ///
+  /// In ar, this message translates to:
+  /// **'دراجة هوائية'**
+  String get vehicleBicycle;
+
+  /// No description provided for @vehicleVan.
+  ///
+  /// In ar, this message translates to:
+  /// **'فان'**
+  String get vehicleVan;
+
+  /// No description provided for @vehicleTukTuk.
+  ///
+  /// In ar, this message translates to:
+  /// **'توك توك'**
+  String get vehicleTukTuk;
+
+  /// No description provided for @vehicleOnFoot.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشيًا'**
+  String get vehicleOnFoot;
+
+  /// No description provided for @pushToggleTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفعيل الإشعارات'**
+  String get pushToggleTitle;
+
+  /// No description provided for @pushToggleSub.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنبيهات الطلبات والتحديثات من سطر'**
+  String get pushToggleSub;
+
+  /// No description provided for @pushUnsupported.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير متاحة على هذا الجهاز'**
+  String get pushUnsupported;
+
+  /// No description provided for @pushDenied.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإشعارات مرفوضة من إعدادات النظام'**
+  String get pushDenied;
+
+  /// No description provided for @pushOpenSystem.
+  ///
+  /// In ar, this message translates to:
+  /// **'فتح إعدادات النظام'**
+  String get pushOpenSystem;
+
+  /// No description provided for @pushToggleError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر تحديث إعداد الإشعارات'**
+  String get pushToggleError;
+
+  /// No description provided for @pushRetry.
+  ///
+  /// In ar, this message translates to:
+  /// **'أعد المحاولة'**
+  String get pushRetry;
+
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإشعارات'**
+  String get notificationsTitle;
+
+  /// No description provided for @notificationsReadAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'قراءة الكل'**
+  String get notificationsReadAll;
+
+  /// No description provided for @cartBadgeLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'السلة، {count} عناصر'**
+  String cartBadgeLabel(int count);
+
+  /// No description provided for @voiceModeTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوضع الصوتي التفاعلي'**
+  String get voiceModeTitle;
+
+  /// No description provided for @voiceModeTooltip.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوضع الصوتي'**
+  String get voiceModeTooltip;
+
+  /// No description provided for @listeningState.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنصت إليك...'**
+  String get listeningState;
+
+  /// No description provided for @thinkingState.
+  ///
+  /// In ar, this message translates to:
+  /// **'يفكر في إجابتك...'**
+  String get thinkingState;
+
+  /// No description provided for @speakingState.
+  ///
+  /// In ar, this message translates to:
+  /// **'يتحدث الآن...'**
+  String get speakingState;
+
+  /// No description provided for @finishVoiceSession.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنهاء المحادثة والمراجعة'**
+  String get finishVoiceSession;
+
+  /// No description provided for @voiceConfirmAdd.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد وإضافة للسلة'**
+  String get voiceConfirmAdd;
+
+  /// No description provided for @voiceContinue.
+  ///
+  /// In ar, this message translates to:
+  /// **'متابعة المحادثة'**
+  String get voiceContinue;
+
+  /// No description provided for @voiceTapToResume.
+  ///
+  /// In ar, this message translates to:
+  /// **'اضغط للمتابعة'**
+  String get voiceTapToResume;
+
+  /// No description provided for @voiceMicDenied.
+  ///
+  /// In ar, this message translates to:
+  /// **'نحتاج إذن الميكروفون لنتحدث معك.'**
+  String get voiceMicDenied;
+
+  /// No description provided for @voiceOpenSettings.
+  ///
+  /// In ar, this message translates to:
+  /// **'فتح الإعدادات'**
+  String get voiceOpenSettings;
+
+  /// No description provided for @voiceUnsupported.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوضع الصوتي غير متاح على هذا الجهاز'**
+  String get voiceUnsupported;
+
+  /// No description provided for @voiceArabicVoiceMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم نجد صوتًا عربيًا على جهازك. ثبّته من إعدادات النظام ثم أعد المحاولة.'**
+  String get voiceArabicVoiceMissing;
+
+  /// No description provided for @voiceQuotaMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'المساعد مشغول حاليًا، جرّب بعد قليل.'**
+  String get voiceQuotaMessage;
+
+  /// No description provided for @voiceNetworkMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر الاتصال، تأكد من الإنترنت وجرّب مرة ثانية.'**
+  String get voiceNetworkMessage;
+
+  /// No description provided for @voiceNoItems.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما في أصناف للمراجعة بعد.'**
+  String get voiceNoItems;
+
+  /// No description provided for @voiceGreeting.
+  ///
+  /// In ar, this message translates to:
+  /// **'أهلًا، أنا قلم. شو بدك اليوم؟'**
+  String get voiceGreeting;
+
+  /// No description provided for @voiceBackToText.
+  ///
+  /// In ar, this message translates to:
+  /// **'العودة للمساعد النصي'**
+  String get voiceBackToText;
+
+  /// No description provided for @voiceSummaryTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مراجعة الأصناف'**
+  String get voiceSummaryTitle;
+
+  /// No description provided for @voiceTotal.
+  ///
+  /// In ar, this message translates to:
+  /// **'المجموع'**
+  String get voiceTotal;
+
+  /// No description provided for @voiceInStock.
+  ///
+  /// In ar, this message translates to:
+  /// **'متوفر'**
+  String get voiceInStock;
+
+  /// No description provided for @voiceOutOfStock.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير متوفر'**
+  String get voiceOutOfStock;
+
+  /// No description provided for @voiceCloseLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إغلاق'**
+  String get voiceCloseLabel;
+
+  /// No description provided for @voiceAddedToCart.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُضيفت الأصناف إلى السلة'**
+  String get voiceAddedToCart;
+
+  /// No description provided for @voiceProposedCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} أصناف مقترحة'**
+  String voiceProposedCount(int count);
 }
 
 class _AppLocalizationsDelegate

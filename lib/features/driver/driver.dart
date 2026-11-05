@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show Clipboard;
+import 'package:project/core/extensions/context_extensions.dart';
+import 'package:project/core/widgets/success_badge.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,10 +19,11 @@ import 'package:project/core/design/widgets.dart';
 import 'package:project/core/errors/api_error_codes.dart';
 import 'package:project/core/errors/failure.dart';
 import 'package:project/core/network/idempotency.dart';
-import 'package:project/core/storage/session_store.dart';
 import 'package:project/core/uploads/upload_repository.dart';
+import 'package:project/core/utils/haptics.dart';
+import 'package:project/core/motion/entrance.dart' show ShakeOnChange;
 import 'package:project/data/models.dart';
-import 'package:project/features/account/account.dart';
+import 'package:project/features/driver/deliver_order.dart';
 import 'package:project/features/common.dart';
 import 'package:project/features/orders/orders.dart';
 
@@ -114,6 +118,7 @@ class DriverController extends GetxController {
   final current = Rxn<DriverOrderModel>();
   final cash = Rxn<CashModel>();
   final today = Rxn<EarningsModel>();
+  final unread = 0.obs;
   final loading = true.obs;
   final failure = Rxn<Failure>();
   final togglingOnline = false.obs;
@@ -139,6 +144,13 @@ class DriverController extends GetxController {
     r[3].fold((_) {}, (v) => today.value = v as EarningsModel);
     loading.value = false;
     _syncLocation();
+    refreshUnread();
+  }
+
+  /// عدّاد شارة الجرس: GET /driver/notifications?unread=1.
+  Future<void> refreshUnread() async {
+    final r = await backend.notifications(driver: true, unread: true, perPage: 50);
+    r.fold((_) {}, (v) => unread.value = v.length);
   }
 
   Future<void> refreshQuiet() async {
@@ -187,69 +199,7 @@ DriverController driverCtl() => Get.isRegistered<DriverController>() ? Get.find<
 
 // --------------------------------------------------------------------- login
 
-class DriverLoginScreen extends StatefulWidget {
-  const DriverLoginScreen({super.key});
-  @override
-  State<DriverLoginScreen> createState() => _DriverLoginScreenState();
-}
-
-class _DriverLoginScreenState extends State<DriverLoginScreen> {
-  final phone = TextEditingController();
-  final pass = TextEditingController();
-  bool show = false, busy = false;
-  String? err;
-
-  @override
-  void dispose() {
-    phone.dispose();
-    pass.dispose();
-    super.dispose();
-  }
-
-  Future<void> _login() async {
-    if (phone.text.trim().isEmpty || pass.text.isEmpty) {
-      setState(() => err = 'أدخل رقم الجوال وكلمة المرور.');
-      return;
-    }
-    setState(() {
-      busy = true;
-      err = null;
-    });
-    final r = await backend.driverLogin(phone.text.replaceAll(RegExp(r'[\s\-()]'), ''), pass.text, deviceName: 'satr-driver');
-    if (!mounted) return;
-    setState(() => busy = false);
-    await r.fold((f) async {
-      setState(() => err = f is ValidationFailure || f.code == ApiErrorCodes.validationFailed || f.statusCode == 401 || f.statusCode == 422 ? 'رقم الجوال أو كلمة المرور غير صحيحة.' : failureText(f));
-    }, (res) async {
-      final s = Get.find<SessionStore>();
-      await s.signIn(token: res.$1, userId: res.$2.id);
-      await s.setRole('driver');
-      Get.find<RemoteConfigRepository>().app = 'driver';
-      Get.find<RemoteConfigRepository>().load(refresh: true);
-      Get.offAllNamed('/driver/home');
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.sc;
-    return Page2(
-      top: const TopBar(),
-      body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        const Eyebrow('تطبيق السائق'),
-        Text('أهلًا بك يا بطل التوصيل', style: T.d2(c.tx)),
-        const SizedBox(height: 24),
-        if (err != null) ...[Note('err', title: err, text: ''), const SizedBox(height: 16)],
-        Fld(label: 'رقم الجوال', controller: phone, keyboard: TextInputType.phone, ltr: true, hint: '0599…'),
-        const SizedBox(height: 24),
-        Fld(label: 'كلمة المرور', controller: pass, obscure: !show, onSubmitted: (_) => _login(), suffix: GestureDetector(onTap: () => setState(() => show = !show), child: SIcon('eye', size: 20, color: c.tx2))),
-        const SizedBox(height: 24),
-        const Note('plum', text: 'نسيت كلمة المرور؟ تواصل مع مشغّل سطر ليعيد ضبطها.'),
-      ]),
-      foot: Foot(child: SBtn('دخول', full: true, loading: busy, onTap: _login)),
-    );
-  }
-}
+// شاشة الدخول انتقلت إلى driver_login.dart (تصميم جديد + بوابة OTP).
 
 // ---------------------------------------------------------------------- home
 
@@ -261,12 +211,15 @@ Widget _driverTop(BuildContext context, DriverController d, {required String sub
     child: ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 56),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Flexible(child: GestureDetector(onTap: () => Get.toNamed('/driver/profile'), child: Row(children: [
+        Flexible(child: GestureDetector(onTap: () => goTab('/driver/profile'), child: Row(children: [
           Avatar(me?.initial ?? 'س'),
           const SizedBox(width: 12),
           Flexible(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(sub, style: T.cap(c.tx2)), Text(me?.name ?? '…', maxLines: 1, overflow: TextOverflow.ellipsis, style: T.h3(c.tx))])),
         ]))),
-        Row(children: [SIconBtn('bell', onTap: () => Get.toNamed('/driver/notifications')), const SizedBox(width: 4), _OnlineChip(d)]),
+        Row(children: [Obx(() => SIconBtn('bell', badge: d.unread.value > 0 ? '${d.unread.value}' : null, onTap: () async {
+              await Get.toNamed('/driver/notifications');
+              d.refreshUnread();
+            })), const SizedBox(width: 4), _OnlineChip(d)]),
       ]),
     ),
   );
@@ -488,7 +441,7 @@ class _AvailCard extends StatelessWidget {
       ]),
       const SizedBox(height: 12),
       Row(children: [
-        Expanded(child: SBtn('قبول المهمة', size: BtnSize.sm, full: true, onTap: () => Get.toNamed('/driver/order', arguments: {'order_id': o.id}))),
+        Expanded(child: SBtn('قبول المهمة', size: BtnSize.sm, full: true, onTap: () => Get.toNamed('/driver/order', arguments: {'order_id': o.id, 'order': o}))),
         const SizedBox(width: 8),
         SBtn('إخفاء', kind: BtnKind.sec, size: BtnSize.sm, onTap: () async {
           await backend.driverReject(o.id);
@@ -508,29 +461,48 @@ class DriverPreviewScreen extends StatefulWidget {
 }
 
 class _DriverPreviewScreenState extends State<DriverPreviewScreen> {
-  final id = (Get.arguments is Map ? Get.arguments['order_id'] : null) as int? ?? 0;
-  DriverOrderModel? o;
-  Failure? f;
+  // لا يوجد GET /driver/orders/{id} في العقد: المعاينة تعرض الطلب القادم من قائمة المتاحة.
+  final DriverOrderModel? o = Get.arguments is Map && Get.arguments['order'] is DriverOrderModel ? Get.arguments['order'] as DriverOrderModel : null;
+  int get id => o?.id ?? 0;
   bool busy = false;
   final key = IdempotencyKey.generate();
 
-  @override
-  void initState() {
-    super.initState();
-    backend.driverOrder(id).then((r) => r.fold((e) => mounted ? setState(() => f = e) : null, (v) => mounted ? setState(() => o = v) : null));
+  /// العودة لقائمة المتاحة (تُنشأ من جديد فتُحدَّث القائمة).
+  void _toAvailable() {
+    if (Get.isDialogOpen ?? false) Get.back();
+    Get.offAllNamed('/driver/available');
   }
 
   Future<void> _accept() async {
+    if (busy || id == 0) return;
+    final l = context.l10n;
+    final d = driverCtl();
+    // شرط الخادم: السائق متصل (PUT /driver/status). نوضح ذلك قبل الطلب بدل خطأ عام.
+    if (d.me.value != null && !d.me.value!.isOnline) {
+      _offlineDlg();
+      return;
+    }
     setState(() => busy = true);
     final r = await backend.driverAccept(id, key);
     if (!mounted) return;
     setState(() => busy = false);
     r.fold((e) {
-      if (e.code == ApiErrorCodes.alreadyTaken) {
-        showDlg(context, kind: 'warn', icon: 'alert', title: 'سبقك سائق آخر', text: 'قُبل هذا الطلب قبل لحظات. سنعرض لك طلبات أخرى قريبة.', foot: [SBtn('الطلبات المتاحة', full: true, onTap: () {
-          Get.back();
-          Get.offAllNamed('/driver/available');
-        })]);
+      Haptics.error();
+      if (e is NetworkFailure || e is TimeoutFailure) {
+        // "أعد المحاولة" فقط لأخطاء الشبكة/المهلة (المفتاح نفسه ⇒ آمن من التكرار).
+        showDlg(context, kind: 'warn', icon: 'wifiOff', title: l.driverNetworkTitle, text: failureText(e), foot: [
+          SBtn(l.commonRetry, full: true, onTap: () {
+            Get.back();
+            _accept();
+          }),
+          SBtn(l.commonClose, kind: BtnKind.ghost, full: true, onTap: () => Get.back()),
+        ]);
+      } else if (e is UnauthorizedFailure || e.code == ApiErrorCodes.unauthenticated) {
+        showDlg(context, kind: 'err', icon: 'alert', title: l.driverSessionExpiredTitle, text: l.driverSessionExpiredText, foot: [SBtn(l.driverSignIn, full: true, onTap: () => Get.offAllNamed('/auth/phone'))]);
+      } else if (e.code == ApiErrorCodes.notFound) {
+        showDlg(context, kind: 'warn', icon: 'alert', title: l.driverOrderUnavailableTitle, text: l.driverOrderUnavailableText, foot: [SBtn(l.driverAvailableOrders, full: true, onTap: _toAvailable)]);
+      } else if (e.code == ApiErrorCodes.alreadyTaken || e.code == ApiErrorCodes.conflict) {
+        showDlg(context, kind: 'warn', icon: 'alert', title: 'سبقك سائق آخر', text: 'قُبل هذا الطلب قبل لحظات. سنعرض لك طلبات أخرى قريبة.', foot: [SBtn('الطلبات المتاحة', full: true, onTap: _toAvailable)]);
       } else if (e.code == ApiErrorCodes.cashLimitReached) {
         showDlg(context, kind: 'err', icon: 'wallet', title: 'وصلت للحد الأقصى للنقد', text: 'سلّم النقد للمشغّل لتتمكن من قبول طلبات جديدة.', foot: [
           SBtn('عرض تفاصيل النقد', full: true, onTap: () {
@@ -539,20 +511,53 @@ class _DriverPreviewScreenState extends State<DriverPreviewScreen> {
           }),
           SBtn('إغلاق', kind: BtnKind.ghost, full: true, onTap: () => Get.back()),
         ]);
+      } else if (e.code == ApiErrorCodes.validationFailed || e.code == ApiErrorCodes.invalidTransition) {
+        // 422: قد يكون السبب عدم الاتصال؛ نحدّث حالة السائق لنعرض السبب الصحيح.
+        d.refreshAll().then((_) {
+          if (!mounted) return;
+          if (d.me.value != null && !d.me.value!.isOnline) {
+            _offlineDlg();
+          } else {
+            final msg = (e.message ?? '').trim();
+            showDlg(context, kind: 'warn', icon: 'alert', title: l.driverAcceptInvalidTitle, text: msg.isEmpty ? l.driverAcceptInvalidText : msg, foot: [SBtn(l.commonOk, full: true, onTap: () => Get.back())]);
+          }
+        });
       } else {
-        showDlg(context, kind: 'warn', icon: 'alert', title: 'تعذّر قبول الطلب', text: e.code == ApiErrorCodes.validationFailed || e.code == ApiErrorCodes.invalidTransition ? (e.message ?? 'لا يمكنك قبول هذا الطلب الآن (قد تكون مشغولًا بمهمة أو غير متصل).') : failureText(e), foot: [SBtn('حسنًا', full: true, onTap: () => Get.back())]);
+        showDlg(context, kind: 'warn', icon: 'alert', title: l.driverAcceptInvalidTitle, text: failureText(e), foot: [SBtn(l.commonOk, full: true, onTap: () => Get.back())]);
       }
     }, (_) async {
-      await driverCtl().refreshAll();
+      Haptics.confirm();
+      // المصدر الوحيد للطلب المقبول: GET /driver/orders/current (عبر refreshAll).
+      await d.refreshAll();
       Get.offNamed('/driver/task');
     });
+  }
+
+  void _offlineDlg() {
+    final l = context.l10n;
+    showDlg(context, kind: 'warn', icon: 'power', title: l.driverAcceptOfflineTitle, text: l.driverAcceptOfflineText, foot: [
+      SBtn(l.driverGoOnline, full: true, onTap: () async {
+        Get.back();
+        final err = await driverCtl().setOnline(true);
+        if (!mounted) return;
+        if (err != null) {
+          showToast(err, icon: 'alertC');
+        } else {
+          _accept();
+        }
+      }),
+      SBtn(l.commonClose, kind: BtnKind.ghost, full: true, onTap: () => Get.back()),
+    ]);
   }
 
   @override
   Widget build(BuildContext context) {
     final c = context.sc;
+    final l = context.l10n;
     final x = o;
-    if (x == null) return Page2(top: const TopBar(title: ''), center: true, body: f == null ? const Skel(h: 260, r: 20) : EmptyState(ill: 'offline', title: 'تعذّر تحميل الطلب', text: failureText(f!), cta: SBtn('أعد المحاولة', full: true, onTap: () => Get.back())));
+    if (x == null) {
+      return Page2(top: const TopBar(title: ''), center: true, body: EmptyState(ill: 'route', title: l.driverOrderUnavailableTitle, text: l.driverOrderUnavailableText, cta: SBtn(l.driverAvailableOrders, full: true, onTap: _toAvailable)));
+    }
     return Page2(
       top: TopBar(title: x.code),
       body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -574,7 +579,7 @@ class _DriverPreviewScreenState extends State<DriverPreviewScreen> {
         const Note('plum', text: 'اسم الزبون وتفاصيل العنوان تظهر بعد قبول المهمة.'),
       ]),
       foot: FootBar(child: Column(mainAxisSize: MainAxisSize.min, children: [
-        SBtn('اقبل المهمة', full: true, loading: busy, onTap: _accept),
+        SBtn('اقبل المهمة', full: true, loading: busy, hapticOnPress: false, onTap: _accept),
         const SizedBox(height: 8),
         SBtn('إخفاء الطلب', kind: BtnKind.ghost, full: true, onTap: () async {
           await backend.driverReject(id);
@@ -628,6 +633,9 @@ class TaskController extends GetxController {
     });
   }
 
+  /// يوقف التحديث الدوري عند إغلاق المهمة.
+  void stopPolling() => _t?.cancel();
+
   @override
   void onClose() {
     _t?.cancel();
@@ -648,7 +656,7 @@ class DriverTaskScreen extends StatelessWidget {
       if (o == null) {
         return Page2(top: const TopBar(title: 'المهمة'), center: true, body: EmptyState(ill: 'route', title: 'لا مهمة حالية', text: ctl.failure.value == null ? 'اقبل طلبًا من قائمة الطلبات المتاحة.' : failureText(ctl.failure.value!), cta: SBtn('الطلبات المتاحة', full: true, onTap: () => Get.offAllNamed('/driver/available'))));
       }
-      final na = o.nextAction;
+      final (primary, secondary) = _actionsOf(o);
       final stages = const ['accepted', 'picked_up', 'on_the_way', 'arrived'];
       final idx = stages.indexOf(o.status.key).clamp(0, 3);
       final after = ['picked_up', 'on_the_way', 'arrived'].contains(o.status.key);
@@ -663,7 +671,7 @@ class DriverTaskScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(label, style: T.h3(c.tx, size: 15.5)), StatusPill(o.status.key, label: statusLabel(o.status))]),
           const SizedBox(height: 24),
-          RouteMap(height: 190, radius: Rad.l, pickup: o.pickup.lat == null ? null : LatLng(o.pickup.lat!, o.pickup.lng!), drop: o.dropoff.lat == null ? null : LatLng(o.dropoff.lat!, o.dropoff.lng!), driver: pos == null ? null : LatLng(pos.latitude, pos.longitude)),
+          RouteMap(height: 190, radius: Rad.l, pickup: o.pickup.lat == null ? null : LatLng(o.pickup.lat!, o.pickup.lng!), drop: o.dropoff.lat == null ? null : LatLng(o.dropoff.lat!, o.dropoff.lng!), driver: pos == null ? null : LatLng(pos.latitude, pos.longitude), driverHeading: pos != null && pos.heading >= 0 && pos.speed > 0.5 ? pos.heading : null, driverSeenAt: pos?.timestamp),
           const SizedBox(height: 24),
           Card2(child: Column(children: [
             Row(children: [SIcon('pin', size: 22, color: c.tx), const SizedBox(width: 12), Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(o.status.key == 'accepted' ? 'اذهب إلى' : 'استلمت من', style: T.cap(c.tx2)), Text(o.pickup.line.isEmpty ? (o.vendorName ?? 'المكتبة') : o.pickup.line, style: T.h3(c.tx, size: 15))])), if (o.status.key == 'accepted' && o.pickup.lat != null) SBtn('خرائط', kind: BtnKind.sec, size: BtnSize.xs, icon: 'nav', onTap: () => _maps(o.pickup.lat!, o.pickup.lng!))]),
@@ -673,26 +681,68 @@ class DriverTaskScreen extends StatelessWidget {
           if (o.isCash) ...[const SizedBox(height: 24), Panel(child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('تحصيل نقدي عند التسليم', style: T.cap(c.tx2)), Mny(o.collect.amount, size: 26)]), SIcon('cash', size: 30, color: c.tx)]))],
           if (o.items.isNotEmpty) ...[const SizedBox(height: 24), Card2(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [Text('المحتويات', style: T.h3(c.tx, size: 15)), const SizedBox(height: 8), for (final it in o.items) Padding(padding: const EdgeInsets.symmetric(vertical: 2), child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Expanded(child: Text(it.$1, style: T.sm(c.tx))), Num('× ${it.$2}', style: T.sm(c.tx2))]))]))],
         ])),
-        foot: na == null ? null : FootBar(child: SBtn(na.label.isEmpty ? 'التالي' : na.label, full: true, loading: ctl.busy.value, kind: na.style == 'danger' ? BtnKind.danger : BtnKind.pri, icon: na.action == 'deliver' ? 'checkC' : 'fwd', onTap: () => _next(context, ctl, o, na))),
+        foot: primary == null
+            ? null
+            : FootBar(child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                SBtn(_label(context, primary), full: true, loading: ctl.busy.value, kind: primary.style == 'danger' && primary.action != 'deliver' ? BtnKind.danger : BtnKind.pri, icon: primary.action == 'deliver' ? 'checkC' : 'fwd', onTap: () => _next(context, ctl, o, primary)),
+                for (final a in secondary) Padding(padding: const EdgeInsets.only(top: 12), child: Center(child: SLink(_label(context, a), color: a.style == 'danger' || _isFailure(a) ? c.err : null, onTap: ctl.busy.value ? null : () => _next(context, ctl, o, a)))),
+              ])),
       );
     });
   }
 
   Future<void> _maps(double lat, double lng) async => launchUrlSafe('https://www.google.com/maps/dir/?api=1&destination=$lat,$lng');
 
+  /// الأساسي والثانوية من الخادم (nextAction ثم actions[] بلا تكرار).
+  /// التسليم بالكود دائمًا أساسي؛ عند "وصل" بلا إجراء deliver من الخادم نضيفه.
+  static (NextActionModel?, List<NextActionModel>) _actionsOf(DriverOrderModel o) {
+    final all = <NextActionModel>[];
+    for (final a in [if (o.nextAction != null) o.nextAction!, ...o.actions]) {
+      if (!all.any((b) => b.action == a.action && b.to == a.to)) all.add(a);
+    }
+    var deliver = all.where((a) => a.action == 'deliver').firstOrNull;
+    if (deliver == null && o.status.key == 'arrived') {
+      deliver = const NextActionModel(action: 'deliver', to: 'delivered', label: '');
+      all.insert(0, deliver);
+    }
+    final primary = deliver ?? all.where((a) => a.style != 'danger' && !_isFailure(a)).firstOrNull ?? all.firstOrNull;
+    return (primary, [for (final a in all) if (!identical(a, primary)) a]);
+  }
+
+  static bool _isFailure(NextActionModel a) => a.to == 'delivery_failed';
+
+  static String _label(BuildContext context, NextActionModel a) {
+    if (a.label.isNotEmpty) return a.label;
+    if (a.action == 'deliver') return context.l10n.driverDeliverCta;
+    if (_isFailure(a)) return context.l10n.driverFailDeliveryCta;
+    return 'التالي';
+  }
+
   void _next(BuildContext context, TaskController ctl, DriverOrderModel o, NextActionModel na) {
+    if (ctl.busy.value) return;
     if (na.action == 'deliver') {
       Get.toNamed('/driver/deliver');
       return;
     }
     final c = context.sc;
+    // تعذّر التسليم: نفس نافذة التأكيد، ثم شاشة السبب (السبب والملاحظة والصورة).
+    if (_isFailure(na)) {
+      showSheet(context, title: na.confirm ?? _label(context, na), body: Text('تأكد من البيانات قبل المتابعة.', style: T.sm(c.tx2)), foot: [
+        SBtn('نعم، ${_label(context, na)}', kind: BtnKind.danger, full: true, hapticOnPress: false, onTap: () {
+          Get.back();
+          Get.toNamed('/driver/failed');
+        }),
+        SBtn('لا، رجوع', kind: BtnKind.ghost, full: true, onTap: () => Get.back()),
+      ]);
+      return;
+    }
     final needsPhoto = na.requires.any((r) => r.contains('photo') || r.contains('upload'));
     showSheet(context, title: na.confirm ?? na.label, body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       Text('تأكد من البيانات قبل المتابعة.', style: T.sm(c.tx2)),
       if (na.geofenceMeters != null) ...[const SizedBox(height: 12), Note('plum', icon: 'pin', text: 'يجب أن تكون ضمن ${na.geofenceMeters} م من الموقع لتأكيد هذه الخطوة.')],
       if (needsPhoto) ...[const SizedBox(height: 12), const Note('warn', icon: 'camera', text: 'تتطلب هذه الخطوة صورة. ستُفتح الكاميرا بعد التأكيد.')],
     ]), foot: [
-      SBtn('نعم، ${na.label}', full: true, onTap: () async {
+      SBtn('نعم، ${na.label}', full: true, hapticOnPress: false, onTap: () async {
         Get.back();
         List<int>? ups;
         if (needsPhoto) {
@@ -700,6 +750,11 @@ class DriverTaskScreen extends StatelessWidget {
           if (ups == null) return;
         }
         final (ok, f) = await ctl.transition(na, uploads: ups);
+        if (ok) {
+          Haptics.confirm();
+        } else if (f != null) {
+          Haptics.error();
+        }
         if (!ok && f != null && context.mounted) _geofence(context, f, na);
       }),
       SBtn('لا، رجوع', kind: BtnKind.ghost, full: true, onTap: () => Get.back()),
@@ -750,80 +805,153 @@ class DriverDeliverScreen extends StatefulWidget {
 }
 
 class _DriverDeliverScreenState extends State<DriverDeliverScreen> {
+  static const _maxLen = 8, _minLen = 4;
   String otp = '';
-  bool wrong = false, busy = false;
-  String? err;
-  final key = IdempotencyKey.generate();
+  bool busy = false;
+  Failure? fail;
+  int shake = 0;
+  String key = IdempotencyKey.generate();
   DriverOrderModel? o;
+  final _deliver = DeliverOrderUseCase(
+    deliver: (id, {otp, uploadIds, required key}) => backend.driverDeliver(id, otp: otp, uploadIds: uploadIds, key: key),
+    current: () => backend.driverCurrent(),
+  );
 
   @override
   void initState() {
     super.initState();
-    o = Get.isRegistered<TaskController>() ? Get.find<TaskController>().order.value : null;
+    o = Get.isRegistered<TaskController>() ? Get.find<TaskController>().order.value : driverCtl().current.value;
   }
 
   bool get photo => Get.find<RemoteConfigRepository>().current?.deliveryConfirmation == 'photo';
+  bool get ready => !busy && otp.length >= _minLen;
 
-  Future<void> _submit({List<int>? ups}) async {
+  Future<void> _submit({List<int> ups = const []}) async {
     final order = o;
-    if (order == null) return;
+    if (order == null || busy) return;
     setState(() {
       busy = true;
-      wrong = false;
-      err = null;
+      fail = null;
     });
-    final r = await backend.driverDeliver(order.id, otp: ups == null ? otp : null, uploadIds: ups, key: key);
+    final r = await _deliver(order: order, otp: otp, uploadIds: ups, key: key);
     if (!mounted) return;
-    setState(() => busy = false);
     r.fold((f) {
+      Haptics.error();
       setState(() {
-        wrong = true;
-        err = f.code == ApiErrorCodes.validationFailed || f.statusCode == 422 ? null : failureText(f);
+        busy = false;
+        fail = f;
+        shake++;
+        // رفضه الخادم ⇒ محاولة جديدة بمفتاح جديد. بلا رد ⇒ نفس المفتاح لإعادة آمنة.
+        if (!f.hasNoResponse) key = IdempotencyKey.generate();
       });
-    }, (v) async {
-      await driverCtl().refreshAll();
-      Get.offNamed('/driver/delivered', arguments: {'earning': v.earning.amount, 'code': v.code});
-    });
+    }, (v) => _close(order, v));
+  }
+
+  /// إغلاق المهمة: إيقاف التحديث، تحديث القوائم، ثم شاشة النجاح بلا رجوع للمهمة.
+  Future<void> _close(DriverOrderModel before, DriverOrderModel after) async {
+    Haptics.confirm();
+    if (Get.isRegistered<TaskController>()) {
+      final t = Get.find<TaskController>()..stopPolling();
+      t.order.value = null;
+      t.loading.value = false;
+    }
+    final d = driverCtl();
+    d.current.value = null;
+    await d.refreshAll();
+    if (Get.isRegistered<AvailableController>()) Get.find<AvailableController>().load(silent: true);
+    final earning = after.earning.amount > 0 ? after.earning.amount : before.earning.amount;
+    Get.offAllNamed('/driver/delivered', arguments: {'earning': earning, 'code': before.code});
   }
 
   void _key(String k) {
     if (busy) return;
     setState(() {
-      wrong = false;
+      fail = null;
       if (k == '⌫') {
         if (otp.isNotEmpty) otp = otp.substring(0, otp.length - 1);
-      } else if (otp.length < 4) {
+      } else if (otp.length < _maxLen) {
         otp += k;
       }
     });
-    if (otp.length == 4 && k != '⌫') _submit();
+  }
+
+  Future<void> _paste() async {
+    final t = (await Clipboard.getData('text/plain'))?.text ?? '';
+    final digits = t.replaceAll(RegExp(r'[^0-9]'), '');
+    if (digits.isEmpty || !mounted) return;
+    setState(() {
+      fail = null;
+      otp = digits.length > _maxLen ? digits.substring(0, _maxLen) : digits;
+    });
+  }
+
+  String _errText(BuildContext context, Failure f) {
+    final l = context.l10n;
+    if (f is DeliveryCodeInvalid) return l.driverDeliverErrWrong;
+    if (f is DeliveryTooManyAttempts) return l.driverDeliverErrTooMany;
+    if (f is DeliveryInvalidState) return l.driverDeliverErrState;
+    if (f is NetworkFailure || f is TimeoutFailure) return l.driverDeliverErrNetwork;
+    if (f is UnauthorizedFailure) return l.driverDeliverErrSession;
+    return failureText(f);
+  }
+
+  Widget? _errAction(BuildContext context, Failure f) {
+    final l = context.l10n;
+    if (f is DeliveryInvalidState) {
+      return SBtn(l.driverDeliverRefresh, kind: BtnKind.sec, size: BtnSize.sm, icon: 'refresh', onTap: () async {
+        await driverCtl().refreshAll();
+        if (Get.isRegistered<TaskController>()) await Get.find<TaskController>().load();
+        Get.back();
+      });
+    }
+    if (f is UnauthorizedFailure) return SBtn(l.driverSignIn, kind: BtnKind.sec, size: BtnSize.sm, onTap: () => Get.offAllNamed('/auth/phone'));
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
     final c = context.sc;
+    final l = context.l10n;
     final x = o;
+    final f = fail;
+    final action = f == null ? null : _errAction(context, f);
     return Page2(
-      top: const TopBar(title: 'تسليم الطلب'),
+      top: TopBar(title: l.driverDeliverTitle),
       body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Text(photo ? 'صوّر لإثبات التسليم' : 'أدخل رمز التسليم', style: T.h1(c.tx)),
+        Text(photo ? 'صوّر لإثبات التسليم' : l.driverDeliverTitle, style: T.h1(c.tx)),
         const SizedBox(height: 8),
-        Text(photo ? 'التقط صورة للطلب عند باب الزبون.' : 'اطلب الرمز المكوّن من 4 أرقام من الزبون. يظهر في تطبيقه.', style: T.sm(c.tx2)),
-        const SizedBox(height: 24),
-        if (photo) DropZone(icon: 'camera', title: 'التقط صورة', onTap: busy ? null : () async {
-          final ups = await pickAndUpload('delivery_proof');
-          if (ups != null) _submit(ups: ups);
-        }) else ...[
-          OtpBoxes(digits: otp, bad: wrong),
-          if (wrong) ...[const SizedBox(height: 16), Note('err', title: err ?? 'الرمز غير صحيح.', text: err == null ? 'اطلب الرمز من الزبون وأعد المحاولة.' : '')],
+        Text(photo ? 'التقط صورة للطلب عند باب الزبون.' : l.driverDeliverHint, style: T.sm(c.tx2)),
+        if (x != null) ...[
+          const SizedBox(height: 8),
+          Text('${x.code} · ${x.customerName ?? 'الزبون'}', style: T.cap(c.tx2)),
         ],
-        if (photo && wrong && err != null) ...[const SizedBox(height: 16), Note('err', text: err)],
         const SizedBox(height: 24),
-        if (x != null) Panel(child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('حصّل من الزبون', style: T.cap(c.tx2)), Mny(x.collect.amount, size: 26)]), SIcon('cash', size: 30, color: c.tx)])),
+        if (photo)
+          DropZone(icon: 'camera', title: 'التقط صورة', onTap: busy ? null : () async {
+            final ups = await pickAndUpload('delivery_proof');
+            if (ups != null) _submit(ups: ups);
+          })
+        else ...[
+          ShakeOnChange(trigger: shake, child: FittedBox(fit: BoxFit.scaleDown, child: OtpBoxes(digits: otp, length: otp.length < _minLen ? _minLen : otp.length, bad: f is DeliveryCodeInvalid, current: otp.length < _minLen))),
+          const SizedBox(height: 8),
+          Center(child: SLink(l.driverDeliverPaste, onTap: busy ? null : _paste)),
+        ],
+        if (f != null) ...[
+          const SizedBox(height: 16),
+          Note('err', icon: 'alertC', text: _errText(context, f)),
+          if (action != null) ...[const SizedBox(height: 8), Align(alignment: AlignmentDirectional.centerStart, child: action)],
+        ],
+        const SizedBox(height: 24),
+        if (x != null && x.isCash) Panel(child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(l.driverDeliverCollect, style: T.cap(c.tx2)), Mny(x.collect.amount, size: 26)]), SIcon('cash', size: 30, color: c.tx)])),
         const SizedBox(height: 16),
-        Center(child: SLink('تعذّر التسليم؟', onTap: () => Get.toNamed('/driver/failed'))),
+        Center(child: SLink(l.driverFailDeliveryCta, color: c.err, onTap: busy ? null : () => Get.toNamed('/driver/failed'))),
       ]),
-      foot: photo ? null : Keypad(onKey: _key, disabled: busy),
+      foot: photo
+          ? null
+          : Column(mainAxisSize: MainAxisSize.min, children: [
+              Padding(padding: const EdgeInsets.fromLTRB(16, 8, 16, 8), child: SBtn(l.driverDeliverConfirm, full: true, icon: 'checkC', loading: busy, disabled: !ready, hapticOnPress: false, onTap: ready ? () => _submit() : null)),
+              Keypad(onKey: _key, disabled: busy),
+            ]),
     );
   }
 }
@@ -866,7 +994,11 @@ class _DriverFailedScreenState extends State<DriverFailedScreen> {
     final r = await backend.driverTransition(o.id, 'delivery_failed', key: key, fields: {'delivery_failure_reason': reason}, note: note.text, uploadIds: photo);
     if (!mounted) return;
     setState(() => busy = false);
-    r.fold((f) => setState(() => err = failureText(f)), (_) async {
+    r.fold((f) {
+      Haptics.error();
+      setState(() => err = failureText(f));
+    }, (_) async {
+      Haptics.confirm();
       await driverCtl().refreshAll();
       Get.offNamed('/driver/failure-recorded');
     });
@@ -890,7 +1022,7 @@ class _DriverFailedScreenState extends State<DriverFailedScreen> {
         }),
         if (err != null) ...[const SizedBox(height: 16), Note('err', text: err)],
       ]),
-      foot: FootBar(child: SBtn('سجّل تعذّر التسليم', kind: BtnKind.danger, full: true, loading: busy, onTap: _send)),
+      foot: FootBar(child: SBtn('سجّل تعذّر التسليم', kind: BtnKind.danger, full: true, loading: busy, hapticOnPress: false, onTap: _send)),
     );
   }
 }
@@ -910,11 +1042,13 @@ class DriverDeliveredScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.sc;
     final d = driverCtl();
-    final earning = (Get.arguments is Map ? Get.arguments['earning'] : null) as int? ?? 0;
+    final args = ModalRoute.settingsOf(context)?.arguments ?? Get.arguments;
+    final earning = (args is Map ? args['earning'] : null) as int? ?? 0;
+    final code = args is Map ? args['code']?.toString() : null;
     return Page2(
       center: true,
       body: Obx(() => Column(mainAxisSize: MainAxisSize.min, children: [
-            const Ill('done', width: 190),
+            SuccessBadge(eventKey: (code ?? '').isEmpty ? null : 'delivered:$code', semanticsLabel: context.l10n.celebrationDelivered),
             const SizedBox(height: 24),
             Text('تم التسليم', style: T.d2(c.tx)),
             const SizedBox(height: 8),
@@ -1103,60 +1237,4 @@ class _DriverCashScreenState extends State<DriverCashScreen> {
   }
 }
 
-class DriverProfileScreen extends StatefulWidget {
-  const DriverProfileScreen({super.key});
-  @override
-  State<DriverProfileScreen> createState() => _DriverProfileScreenState();
-}
-
-class _DriverProfileScreenState extends State<DriverProfileScreen> {
-  @override
-  Widget build(BuildContext context) {
-    final c = context.sc;
-    final d = driverCtl();
-    return Obx(() {
-      final me = d.me.value;
-      final lang = (Get.locale?.languageCode ?? 'ar') == 'en' ? 'English' : 'العربية';
-      return Page2(
-        tab: 'home',
-        role: _tab,
-        top: const TopBar(title: 'ملفي'),
-        body: me == null
-            ? const Skel(h: 120, r: 20)
-            : Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                Card2(child: Row(children: [
-                  Avatar(me.initial, large: true),
-                  const SizedBox(width: 14),
-                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(me.name, style: T.h2(c.tx)), Row(children: [SIcon('star', size: 16, color: c.amber, filled: true), const SizedBox(width: 6), Text('${me.rating.toStringAsFixed(1)} · ${me.ratingCount} تقييمًا', style: T.sm(c.tx))])])),
-                ])),
-                const SizedBox(height: 24),
-                Text('المركبة', style: TextStyle(fontFamily: Fonts.ui, fontSize: 14, fontWeight: FontWeight.w600, color: c.tx)),
-                const SizedBox(height: 8),
-                Wrap(spacing: 8, runSpacing: 8, children: [
-                  for (final v in kVehicleLabels.entries)
-                    SChip(v.value, on: me.vehicleType == v.key, onTap: () async {
-                      final r = await backend.updateDriver(vehicleType: v.key);
-                      r.fold((f) => showToast(failureText(f), icon: 'alertC'), (m) => d.me.value = m);
-                    }),
-                ]),
-                const SizedBox(height: 24),
-                Card2(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), child: Column(children: [
-                  LiTile('globe', 'اللغة', sub: lang, onTap: () => langSheet(context)),
-                  LiTile('bell', 'الإشعارات', sub: 'إدارة من إعدادات الجهاز', first: false, onTap: ph.openAppSettings),
-                ])),
-                const SizedBox(height: 24),
-                Card2(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), child: LiTile('logout', 'تسجيل الخروج', sub: 'يصبح غير متصل', onTap: () => showDlg(context, icon: 'logout', title: 'تسجيل الخروج؟', text: 'سيصبح حسابك غير متصل ولن تصلك طلبات.', foot: [
-                      SBtn('تسجيل الخروج', full: true, onTap: () async {
-                        Get.back();
-                        d.loc.stop();
-                        await backend.driverStatus(false);
-                        await doSignOut();
-                        Get.delete<DriverController>(force: true);
-                      }),
-                      SBtn('إلغاء', kind: BtnKind.ghost, full: true, onTap: () => Get.back()),
-                    ]))),
-              ]),
-      );
-    });
-  }
-}
+// شاشة ملف/إعدادات السائق انتقلت إلى driver_settings.dart.

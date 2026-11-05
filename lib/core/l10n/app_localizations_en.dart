@@ -994,4 +994,489 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get offerRejectedBody =>
       'The order was cancelled. Contact the library about any amount already paid.';
+
+  @override
+  String get vibrationSettingTitle => 'Vibration';
+
+  @override
+  String get vibrationSettingSub =>
+      'A gentle buzz on touch and when actions are confirmed';
+
+  @override
+  String get stepperIncrease => 'Increase quantity';
+
+  @override
+  String get stepperDecrease => 'Decrease quantity';
+
+  @override
+  String voiceRecordingPill(String time) {
+    return 'Recording · $time';
+  }
+
+  @override
+  String voiceRecordingSemantics(String time) {
+    return 'Recording, $time elapsed. We’re listening.';
+  }
+
+  @override
+  String productImageSemantics(String name) {
+    return 'Image of $name';
+  }
+
+  @override
+  String get productImageOpen => 'Open the product’s image full screen';
+
+  @override
+  String get imageViewerClose => 'Close';
+
+  @override
+  String imageViewerPage(int current, int total) {
+    return 'Image $current of $total';
+  }
+
+  @override
+  String get celebrationOrderPlaced =>
+      'Success! Your order’s been sent to the shop.';
+
+  @override
+  String get celebrationDelivered =>
+      'Delivery completed successfully. Great work!';
+
+  @override
+  String get celebrationOrderDelivered => 'Your order’s been delivered.';
+
+  @override
+  String get driverLocationLive => 'Driver location is live';
+
+  @override
+  String driverLocationStale(int minutes) {
+    return 'Last location $minutes min ago. The driver may be in a weak-signal area.';
+  }
+
+  @override
+  String get driverLocationNone => 'Waiting for the driver’s first location.';
+
+  @override
+  String driverEtaShort(int minutes) {
+    return 'about $minutes min';
+  }
+
+  @override
+  String get driverMarkerSemantics => 'Driver’s location on the map';
+
+  @override
+  String get driverOrderUnavailableTitle => 'This order is no longer available';
+
+  @override
+  String get driverOrderUnavailableText =>
+      'It may have been cancelled or changed. We’ll show you other nearby orders.';
+
+  @override
+  String get driverAvailableOrders => 'Available orders';
+
+  @override
+  String get driverAcceptOfflineTitle => 'You’re offline';
+
+  @override
+  String get driverAcceptOfflineText => 'Go online to accept orders.';
+
+  @override
+  String get driverGoOnline => 'Go online';
+
+  @override
+  String get driverAcceptInvalidTitle => 'Can’t accept this order now';
+
+  @override
+  String get driverAcceptInvalidText =>
+      'You may already have an active task, or the order’s status changed.';
+
+  @override
+  String get driverSessionExpiredTitle => 'Your session has ended';
+
+  @override
+  String get driverSessionExpiredText => 'Sign in again to continue.';
+
+  @override
+  String get driverSignIn => 'Sign in';
+
+  @override
+  String get driverNetworkTitle => 'Connection problem';
+
+  @override
+  String get commonRetry => 'Try again';
+
+  @override
+  String get commonOk => 'OK';
+
+  @override
+  String get commonClose => 'Close';
+
+  @override
+  String get otpTitle => 'Verify your number';
+
+  @override
+  String get otpHeadline => 'Enter the verification code';
+
+  @override
+  String otpSubtitle(String phone) {
+    return 'We sent a code by text message to $phone.';
+  }
+
+  @override
+  String otpCodeSemantics(int length) {
+    return 'Verification code, $length digits';
+  }
+
+  @override
+  String get otpVerify => 'Verify';
+
+  @override
+  String get otpResend => 'Resend code';
+
+  @override
+  String otpResendIn(int seconds) {
+    return 'Resend in ${seconds}s';
+  }
+
+  @override
+  String get otpChangeNumber => 'Change number';
+
+  @override
+  String get otpResent => 'A new code is on its way.';
+
+  @override
+  String get otpErrInvalid =>
+      'That code isn’t correct. Check it and try again.';
+
+  @override
+  String get otpErrExpired => 'This code has expired. Request a new one.';
+
+  @override
+  String get otpErrTooMany =>
+      'Too many attempts. Wait a little, then try again.';
+
+  @override
+  String get otpErrPhone => 'We can’t send a code to this number.';
+
+  @override
+  String get otpErrNetwork =>
+      'Connection problem. Check your internet and try again.';
+
+  @override
+  String get otpErrUnavailable =>
+      'Verification isn’t available right now. Try again later.';
+
+  @override
+  String get otpDevMockNotice =>
+      'Dev only: Twilio keys are missing, so the test code 1234 is used.';
+
+  @override
+  String get driverOtpTitle => 'Confirm it’s you';
+
+  @override
+  String get driverLoginBrand => 'Satr | Driver';
+
+  @override
+  String get driverLoginHeadline => 'Welcome back';
+
+  @override
+  String get driverLoginSubtitle =>
+      'Sign in to start receiving delivery tasks.';
+
+  @override
+  String get driverLoginPhone => 'Mobile number';
+
+  @override
+  String get driverLoginPassword => 'Password';
+
+  @override
+  String get driverLoginPhoneInvalid =>
+      'Enter a valid mobile number, for example 0599123456.';
+
+  @override
+  String get driverLoginPasswordRequired => 'Enter your password.';
+
+  @override
+  String get driverLoginBadCredentials =>
+      'The mobile number or password isn’t correct.';
+
+  @override
+  String get driverLoginSubmit => 'Sign in';
+
+  @override
+  String get driverLoginShowPassword => 'Show password';
+
+  @override
+  String get driverLoginHidePassword => 'Hide password';
+
+  @override
+  String get driverLoginForgot => 'Forgot your password?';
+
+  @override
+  String get driverLoginForgotText => 'Contact the Satr operator to reset it.';
+
+  @override
+  String get driverLoginSupport => 'Contact support';
+
+  @override
+  String get driverLoginSupportText =>
+      'Reach the Satr operator for help with your account.';
+
+  @override
+  String driverLoginVersion(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get driverDeliverCta => 'Deliver order';
+
+  @override
+  String get driverFailDeliveryCta => 'Could not deliver';
+
+  @override
+  String get driverDeliverTitle => 'Confirm delivery';
+
+  @override
+  String get driverDeliverHint =>
+      'Ask the customer for the delivery code shown in their app';
+
+  @override
+  String get driverDeliverConfirm => 'Confirm delivery';
+
+  @override
+  String get driverDeliverPaste => 'Paste code';
+
+  @override
+  String get driverDeliverCollect => 'Collect from customer';
+
+  @override
+  String get driverDeliverErrWrong =>
+      'Wrong delivery code. Check it with the customer and try again.';
+
+  @override
+  String get driverDeliverErrTooMany =>
+      'Too many attempts. Wait a moment, then try again.';
+
+  @override
+  String get driverDeliverErrState =>
+      'This order can no longer be delivered. Refresh the task.';
+
+  @override
+  String get driverDeliverErrNetwork =>
+      'Could not connect. Check your internet and try again.';
+
+  @override
+  String get driverDeliverErrSession =>
+      'Your session expired. Please sign in again.';
+
+  @override
+  String get driverDeliverRefresh => 'Refresh task';
+
+  @override
+  String get orderDeliveryCodeTitle => 'Delivery code';
+
+  @override
+  String get orderDeliveryCodeCaption =>
+      'Give this code to the driver only when you receive your order';
+
+  @override
+  String get driverSettingsTitle => 'Settings';
+
+  @override
+  String get driverSettingsOnline => 'Online';
+
+  @override
+  String get driverSettingsOffline => 'Offline';
+
+  @override
+  String driverSettingsRatingCount(String rating, int count) {
+    return '$rating · $count ratings';
+  }
+
+  @override
+  String get driverSettingsMyData => 'My details';
+
+  @override
+  String get driverSettingsName => 'Name';
+
+  @override
+  String get driverSettingsPhone => 'Phone';
+
+  @override
+  String get driverSettingsVehicle => 'Vehicle';
+
+  @override
+  String get driverSettingsZone => 'Zone';
+
+  @override
+  String get driverSettingsCash => 'Cash on hand';
+
+  @override
+  String get driverSettingsCashNearLimit =>
+      'You’re close to your cash limit. Hand over cash soon.';
+
+  @override
+  String get driverSettingsLanguage => 'Language';
+
+  @override
+  String get driverSettingsLoadErrorTitle => 'Couldn’t load your details';
+
+  @override
+  String get driverSettingsLoadErrorText =>
+      'Check your connection and try again.';
+
+  @override
+  String get driverSettingsRetry => 'Try again';
+
+  @override
+  String get driverSettingsNotifications => 'Notifications';
+
+  @override
+  String get driverSettingsNotifHistory => 'Notification history';
+
+  @override
+  String get driverSettingsLogout => 'Sign out';
+
+  @override
+  String get driverSettingsLogoutSub => 'You’ll go offline';
+
+  @override
+  String get driverSettingsLogoutTitle => 'Sign out?';
+
+  @override
+  String get driverSettingsLogoutText =>
+      'You’ll go offline and stop receiving orders.';
+
+  @override
+  String get driverSettingsCancel => 'Cancel';
+
+  @override
+  String get vehicleMotorcycle => 'Motorcycle';
+
+  @override
+  String get vehicleCar => 'Car';
+
+  @override
+  String get vehicleBicycle => 'Bicycle';
+
+  @override
+  String get vehicleVan => 'Van';
+
+  @override
+  String get vehicleTukTuk => 'Tuk-tuk';
+
+  @override
+  String get vehicleOnFoot => 'On foot';
+
+  @override
+  String get pushToggleTitle => 'Enable notifications';
+
+  @override
+  String get pushToggleSub => 'Order alerts and updates from Satr';
+
+  @override
+  String get pushUnsupported => 'Not available on this device';
+
+  @override
+  String get pushDenied => 'Notifications are blocked in system settings';
+
+  @override
+  String get pushOpenSystem => 'Open system settings';
+
+  @override
+  String get pushToggleError => 'Couldn’t update notification settings';
+
+  @override
+  String get pushRetry => 'Retry';
+
+  @override
+  String get notificationsTitle => 'Notifications';
+
+  @override
+  String get notificationsReadAll => 'Mark all read';
+
+  @override
+  String cartBadgeLabel(int count) {
+    return 'Cart, $count items';
+  }
+
+  @override
+  String get voiceModeTitle => 'Interactive Voice Mode';
+
+  @override
+  String get voiceModeTooltip => 'Voice mode';
+
+  @override
+  String get listeningState => 'Listening to you...';
+
+  @override
+  String get thinkingState => 'Thinking...';
+
+  @override
+  String get speakingState => 'Speaking...';
+
+  @override
+  String get finishVoiceSession => 'Finish & Review';
+
+  @override
+  String get voiceConfirmAdd => 'Confirm & add to cart';
+
+  @override
+  String get voiceContinue => 'Continue';
+
+  @override
+  String get voiceTapToResume => 'Tap to resume';
+
+  @override
+  String get voiceMicDenied => 'We need microphone access to talk with you.';
+
+  @override
+  String get voiceOpenSettings => 'Open settings';
+
+  @override
+  String get voiceUnsupported => 'Voice mode isn’t available on this device';
+
+  @override
+  String get voiceArabicVoiceMissing =>
+      'No Arabic voice found on your device. Install one in system settings and try again.';
+
+  @override
+  String get voiceQuotaMessage =>
+      'The assistant is busy right now, please try again shortly.';
+
+  @override
+  String get voiceNetworkMessage =>
+      'Couldn’t connect. Check your internet and try again.';
+
+  @override
+  String get voiceNoItems => 'No items to review yet.';
+
+  @override
+  String get voiceGreeting => 'Hi, I’m Qalam. What would you like today?';
+
+  @override
+  String get voiceBackToText => 'Back to text assistant';
+
+  @override
+  String get voiceSummaryTitle => 'Review items';
+
+  @override
+  String get voiceTotal => 'Total';
+
+  @override
+  String get voiceInStock => 'In stock';
+
+  @override
+  String get voiceOutOfStock => 'Out of stock';
+
+  @override
+  String get voiceCloseLabel => 'Close';
+
+  @override
+  String get voiceAddedToCart => 'Items added to cart';
+
+  @override
+  String voiceProposedCount(int count) {
+    return '$count proposed items';
+  }
 }

@@ -1,6 +1,6 @@
-import 'dart:async';
-import 'dart:math' as math;
+ import 'dart:async';
 
+import 'package:project/core/animations/fly_to_cart/fly_to_cart.dart';
 import 'package:dartz/dartz.dart' hide State;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +9,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:project/core/config/ai_config.dart';
 import 'package:project/core/design/icons.dart';
 import 'package:project/core/design/illustrations.dart';
+import 'package:project/core/design/motion.dart';
+import 'package:project/core/extensions/context_extensions.dart';
+import 'package:project/core/widgets/voice_waveform.dart';
 import 'package:project/core/design/shell.dart';
 import 'package:project/core/design/tokens.dart';
 import 'package:project/core/design/widgets.dart';
@@ -27,6 +30,7 @@ import 'package:project/customer/features/ai_assistant/domain/entities/suggestio
 import 'package:project/customer/features/ai_assistant/domain/failures/ai_failures.dart';
 import 'package:project/customer/features/ai_assistant/domain/repositories/ai_assistant_repository.dart';
 import 'package:project/customer/features/cart/domain/entities/cart_product_line.dart';
+import 'package:project/core/l10n/app_localizations.dart';
 import 'package:project/features/common.dart';
 
 enum Phase { idle, recording, analyzing, results, error }
@@ -36,6 +40,9 @@ enum Phase { idle, recording, analyzing, results, error }
 class AssistantController extends GetxController {
   late final AiAssistantRepository _repo;
   final _recorder = AudioRecorderService();
+
+  /// مستويات الصوت (0..1) لعرض الموجة فقط.
+  Stream<double> get levels => _recorder.levels;
 
   final text = TextEditingController();
   final phase = Phase.idle.obs;
@@ -233,14 +240,22 @@ class AssistantScreen extends StatelessWidget {
       final ph = ctl.phase.value;
       return Page2(
         tab: 'ai',
-        top: TopBar(title: 'مساعد سطر', back: false, right: SIconBtn('refresh', onTap: ctl.reset)),
-        body: switch (ph) {
-          Phase.idle => _idle(context, ctl),
-          Phase.recording => _recording(context, ctl),
-          Phase.analyzing => _analyzing(context, ctl),
-          Phase.results => _results(context, ctl),
-          Phase.error => _error(context, ctl),
-        },
+        top: TopBar(title: 'مساعد سطر', back: false, right: Row(mainAxisSize: MainAxisSize.min, children: [
+          Tooltip(message: AppLocalizations.of(context)!.voiceModeTooltip, child: SIconBtn('sparkles', onTap: () => Get.toNamed('/customer/ai-voice'))),
+          SIconBtn('refresh', onTap: ctl.reset),
+        ])),
+        body: _RecordingLinger(
+          recording: ph == Phase.recording,
+          hold: Motion.waveFreeze + Motion.waveFade,
+          recordingView: (active) => _recording(context, ctl, active),
+          child: switch (ph) {
+            Phase.idle => _idle(context, ctl),
+            Phase.recording => const SizedBox.shrink(),
+            Phase.analyzing => _analyzing(context, ctl),
+            Phase.results => _results(context, ctl),
+            Phase.error => _error(context, ctl),
+          },
+        ),
         foot: switch (ph) {
           Phase.idle => _inputBar(context, ctl),
           Phase.recording => Foot(child: _recFoot(context, ctl)),
@@ -298,15 +313,26 @@ class AssistantScreen extends StatelessWidget {
     );
   }
 
-  Widget _recording(BuildContext context, AssistantController ctl) {
+  Widget _recording(BuildContext context, AssistantController ctl, bool active) {
     final c = context.sc;
-    final m = ctl.elapsed.value ~/ 60, s = ctl.elapsed.value % 60;
+    final l = context.l10n;
     return Padding(
       padding: const EdgeInsets.only(top: 30),
       child: Column(children: [
-        Container(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4), decoration: BoxDecoration(color: c.errSoft, borderRadius: BorderRadius.circular(999)), child: Text('● يسجّل · ${two(m)}:${two(s)}', style: TextStyle(fontFamily: Fonts.ui, fontSize: 13, fontWeight: FontWeight.w600, color: c.errInk))),
+        // Obx محلي: المؤقت وحده يُعاد بناؤه كل ثانية، والموجة ترسم نفسها.
+        Obx(() {
+          final m = ctl.elapsed.value ~/ 60, s = ctl.elapsed.value % 60;
+          final time = '${two(m)}:${two(s)}';
+          return Semantics(
+            container: true,
+            label: l.voiceRecordingSemantics(time),
+            child: ExcludeSemantics(
+              child: Container(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4), decoration: BoxDecoration(color: c.errSoft, borderRadius: BorderRadius.circular(999)), child: Text('● ${l.voiceRecordingPill(time)}', style: TextStyle(fontFamily: Fonts.ui, fontSize: 13, fontWeight: FontWeight.w600, color: c.errInk))),
+            ),
+          );
+        }),
         const SizedBox(height: 24),
-        _Wave(ctl.level.value),
+        VoiceWaveform(levels: ctl.levels, active: active),
         const SizedBox(height: 24),
         Text('تحدّث الآن بما تحتاجه', textAlign: TextAlign.center, style: T.d2(c.tx, size: 24, height: 1.6)),
         const SizedBox(height: 8),
@@ -404,11 +430,12 @@ class AssistantScreen extends StatelessWidget {
 
   void _confirm(BuildContext context, AssistantController ctl) {
     final c = context.sc;
+    final flyKeys = [for (var i = 0; i < ctl.chosen.length; i++) GlobalKey()];
     showSheet(context, title: 'أضف إلى السلة؟', body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       for (var i = 0; i < ctl.chosen.length; i++) ...[
         if (i > 0) const Padding(padding: EdgeInsets.symmetric(vertical: 12), child: Divider2()),
         Row(children: [
-          ProdThumb(imageUrl: ctl.chosen[i].product!.imageUrl, name: ctl.chosen[i].product!.name, seed: ctl.chosen[i].product!.id),
+          KeyedSubtree(key: flyKeys[i], child: ProdThumb(imageUrl: ctl.chosen[i].product!.imageUrl, name: ctl.chosen[i].product!.name, seed: ctl.chosen[i].product!.id)),
           const SizedBox(width: 14),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(ctl.chosen[i].product!.name, style: T.h3(c.tx, size: 15).copyWith(height: 1.45)), Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Num('× ${ctl.chosen[i].quantity}', style: T.sm(c.tx2)), Mny(ctl.chosen[i].product!.priceAmount * ctl.chosen[i].quantity)])])),
         ]),
@@ -417,7 +444,12 @@ class AssistantScreen extends StatelessWidget {
       Text('لن يُنشأ أي طلب الآن. تراجع السلة أولًا.', style: T.sm(c.tx2)),
     ]), foot: [
       SBtn('أضف وراجع السلة', full: true, onTap: () {
+        final urls = [for (final it in ctl.chosen) it.product!.imageUrl];
         ctl.addChosenToCart();
+        // حتى 3 صور متتابعة؛ بلا أيقونة سلة ظاهرة ⇒ نبضة + اهتزاز خفيف فقط.
+        FlyToCart.runMany(context, [
+          for (var i = 0; i < flyKeys.length && i < urls.length; i++) (sourceKey: flyKeys[i], image: FlyToCart.productImage(context, flyKeys[i], urls[i])),
+        ]);
         Get.back();
         ctl.reset();
         Get.toNamed('/cart');
@@ -477,38 +509,46 @@ class _SugRow extends StatelessWidget {
   }
 }
 
-class _Wave extends StatefulWidget {
-  const _Wave(this.level);
-  final double level;
+/// يُبقي واجهة التسجيل ظاهرة لحظة بعد الإيقاف كي تتجمد الموجة ثم تتلاشى. واجهة فقط.
+class _RecordingLinger extends StatefulWidget {
+  const _RecordingLinger({required this.recording, required this.hold, required this.recordingView, required this.child});
+  final bool recording;
+  final Duration hold;
+  final Widget Function(bool active) recordingView;
+  final Widget child;
   @override
-  State<_Wave> createState() => _WaveState();
+  State<_RecordingLinger> createState() => _RecordingLingerState();
 }
 
-class _WaveState extends State<_Wave> with SingleTickerProviderStateMixin {
-  late final AnimationController _c = AnimationController(vsync: this, duration: const Duration(seconds: 1))..repeat();
+class _RecordingLingerState extends State<_RecordingLinger> {
+  Timer? _t;
+  bool _lingering = false;
+
+  @override
+  void didUpdateWidget(_RecordingLinger old) {
+    super.didUpdateWidget(old);
+    if (widget.recording) {
+      _t?.cancel();
+      _lingering = false;
+    } else if (old.recording && !MediaQuery.disableAnimationsOf(context)) {
+      _lingering = true;
+      _t?.cancel();
+      _t = Timer(widget.hold, () {
+        if (mounted) setState(() => _lingering = false);
+      });
+    }
+  }
+
   @override
   void dispose() {
-    _c.dispose();
+    _t?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final col = context.sc.pri;
-    return SizedBox(
-      height: 48,
-      child: AnimatedBuilder(
-        animation: _c,
-        builder: (_, __) => Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-          for (var i = 0; i < 21; i++)
-            Container(
-              width: 5,
-              margin: const EdgeInsets.symmetric(horizontal: 2),
-              height: 10 + 32 * math.max(.15, widget.level) * (0.5 + 0.5 * math.sin((_c.value * 2 * math.pi) + (i % 7) * .9)).abs(),
-              decoration: BoxDecoration(color: col, borderRadius: BorderRadius.circular(3)),
-            ),
-        ]),
-      ),
-    );
+    if (widget.recording) return widget.recordingView(true);
+    if (_lingering) return widget.recordingView(false);
+    return widget.child;
   }
 }

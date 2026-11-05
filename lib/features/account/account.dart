@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:project/core/services/push/push_service.dart';
+import 'package:project/core/widgets/push_toggle_tiles.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:project/core/config/remote_config_repository.dart';
 import 'package:project/core/design/icons.dart';
 import 'package:project/core/design/shell.dart';
 import 'package:project/core/design/tokens.dart';
 import 'package:project/core/design/widgets.dart';
+import 'package:project/core/design/vibration_tile.dart';
 import 'package:project/core/errors/failure.dart';
 import 'package:project/core/storage/session_store.dart';
 import 'package:project/core/uploads/upload_repository.dart';
@@ -43,6 +45,8 @@ class AccountController extends GetxController {
 
 Future<void> doSignOut({bool call = true}) async {
   final s = Get.find<SessionStore>();
+  // إلغاء تسجيل رمز FCM قبل إبطال جلسة الخادم؛ الفشل لا يمنع الخروج.
+  await PushService.maybe?.onLogout();
   if (call) {
     await (s.isDriver ? backend.driverLogout() : backend.logout());
   }
@@ -83,8 +87,9 @@ class AccountScreen extends StatelessWidget {
               await Get.toNamed('/addresses');
               ctl.load();
             }),
-            LiTile('bell', 'الإشعارات', sub: 'إدارة من إعدادات الجهاز', first: false, onTap: openAppSettings),
+            const PushToggleTiles(first: false),
             LiTile('globe', 'اللغة', sub: lang, first: false, onTap: () => langSheet(context)),
+            const VibrationTile(),
           ])),
           const SizedBox(height: 24),
           Card2(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), child: Column(children: [

@@ -11,7 +11,7 @@ import 'package:project/customer/features/printing/domain/entities/print_estimat
 Backend get backend => Get.find<Backend>();
 CartController get cartCtl => Get.find<CartController>();
 
-String failureText(Failure f) => FailureMessages.localizedMessage(Get.context!, f);
+String failureText(Failure f) => f.describe(Get.context!);
 
 /// تقدير مجموع السلة للعرض فقط (الخادم هو المرجع في التسعيرة).
 ({num products, num printing, bool productsKnown}) cartEstimate() {

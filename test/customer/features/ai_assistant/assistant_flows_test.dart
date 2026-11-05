@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:dartz/dartz.dart' hide State;
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
@@ -20,7 +19,6 @@ import 'package:project/customer/features/ai_assistant/data/repositories/voice_r
 import 'package:project/customer/features/ai_assistant/domain/entities/audio_clip.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/suggested_product.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/suggestion_item.dart';
-import 'package:project/customer/features/ai_assistant/domain/entities/voice_turn.dart';
 import 'package:project/customer/features/ai_assistant/domain/failures/ai_failures.dart';
 import 'package:project/customer/features/ai_assistant/domain/repositories/voice_repository.dart';
 import 'package:project/customer/features/ai_assistant/domain/usecases/run_voice_turn_usecase.dart';

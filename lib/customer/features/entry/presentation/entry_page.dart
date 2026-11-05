@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:project/core/config/app_env.dart';
-import 'package0/core/config/remote_config_repository.dart';
+import 'package:project/core/config/remote_config_repository.dart';
 import 'package:project/core/design/icons.dart';
 import 'package:project/core/design/illustrations.dart';
 import 'package:project/core/design/shell.dart';

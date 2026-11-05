@@ -10,7 +10,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:project/core/config/remote_config_repository.dart';
 import 'package:project/core/design/icons.dart';
 import 'package:project/core/design/illustrations.dart';
-import 'package0/core/design/shell.dart';
+import 'package:project/core/design/shell.dart';
 import 'package:project/core/design/tokens.dart';
 import 'package:project/core/design/widgets.dart';
 import 'package:project/core/errors/api_error_codes.dart';

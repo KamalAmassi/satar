@@ -1,3 +1,4 @@
+import 'package:project/core/network/image_url.dart';
 import 'package:project/core/network/masar_model/masar_models.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/suggested_product.dart';
 
@@ -29,7 +30,7 @@ class SuggestedProductModel extends SuggestedProduct {
     return SuggestedProductModel(
       id: product.id,
       name: product.name,
-      imageUrl: product.imageUrl,
+      imageUrl: resolveImageUrl(product.imageUrl),
       priceAmount: product.price.amount,
       priceLabel: product.price.formatted,
       inStock: product.inStock,

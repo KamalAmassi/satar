@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:project/core/network/image_url.dart';
 import 'package:project/core/utils/money.dart';
 
 /// بيانات عرض المنتج في السلة (قراءة فقط من GET /v1/products/{id}).
@@ -38,7 +39,7 @@ class ProductInfo extends Equatable {
         inStock: json['in_stock'] as bool? ?? true,
         stock: json['stock'] as int?,
         priceMode: json['price_mode'] as String? ?? 'fixed',
-        imageUrl: json['image_url'] as String?,
+        imageUrl: resolveImageUrl(json['image_url'] as String?),
         options: [
           for (final o in json['options'] as List? ?? const [])
             ProductOptionInfo.fromJson(Map<String, dynamic>.from(o as Map)),

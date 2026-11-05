@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:project/core/widgets/satr_network_image.dart';
 import 'package:flutter/services.dart';
 import 'package:project/core/design/icons.dart';
 import 'package:project/core/design/illustrations.dart';
@@ -1570,7 +1571,7 @@ class ProdThumb extends StatelessWidget {
   Widget build(BuildContext context) => SizedBox(
         width: size,
         height: size,
-        child: ProductHero(tag: heroTag, radius: Rad.m, child: ProductArt(imageUrl: imageUrl, name: name, seed: seed)),
+        child: ProductHero(tag: heroTag, radius: Rad.m, child: ProductArt(imageUrl: imageUrl, name: name, seed: seed, semanticLabel: name.isEmpty ? null : name)),
       );
 }
 
@@ -1589,25 +1590,7 @@ class ProductArt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fallback = ProductCover(kind: ProductCover.kindFor(name), tone: ProductCover.toneFor(seed), fit: fit);
-    if (imageUrl == null || imageUrl!.isEmpty) return fallback;
-    final c = context.sc;
-    return LayoutBuilder(builder: (context, box) {
-      final w = decodeWidth ?? productImageCacheWidth(box.maxWidth, MediaQuery.devicePixelRatioOf(context));
-      return Image.network(
-        imageUrl!,
-        fit: BoxFit.cover,
-        cacheWidth: w,
-        semanticLabel: semanticLabel,
-        excludeFromSemantics: semanticLabel == null,
-        errorBuilder: (_, __, ___) => fallback,
-        frameBuilder: (_, child, frame, sync) => sync
-            ? child
-            : Stack(fit: StackFit.expand, children: [
-                ColoredBox(color: c.sf2),
-                AnimatedOpacity(opacity: frame == null ? 0 : 1, duration: Motion.imageFade, curve: Curves.easeOut, child: child),
-              ]),
-      );
-    });
+    return SatrNetworkImage(url: imageUrl, semanticLabel: semanticLabel, decodeWidth: decodeWidth, fallback: fallback);
   }
 }
 

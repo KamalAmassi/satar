@@ -11,15 +11,17 @@ import 'package:project/core/design/shell.dart';
 import 'package:project/customer/features/orders/presentation/orders_page.dart' show callUrl;
 import 'package:project/core/design/tokens.dart';
 import 'package:project/core/design/widgets.dart';
+import 'package:project/core/errors/api_error_codes.dart';
 import 'package:project/core/errors/failure.dart';
-import 'package:project/core/otp/otp_module.dart';
-import 'package:project/core/otp/presentation/otp_args.dart';
+import 'package:project/core/services/push/push_service.dart';
+import 'package:project/customer/features/cart/presentation/bindings/cart_binding.dart';
 import 'package:project/core/storage/session_store.dart';
 import 'package:project/customer/features/account/presentation/account_page.dart';
 import 'package:project/core/data/models.dart';
 import 'package:project/core/widgets/common_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -285,38 +287,101 @@ class PhoneScreen extends StatelessWidget {
   }
 }
 
+enum _OtpUi { entry, wrong, expired, locked }
+
+/// تحقق الزبون برمز SMS عبر الخادم (sendOtp/verifyOtp ثم signIn). منقول من
+/// d1d6084:lib/features/entry/entry.dart. التحقق الثنائي للسائق يبقى في core/otp.
 class OtpController extends GetxController {
   late final String phone;
   final sending = false.obs;
-  final retryAfter = 0.obs;
+  final verifying = false.obs;
+  final otp = ''.obs;
+  final mode = _OtpUi.entry.obs;
+  final resendIn = 0.obs;
+  final suggestResend = false.obs;
   Timer? _timer;
+  int _wrong = 0;
 
   @override
   void onInit() {
     super.onInit();
     final a = Get.arguments;
     phone = a is Map ? (a['phone'] as String? ?? '') : '';
+    _countdown(42);
   }
 
-  void startTimer() {
-    retryAfter.value = 60;
+  void _countdown(int seconds) {
     _timer?.cancel();
+    resendIn.value = seconds;
     _timer = Timer.periodic(const Duration(seconds: 1), (t) {
-      if (retryAfter.value > 0) {
-        retryAfter.value--;
-      } else {
+      if (resendIn.value <= 1) {
+        resendIn.value = 0;
         t.cancel();
+      } else {
+        resendIn.value--;
       }
     });
   }
 
   Future<void> sendOtp({bool resend = false}) async {
+    if (sending.value) return;
     sending.value = true;
     final r = await backend.sendOtp(phone);
     sending.value = false;
     r.fold((f) => showToast(failureText(f), icon: 'alertC'), (_) {
-      startTimer();
-      if (resend) showToast('أُعيد إرسال الرمز');
+      _wrong = 0;
+      suggestResend.value = false;
+      otp.value = '';
+      mode.value = _OtpUi.entry;
+      _countdown(42);
+      if (resend) showToast('أرسلنا رمزًا جديدًا');
+    });
+  }
+
+  Future<void> key(String k) async {
+    if (verifying.value || mode.value == _OtpUi.expired || mode.value == _OtpUi.locked) return;
+    if (k == '⌫') {
+      if (otp.value.isNotEmpty) otp.value = otp.value.substring(0, otp.value.length - 1);
+      mode.value = _OtpUi.entry;
+      return;
+    }
+    if (otp.value.length >= 4) return;
+    mode.value = _OtpUi.entry;
+    otp.value += k;
+    if (otp.value.length == 4) await verify();
+  }
+
+  Future<void> verify() async {
+    verifying.value = true;
+    final r = await backend.verifyOtp(phone, otp.value, deviceName: 'satr-app');
+    verifying.value = false;
+    await r.fold((f) async {
+      if (f.code == ApiErrorCodes.otpExpired) {
+        mode.value = _OtpUi.expired;
+      } else if (f.code == ApiErrorCodes.otpInvalid || f is ValidationFailure) {
+        // الخادم هو المرجع في القفل؛ العدّاد المحلي يقترح رمزًا جديدًا بعد 5 محاولات فقط.
+        _wrong++;
+        if (_wrong >= 5) suggestResend.value = true;
+        final locked = f.reason == 'otp_locked' || f.reason == 'locked' || f.code == 'otp_locked';
+        mode.value = locked ? _OtpUi.locked : _OtpUi.wrong;
+        await Future.delayed(const Duration(milliseconds: 700));
+        if (mode.value == _OtpUi.wrong) otp.value = '';
+      } else {
+        mode.value = _OtpUi.wrong;
+        showToast(failureText(f), icon: 'alertC');
+        otp.value = '';
+      }
+    }, (auth) async {
+      final session = Get.find<SessionStore>();
+      await session.signIn(token: auth.token, userId: auth.user.id);
+      await session.setRole('customer');
+      PushService.maybe?.onSessionStarted();
+      CartBinding.ensureCart().ensureLoaded();
+      if (auth.isNewUser || (auth.user.name ?? '').isEmpty) {
+        Get.offAllNamed('/auth/welcome');
+      } else {
+        Get.offAllNamed('/home');
+      }
     });
   }
 
@@ -331,27 +396,46 @@ class OtpScreen extends StatelessWidget {
   const OtpScreen({super.key});
   @override
   Widget build(BuildContext context) {
+    final c = context.sc;
     final ctl = Get.put(OtpController());
-    final phone = ctl.phone;
-    return OtpVerificationView(
-      args: OtpArgs(
-        phone: phone,
-        gateway: OtpModule.gateway,
-        normalizer: OtpModule.normalizer,
-        onVerifySuccess: (result) async {
-          final session = Get.find<SessionStore>();
-          await session.saveAuth(token: result.token, isDriver: false, user: result.user);
-          if (result.isNewUser) {
-            Get.offAllNamed('/auth/welcome');
-          } else {
-            Get.offAllNamed('/home');
-          }
-        },
-        onResendRequested: () async {
-          await ctl.sendOtp(resend: true);
-        },
-      ),
-    );
+    return Obx(() {
+      final bad = ctl.mode.value == _OtpUi.wrong;
+      final dis = ctl.mode.value == _OtpUi.expired || ctl.mode.value == _OtpUi.locked;
+      final msg = switch (ctl.mode.value) {
+        _OtpUi.wrong => const Note('err', title: 'الرمز غير صحيح.', text: 'تحقق من الرسالة وأعد المحاولة. بعد 5 محاولات خاطئة يُقفل الرمز.'),
+        _OtpUi.expired => const Note('warn', title: 'انتهت صلاحية الرمز.', text: 'اطلب رمزًا جديدًا للمتابعة.'),
+        _OtpUi.locked => const Note('err', title: 'أُقفل الرمز بعد 5 محاولات خاطئة.', text: 'اطلب رمزًا جديدًا.'),
+        _OtpUi.entry => null,
+      };
+      return Page2(
+        top: const TopBar(),
+        body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const Eyebrow('التحقق'),
+          Text('أدخل الرمز', style: T.d2(c.tx)),
+          const SizedBox(height: 6),
+          Text.rich(TextSpan(style: T.bd(c.tx2), children: [
+            const TextSpan(text: 'أرسلناه إلى '),
+            WidgetSpan(alignment: PlaceholderAlignment.baseline, baseline: TextBaseline.alphabetic, child: Text(ctl.phone, textDirection: TextDirection.ltr, style: TextStyle(fontFamily: Fonts.ui, fontSize: 16, fontWeight: FontWeight.w600, color: c.tx))),
+            const TextSpan(text: '  '),
+            WidgetSpan(alignment: PlaceholderAlignment.baseline, baseline: TextBaseline.alphabetic, child: SLink('تغيير', onTap: () => Get.back())),
+          ])),
+          const SizedBox(height: 24),
+          OtpBoxes(digits: ctl.otp.value, bad: bad),
+          if (msg != null) ...[const SizedBox(height: 24), msg],
+          const SizedBox(height: 24),
+          Center(
+            child: ctl.verifying.value
+                ? SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.5, color: c.pri))
+                : (dis || ctl.suggestResend.value)
+                    ? SBtn('إرسال رمز جديد', kind: BtnKind.sec, size: BtnSize.sm, icon: 'refresh', loading: ctl.sending.value, onTap: () => ctl.sendOtp(resend: true))
+                    : (ctl.resendIn.value > 0
+                        ? Row(mainAxisSize: MainAxisSize.min, children: [Text('إعادة الإرسال بعد ', style: T.sm(c.tx2)), CountdownText(ctl.resendIn.value, key: ValueKey(ctl.resendIn.value ~/ 1000), style: T.sm(c.tx2))])
+                        : SBtn('إعادة إرسال الرمز', kind: BtnKind.ghost, size: BtnSize.sm, onTap: () => ctl.sendOtp(resend: true))),
+          ),
+        ]),
+        foot: Keypad(onKey: ctl.key, disabled: dis || ctl.verifying.value),
+      );
+    });
   }
 }
 

@@ -191,13 +191,16 @@ class PlaceModel {
 }
 
 class OrderSummaryModel {
-  const OrderSummaryModel({required this.id, required this.code, required this.status, required this.createdAt, this.dropoff = const PlaceModel(), this.itemsCount, required this.total, this.driverName, this.rated});
+  const OrderSummaryModel({required this.id, required this.code, required this.status, required this.createdAt, this.dropoff = const PlaceModel(), this.itemsCount, required this.total, this.driverName, this.rated, this.summary = ''});
   final int id;
   final String code;
   final StatusModel status;
   final DateTime? createdAt;
   final PlaceModel dropoff;
   final int? itemsCount;
+
+  /// ملخص نصي قصير للطلب إن أرسله الخادم.
+  final String summary;
   final Money total;
   final String? driverName;
   final bool? rated;
@@ -210,7 +213,8 @@ class OrderSummaryModel {
       itemsCount: j['items_count'] as int?,
       total: Money.fromJson(j['total']),
       driverName: j['driver_name'] as String?,
-      rated: j['rated'] as bool?);
+      rated: j['rated'] as bool?,
+      summary: j['summary'] as String? ?? '');
 }
 
 class PrintSpecModel {
@@ -237,10 +241,16 @@ class PrintSpecModel {
 }
 
 class OrderItemModel {
-  const OrderItemModel({required this.id, required this.name, required this.qty, this.note, this.unitPrice, this.lineTotal, this.print});
+  const OrderItemModel({required this.id, required this.name, required this.qty, this.note, this.unitPrice, this.lineTotal, this.print, this.imageUrl, this.productId});
   final int id;
   final String name;
   final int qty;
+  final String? imageUrl;
+  final int? productId;
+
+  /// أسماء بديلة تستخدمها الصفحات.
+  int get quantity => qty;
+  Money? get totalPrice => lineTotal;
   final String? note;
   final Money? unitPrice;
   final Money? lineTotal;
@@ -252,7 +262,9 @@ class OrderItemModel {
       note: j['note'] as String?,
       unitPrice: j['unit_price'] == null ? null : Money.fromJson(j['unit_price']),
       lineTotal: j['line_total'] == null ? null : Money.fromJson(j['line_total']),
-      print: j['print'] is Map ? PrintSpecModel.fromJson(jm(j['print'])) : null);
+      print: j['print'] is Map ? PrintSpecModel.fromJson(jm(j['print'])) : null,
+      imageUrl: j['image_url'] as String?,
+      productId: (j['product_id'] as num?)?.toInt());
 }
 
 class PriceLineModel {
@@ -355,6 +367,12 @@ class OrderModel {
     this.cancelReason,
     this.cancelledBy,
   });
+
+  /// تفصيل السعر (اسم بديل لـ priceLines).
+  List<PriceLineModel> get breakdown => priceLines;
+
+  /// الإيصال متاح للطلبات المنتهية (التسليم/الإكمال)؛ الشاشة تجلبه بالمعرّف.
+  String? get receiptUrl => const {'delivered', 'completed'}.contains(status.key) ? '/receipt' : null;
 
   final int id;
   final String code;
@@ -556,6 +574,16 @@ class NotificationModel {
     final v = data['order_id'] ?? data['order'];
     return v is int ? v : int.tryParse('$v');
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'event': event,
+        'title': title,
+        'body': body,
+        'data': data,
+        'read_at': readAt?.toIso8601String(),
+        'created_at': createdAt?.toIso8601String(),
+      };
 
   factory NotificationModel.fromJson(Map<String, dynamic> j) => NotificationModel(
       id: j['id'] as int,

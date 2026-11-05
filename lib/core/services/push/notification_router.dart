@@ -35,4 +35,7 @@ abstract final class NotificationRouter {
     if (t.args == null && Get.currentRoute == t.route) return;
     Get.toNamed(t.route, arguments: t.args);
   }
+
+  /// اسم مريح للواجهة: يوجّه حسب كون الجلسة سائقًا أم زبونًا.
+  static void routePayload(Map<String, dynamic> data, {required bool isDriver}) => route(data, role: isDriver ? 'driver' : 'customer');
 }

@@ -48,3 +48,19 @@ String dateLabel(DateTime? d) {
 }
 
 String statusLabel(StatusModel s) => s.label.isNotEmpty ? s.label : s.key;
+
+/// وصف قصير لحالة الطلب للزبون (يُعرض تحت اسم الحالة).
+String statusDesc(String key) => switch (key) {
+      'pending' || 'new' || 'submitted' => 'وصل طلبك وننتظر مراجعة المكتبة.',
+      'priced' => 'جهّزت المكتبة عرض السعر. راجعه وأكّد.',
+      'awaiting_payment' => 'بانتظار إتمام الدفع لنبدأ التجهيز.',
+      'paid' || 'preparing' || 'processing' => 'نجهّز طلبك الآن.',
+      'ready' || 'ready_for_pickup' => 'طلبك جاهز وبانتظار السائق.',
+      'assigned' || 'accepted' => 'تم إسناد طلبك إلى سائق.',
+      'picked_up' => 'استلم السائق طلبك.',
+      'on_the_way' => 'طلبك في الطريق إليك.',
+      'arrived' => 'وصل السائق. جهّز كود التسليم.',
+      'delivered' || 'completed' => 'تم تسليم طلبك. شكرًا لك!',
+      'cancelled' || 'canceled' => 'أُلغي هذا الطلب.',
+      _ => '',
+    };

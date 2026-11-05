@@ -1,3 +1,4 @@
+import 'package:project/core/storage/user_data_reset.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// جلسة المستخدم الحالية (التوكن ومعرّف المستخدم).
@@ -13,6 +14,7 @@ class SessionStore {
   static const _userKey = 'session_user_id';
   static const _roleKey = 'session_role';
   static const _chosenRoleKey = 'chosen_role';
+  static const _lastIdentityKey = 'last_identity';
 
   int _generation = 0;
   int get generation => _generation;
@@ -54,17 +56,26 @@ class SessionStore {
     }
   }
 
-  Future<void> signIn({required String token, required int userId}) async {
+  /// يُستدعى بعد نجاح الدخول كاملًا فقط. يحفظ التوكن والمعرّف والدور معًا.
+  /// إن اختلف الحساب (أو الدور) عن آخر حساب على الجهاز تُمسح حالة السابق أولًا.
+  Future<void> signIn({required String token, required int userId, String? role}) async {
+    final identity = '${role ?? this.role ?? 'customer'}_$userId';
+    final last = _prefs.getString(_lastIdentityKey);
+    if (last != null && last != identity) await UserDataReset.run();
     await _prefs.setString(_tokenKey, token);
     await _prefs.setInt(_userKey, userId);
+    if (role != null) await setRole(role);
+    await _prefs.setString(_lastIdentityKey, identity);
     _generation++;
   }
 
+  /// يمسح الجلسة وحالة المستخدم في الذاكرة. يبقى onboardingSeen والدور المختار.
   Future<void> signOut() async {
     await _prefs.remove(_tokenKey);
     await _prefs.remove(_userKey);
     await _prefs.remove(_roleKey);
     _generation++;
+    await UserDataReset.run();
   }
 
   SessionGuard guard() => SessionGuard._(this, _generation, userId);

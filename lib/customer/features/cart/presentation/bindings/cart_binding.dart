@@ -18,7 +18,10 @@ class CartBinding extends Bindings {
     if (!Get.isRegistered<CartRepository>()) {
       Get.lazyPut<CartRepository>(
         () => CartRepositoryImpl(
-          CartLocalDataSourceImpl(Get.find<SharedPreferences>()),
+          CartLocalDataSourceImpl(
+            Get.find<SharedPreferences>(),
+            role: () => Get.find<SessionStore>().role ?? 'customer',
+          ),
           ProductRemoteDataSourceImpl(Get.find<ApiClient>()),
         ),
         fenix: true,

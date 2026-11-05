@@ -75,6 +75,12 @@ class CartController extends GetxService {
     }
   }
 
+  /// عند الخروج/تبدّل الحساب: يفرغ حالة السلة في الذاكرة (المخزَّنة تبقى لصاحبها).
+  void resetForSignOut() {
+    _loadedUserId = null;
+    _resetMemory();
+  }
+
   void _resetMemory() {
     for (final t in _uploadTokens.values) {
       t.cancel();

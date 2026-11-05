@@ -122,8 +122,7 @@ class _DriverLoginScreenState extends State<DriverLoginScreen> {
 
   Future<void> _complete((String, DriverModel) res) async {
     final s = Get.find<SessionStore>();
-    await s.signIn(token: res.$1, userId: res.$2.id);
-    await s.setRole('driver');
+    await s.signIn(token: res.$1, userId: res.$2.id, role: 'driver');
     PushService.maybe?.onSessionStarted();
     Get.find<RemoteConfigRepository>().app = 'driver';
     Get.find<RemoteConfigRepository>().load(refresh: true);

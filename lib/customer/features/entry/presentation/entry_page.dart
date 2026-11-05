@@ -302,8 +302,7 @@ class OtpController extends GetxController {
       }
     }, (auth) async {
       final session = Get.find<SessionStore>();
-      await session.signIn(token: auth.token, userId: auth.user.id);
-      await session.setRole('customer');
+      await session.signIn(token: auth.token, userId: auth.user.id, role: 'customer');
       PushService.maybe?.onSessionStarted();
       CartBinding.ensureCart().ensureLoaded();
       if (auth.isNewUser || (auth.user.name ?? '').isEmpty) {

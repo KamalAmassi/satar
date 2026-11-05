@@ -12,11 +12,15 @@ import 'package:project/customer/features/catalog/presentation/catalog_page.dart
 import 'package:project/customer/features/checkout/presentation/checkout_page.dart';
 import 'package:project/customer/features/entry/presentation/entry_page.dart';
 import 'package:project/customer/features/orders/presentation/orders_page.dart';
+import 'package:project/customer/features/orders/presentation/rate_page.dart';
+import 'package:project/customer/features/orders/presentation/receipt_page.dart';
+import 'package:project/customer/features/orders/presentation/tracking_page.dart';
 import 'package:project/customer/features/payment/presentation/payment_page.dart';
 import 'package:project/customer/features/printing/presentation/printing_page.dart';
 import 'package:project/driver/features/auth/presentation/driver_login_page.dart';
 import 'package:project/driver/features/auth/presentation/driver_settings_page.dart';
 import 'package:project/driver/features/orders/presentation/driver_page.dart';
+import 'package:project/driver/features/orders/presentation/deliver_order_page.dart';
 import 'package:project/driver/features/orders/presentation/driver_delivered_page.dart';
 import 'package:project/driver/features/orders/presentation/driver_earnings_page.dart';
 import 'package:project/driver/features/orders/presentation/driver_failed_page.dart';

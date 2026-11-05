@@ -16,7 +16,9 @@ import 'package:project/core/uploads/upload_repository.dart';
 import 'package:project/customer/features/cart/presentation/controllers/cart_controller.dart';
 import 'package:project/customer/features/printing/domain/entities/print_job.dart';
 import 'package:project/customer/features/printing/domain/entities/print_spec.dart';
+import 'package:project/customer/features/printing/presentation/bindings/printing_binding.dart';
 import 'package:project/customer/features/printing/presentation/controllers/printing_controller.dart';
+import 'package:project/core/widgets/cart_badge_button.dart';
 import 'package:project/core/widgets/common_widgets.dart';
 
 PrintingController printCtl() {
@@ -32,7 +34,7 @@ class PrintLandingScreen extends StatelessWidget {
     final cfg = Get.find<RemoteConfigRepository>().current?.printing;
     return Page2(
       tab: 'print',
-      top: const TopBar(title: 'الطباعة', back: false, right: CartBadgeButton()),
+      top: TopBar(title: 'الطباعة', back: false, right: const CartBadgeButton()),
       body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         HeroBox(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('اطبع ملفاتك بسهولة', style: T.d2(c.onHero)),
@@ -83,15 +85,7 @@ class _PrintUploadScreenState extends State<PrintUploadScreen> {
     if (picking) return;
     setState(() => picking = true);
     try {
-      final res = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg'], allowMultiple: true, withData: false, withReadStream: true);
-      if (res != null && res.files.isNotEmpty) {
-        for (final f in res.files) {
-          if (f.path != null) {
-            final picked = PickedFile(id: f.path!, name: f.name, sizeBytes: f.size, path: f.path, mimeType: f.extension == 'pdf' ? 'application/pdf' : 'image/jpeg');
-            ctl.addJob(picked);
-          }
-        }
-      }
+      await ctl.pickFiles();
     } catch (_) {
       showToast('تعذّر اختيار الملفات', icon: 'alertC');
     } finally {
@@ -140,14 +134,14 @@ class _JobUploadCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.sc;
-    final st = job.uploadState;
+    final st = job.status;
     return Card2(child: Row(children: [
       Container(width: 48, height: 48, decoration: BoxDecoration(color: c.plumSoft, borderRadius: BorderRadius.circular(14)), child: Center(child: SIcon('file', size: 24, color: c.plumInk))),
       const SizedBox(width: 14),
       Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(job.fileName, maxLines: 1, overflow: TextOverflow.ellipsis, style: T.h3(c.tx, size: 15)),
         const SizedBox(height: 2),
-        if (st == JobUploadState.done) Text('جاهز · ${job.pageCount ?? '?'} صفحة', style: T.sm(c.okInk)) else if (st == JobUploadState.uploading) Text('جارٍ الرفع…', style: T.sm(c.amberInk)) else Text('لم يكتمل الرفع', style: T.sm(c.errInk)),
+        if (st == UploadStatus.uploaded) Text('جاهز · ${job.knownPages ?? '?'} صفحة', style: T.sm(c.okInk)) else if (st == UploadStatus.uploading) Text('جارٍ الرفع…', style: T.sm(c.amberInk)) else Text('لم يكتمل الرفع', style: T.sm(c.errInk)),
       ])),
       SIconBtn('trash', size: 20, box: 40, onTap: () => ctl.removeJob(job.id)),
     ]));
@@ -223,7 +217,7 @@ class _PrintSpecsScreenState extends State<PrintSpecsScreen> {
   }
 
   void _apply(PrintJob job, PrintSpec Function(PrintSpec) f) {
-    ctl.updateSpec(job.id, f(job.spec));
+    ctl.updateSpec(job.id, f);
   }
 }
 
@@ -263,4 +257,11 @@ class PrintReviewScreen extends StatelessWidget {
       );
     });
   }
+}
+
+String specSummary(PrintJob j, PrintingConfig? cfg) {
+  final s = j.spec;
+  final paper = cfg?.paper(s.paperSize)?.label ?? s.paperSize;
+  final bind = cfg?.binding(s.binding)?.label;
+  return [paper, s.color == 'color' ? 'ملوّن' : 'أبيض وأسود', s.sides == 'double' ? 'وجهان' : 'وجه واحد', '${s.copies} نسخ', if (bind != null && s.binding != 'none') bind].join(' · ');
 }

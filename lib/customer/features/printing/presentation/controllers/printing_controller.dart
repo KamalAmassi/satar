@@ -8,6 +8,8 @@ import 'package:project/core/storage/session_store.dart';
 import 'package:project/core/uploads/picked_file.dart';
 import 'package:project/customer/features/cart/presentation/controllers/cart_controller.dart';
 import 'package:project/customer/features/printing/domain/entities/file_check.dart';
+import 'package:project/customer/features/printing/domain/entities/print_estimate.dart';
+import 'package:project/customer/features/printing/domain/entities/print_job.dart';
 import 'package:project/customer/features/printing/domain/entities/print_spec.dart';
 
 /// ملف رُفض قبل الرفع، مع سببه، لعرضه في شاشة الخطأ.
@@ -61,6 +63,32 @@ class PrintingController extends GetxController {
       printing.value = c.printing;
     });
   }
+
+  // ---- واجهة متوافقة مع صفحات الطباعة (الملفات نفسها تعيش في السلة) ----
+
+  /// ملفات الطباعة الحالية (مصدرها السلة).
+  List<PrintJob> get jobs => cart.printJobs;
+
+  /// الملف المحدد في شاشة المواصفات (حالة واجهة فقط).
+  final selectedJobId = RxnString();
+
+  /// كل الملفات مرفوعة وجاهزة للمتابعة.
+  bool get readyToProceed => jobs.isNotEmpty && jobs.every((j) => j.isUploaded);
+
+  /// أخطاء تحقق من الخادم أو ملف يحتاج تدخلًا.
+  bool get hasInvalidSpecs => jobs.any((j) => j.fieldErrors.isNotEmpty || j.needsAttention);
+
+  /// تقدير الطباعة بالوحدة الصغرى (للعرض فقط؛ الخادم هو المرجع).
+  int get totalEstimateMinor {
+    final cfg = printing.value;
+    if (cfg == null) return 0;
+    return jobs.fold<int>(0, (s, j) => s + (PrintEstimate.forJob(j, cfg)?.amount ?? 0));
+  }
+
+  void removeJob(String jobId) => cart.removePrintJob(jobId);
+
+  /// الملفات موجودة في السلة أصلًا منذ اختيارها؛ لا شيء إضافي لفعله.
+  void addJobsToCart() {}
 
   int get maxJobs => printing.value?.maxJobs ?? 0;
   int get remainingSlots => maxJobs - cart.printJobs.length;

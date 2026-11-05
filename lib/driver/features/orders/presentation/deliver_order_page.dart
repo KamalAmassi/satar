@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:project/core/config/remote_config_repository.dart';
 import 'package:project/core/design/icons.dart';
 import 'package:project/core/design/shell.dart';
+import 'package:project/core/motion/entrance.dart';
 import 'package:project/core/design/tokens.dart';
 import 'package:project/core/design/widgets.dart';
 import 'package:project/core/errors/failure.dart';

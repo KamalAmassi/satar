@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:project/core/design/tokens.dart';
+import 'package:project/core/design/shell.dart';
 import 'package:project/core/design/widgets.dart';
 import 'package:project/core/widgets/common_widgets.dart';
 

@@ -15,7 +15,7 @@ import 'package:project/core/otp/otp_module.dart';
 import 'package:project/core/otp/presentation/otp_args.dart';
 import 'package:project/core/storage/session_store.dart';
 import 'package:project/customer/features/account/presentation/account_page.dart';
-import 'package:project/data/models.dart';
+import 'package:project/core/data/models.dart';
 import 'package:project/core/widgets/common_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';

@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:project/core/errors/error_handler.dart';
 import 'package:project/core/errors/failure.dart';
 import 'package:project/core/network/api_client.dart';
-import 'package:project/data/models.dart';
+import 'package:project/core/data/models.dart';
 
 /// واجهة الباكند الموحّدة (satr-openapi.json). كل نقطة نهاية هنا موجودة في العقد؛
 /// لا نقاط مخترعة ولا استجابات نجاح مصطنعة.

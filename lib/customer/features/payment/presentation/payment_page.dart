@@ -19,7 +19,7 @@ import 'package0/customer/features/library_offer/presentation/controllers/offer_
 import 'package0/customer/features/payment/presentation/bindings/transfer_payment_binding.dart';
 import 'package:project/customer/features/payment/presentation/controllers/transfer_payment_controller.dart';
 import 'package:project/customer/features/orders/presentation/orders_page.dart';
-import 'package:project/data/models.dart';
+import 'package:project/core/data/models.dart';
 import 'package:project/core/widgets/common_widgets.dart';
 
 OfferController offerCtl() {

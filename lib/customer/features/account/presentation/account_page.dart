@@ -14,7 +14,7 @@ import 'package:project/core/storage/session_store.dart';
 import 'package:project/core/uploads/upload_repository.dart';
 import 'package:project/customer/features/checkout/presentation/controllers/checkout_controller.dart';
 import 'package:project/customer/features/orders/presentation/orders_page.dart';
-import 'package:project/data/models.dart';
+import 'package:project/core/data/models.dart';
 import 'package:project/core/widgets/common_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';

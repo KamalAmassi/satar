@@ -9,7 +9,7 @@ import 'package:project/core/errors/failure.dart';
 import 'package:project/core/extensions/context_extensions.dart';
 import 'package:project/core/network/idempotency.dart';
 import 'package:project/core/utils/haptics.dart';
-import 'package:project/data/models.dart';
+import 'package:project/core/data/models.dart';
 import 'package:project/driver/features/orders/presentation/driver_page.dart';
 import 'package:project/core/widgets/common_widgets.dart';
 

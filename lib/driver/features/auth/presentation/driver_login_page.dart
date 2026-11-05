@@ -19,7 +19,7 @@ import 'package:project/core/otp/presentation/otp_messages.dart';
 import 'package:project/core/storage/session_store.dart';
 import 'package:project/core/utils/haptics.dart';
 import 'package:project/core/utils/phone_normalizer.dart';
-import 'package:project/data/models.dart';
+import 'package:project/core/data/models.dart';
 import 'package:project/core/widgets/common_widgets.dart';
 
 class DriverLoginScreen extends StatefulWidget {

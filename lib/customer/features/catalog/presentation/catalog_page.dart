@@ -20,7 +20,7 @@ import 'package:project/core/storage/session_store.dart';
 import 'package:project/core/utils/haptics.dart';
 import 'package:project/customer/features/cart/domain/entities/cart_product_line.dart';
 import 'package:project/customer/features/cart/presentation/controllers/cart_controller.dart';
-import 'package:project/data/models.dart';
+import 'package:project/core/data/models.dart';
 import 'package:project/core/widgets/common_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

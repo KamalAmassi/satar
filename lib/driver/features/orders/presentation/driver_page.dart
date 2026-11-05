@@ -22,7 +22,7 @@ import 'package:project/core/network/idempotency.dart';
 import 'package:project/core/uploads/upload_repository.dart';
 import 'package:project/core/utils/haptics.dart';
 import 'package:project/core/motion/entrance.dart' show ShakeOnChange;
-import 'package:project/data/models.dart';
+import 'package:project/core/data/models.dart';
 import 'package:project/driver/features/orders/presentation/deliver_order_page.dart';
 import 'package:project/core/widgets/common_widgets.dart';
 import 'package:project/customer/features/orders/presentation/orders_page.dart';

@@ -23,7 +23,7 @@ import 'package:project/customer/features/checkout/domain/entities/pickup_point.
 import 'package:project/customer/features/checkout/presentation/bindings/checkout_binding.dart';
 import 'package:project/customer/features/checkout/presentation/controllers/checkout_controller.dart';
 import 'package:project/customer/features/cart/presentation/controllers/cart_controller.dart';
-import 'package:project/data/models.dart';
+import 'package:project/core/data/models.dart';
 import 'package:project/core/widgets/common_widgets.dart';
 
 const kCheckoutFlow = {'/checkout', '/checkout/quote', '/order-placed', '/order-uncertain', '/cart', '/print/upload', '/print/specs', '/print/review'};

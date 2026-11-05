@@ -12,8 +12,8 @@ import 'package:project/core/storage/session_store.dart';
 import 'package:project/core/uploads/picked_file.dart';
 import 'package:project/core/uploads/upload_repository.dart';
 import 'package:project/customer/features/cart/presentation/bindings/cart_binding.dart';
-import 'package:project/data/backend.dart';
-import 'package:project/data/push_registrars.dart';
+import 'package:project/core/data/backend.dart';
+import 'package:project/core/data/push_registrars.dart';
 import 'package:project/driver/features/orders/presentation/driver_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -4,7 +4,7 @@ import 'package:project/core/design/tokens.dart';
 import 'package:project/core/design/widgets.dart';
 import 'package:project/core/errors/failure.dart';
 import 'package:project/core/errors/failure_messages.dart';
-import 'package:project/data/backend.dart';
+import 'package:project/core/data/backend.dart';
 import 'package:project/customer/features/cart/presentation/controllers/cart_controller.dart';
 
 Backend get backend => Get.find<Backend>();

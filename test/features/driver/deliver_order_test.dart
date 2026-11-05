@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:project/core/errors/api_error_codes.dart';
 import 'package:project/core/errors/failure.dart';
-import 'package:project/data/models.dart';
+import 'package:project/core/data/models.dart';
 import 'package:project/driver/features/orders/presentation/deliver_order.dart';
 
 DriverOrderModel _order({int id = 7, String status = 'arrived'}) => DriverOrderModel.fromJson({

@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 import 'package:project/core/errors/api_error_codes.dart';
 import 'package:project/core/errors/failure.dart';
-import 'package:project/data/models.dart';
+import 'package:project/core/data/models.dart';
 
 class DeliveryCodeInvalid extends Failure {
   const DeliveryCodeInvalid({super.message, super.code}) : super(statusCode: 422);

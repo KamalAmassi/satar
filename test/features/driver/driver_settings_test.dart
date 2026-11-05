@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:project/core/errors/failure.dart';
-import 'package:project/data/models.dart';
+import 'package:project/core/data/models.dart';
 import 'package:project/driver/features/auth/presentation/driver_settings_page.dart';
 
 DriverModel _driver({bool online = false}) => DriverModel.fromJson({

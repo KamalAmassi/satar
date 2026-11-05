@@ -12,7 +12,7 @@ import 'package:project/core/l10n/app_localizations.dart';
 import 'package:project/core/motion/entrance.dart';
 import 'package:project/core/services/push/push_service.dart';
 import 'package:project/core/widgets/push_toggle_tiles.dart';
-import 'package:project/data/models.dart';
+import 'package:project/core/data/models.dart';
 import 'package:project/customer/features/account/presentation/account_page.dart' show doSignOut, langSheet;
 import 'package:project/core/widgets/common_widgets.dart';
 import 'package:project/driver/features/orders/presentation/driver_page.dart';

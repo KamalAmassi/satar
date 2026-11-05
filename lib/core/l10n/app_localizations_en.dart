@@ -1622,4 +1622,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get roleLegal =>
       'By continuing you agree to the Terms of Use and Privacy Policy.';
+
+  @override
+  String get sessionExpiredSnack =>
+      'Your session expired. Please sign in again.';
+
+  @override
+  String get changeRole => 'Change role';
 }

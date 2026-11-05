@@ -51,7 +51,8 @@ Future<void> doSignOut({bool call = true}) async {
   }
   await s.signOut();
   if (Get.isRegistered<CheckoutController>()) Get.delete<CheckoutController>(force: true);
-  Get.offAllNamed('/');
+  // الخروج الصريح: يبقى onboardingSeen والدور المحفوظ، وننتقل لدخول الدور (لا للتعريف).
+  Get.offAllNamed(s.loginRoute);
 }
 
 class AccountScreen extends StatelessWidget {

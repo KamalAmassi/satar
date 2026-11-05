@@ -1590,4 +1590,10 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get roleLegal =>
       'بالمتابعة فإنك توافق على شروط الاستخدام وسياسة الخصوصية.';
+
+  @override
+  String get sessionExpiredSnack => 'انتهت الجلسة، سجّل الدخول مرة أخرى.';
+
+  @override
+  String get changeRole => 'تغيير الدور';
 }

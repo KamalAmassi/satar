@@ -2947,6 +2947,18 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'بالمتابعة فإنك توافق على شروط الاستخدام وسياسة الخصوصية.'**
   String get roleLegal;
+
+  /// No description provided for @sessionExpiredSnack.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهت الجلسة، سجّل الدخول مرة أخرى.'**
+  String get sessionExpiredSnack;
+
+  /// No description provided for @changeRole.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير الدور'**
+  String get changeRole;
 }
 
 class _AppLocalizationsDelegate

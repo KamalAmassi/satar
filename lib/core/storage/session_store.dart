@@ -29,8 +29,20 @@ class SessionStore {
       await _prefs.remove(_roleKey);
     } else {
       await _prefs.setString(_roleKey, r);
+      await _prefs.setString(_chosenRoleKey, r);
     }
   }
+
+  /// هل أنهى المستخدم (أو تخطّى) التعريف؟ يبقى بعد الخروج.
+  bool get onboardingSeen => _prefs.getBool('onboarded') ?? false;
+  Future<void> markOnboardingSeen() => _prefs.setBool('onboarded', true);
+
+  /// شاشة الدخول للدور المحفوظ، أو اختيار الدور إن لم يُحفظ دور.
+  String get loginRoute => switch (chosenRole) {
+        'driver' => '/driver/login',
+        'customer' => '/auth/phone',
+        _ => '/role',
+      };
 
   /// الدور المختار على هذا الجهاز؛ يبقى بعد الخروج حتى يُسأل المستخدم مرة واحدة فقط.
   String? get chosenRole => _prefs.getString(_chosenRoleKey);

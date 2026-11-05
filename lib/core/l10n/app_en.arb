@@ -502,5 +502,7 @@
   "roleCustomerSub": "Order stationery, books and printing",
   "roleDriver": "Driver",
   "roleDriverSub": "Receive orders and deliver them",
-  "roleLegal": "By continuing you agree to the Terms of Use and Privacy Policy."
+  "roleLegal": "By continuing you agree to the Terms of Use and Privacy Policy.",
+  "sessionExpiredSnack": "Your session expired. Please sign in again.",
+  "changeRole": "Change role"
 }

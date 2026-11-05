@@ -20,7 +20,7 @@ import 'package:project/core/storage/session_store.dart';
 import 'package:project/customer/features/account/presentation/account_page.dart';
 import 'package:project/core/data/models.dart';
 import 'package:project/core/widgets/common_widgets.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:project/core/widgets/change_role_link.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -160,7 +160,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _done() {
-    Get.find<SharedPreferences>().setBool('onboarded', true);
+    Get.find<SessionStore>().markOnboardingSeen();
     Get.offAllNamed('/role');
   }
 }
@@ -208,6 +208,8 @@ class PhoneScreen extends StatelessWidget {
             Text('سنرسل لك رمز تحقق عبر واتساب أو SMS لتأكيد حسابك.', style: T.bd(c.tx2)),
             const SizedBox(height: 24),
             Fld(label: 'رقم الجوال', hint: '0599000000', controller: ctl.phone, keyboard: TextInputType.phone, ltr: true, error: ctl.failure.value == null ? null : failureText(ctl.failure.value!)),
+            const SizedBox(height: 8),
+            const ChangeRoleLink(),
           ])),
       foot: Foot(child: Obx(() => SBtn('أرسل الرمز', full: true, loading: ctl.sending.value, onTap: ctl.send))),
     );

@@ -3,27 +3,41 @@ import 'dart:ui' show PathMetric;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/core/config/remote_config_repository.dart';
+import 'package:project/core/data/backend.dart';
 import 'package:project/core/design/tokens.dart';
 import 'package:project/core/l10n/app_localizations.dart';
 import 'package:project/core/motion/motion_settings.dart';
 import 'package:project/core/storage/session_store.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// يقرر أول شاشة بعد الإقلاع (مكان واحد لشجرة القرار) بعد إنهاء فحوص البدء الفعلية.
+///
+/// 1) لم يُرَ التعريف ⇒ onboarding. 2) لا جلسة ⇒ دخول الدور المحفوظ أو اختيار الدور.
+/// 3) جلسة ⇒ التحقق بـ /me: 200 ⇒ الرئيسية؛ 401 ⇒ تتولاه [SessionExpiry] (يعيد null)؛
+/// أي خطأ شبكة/مهلة ⇒ الرئيسية بالجلسة المخزنة (يعمل دون اتصال).
 class SplashController {
-  SplashController({SessionStore? session, SharedPreferences? prefs})
+  SplashController({SessionStore? session, Backend? backend})
       : _session = session ?? Get.find<SessionStore>(),
-        _prefs = prefs ?? Get.find<SharedPreferences>();
+        _backend = backend;
 
   final SessionStore _session;
-  final SharedPreferences _prefs;
+  final Backend? _backend;
+  static const _validateTimeout = Duration(seconds: 4);
 
-  /// يحمّل الإعداد ثم يعيد مسار أول شاشة.
-  Future<String> resolveStart() async {
+  Future<String?> resolveStart() async {
     await Get.find<RemoteConfigRepository>().load();
-    if (_session.isSignedIn) return _session.isDriver ? '/driver/home' : '/home';
-    if (!(_prefs.getBool('onboarded') ?? false)) return '/onboarding';
-    return '/role';
+    if (_session.isSignedIn) {
+      final home = _session.isDriver ? '/driver/home' : '/home';
+      final backend = _backend ?? Get.find<Backend>();
+      try {
+        final res = await (_session.isDriver ? backend.driverMe() : backend.me()).timeout(_validateTimeout);
+        final String? next = res.fold((f) => f.statusCode == 401 ? null : home, (_) => home);
+        return next;
+      } catch (_) {
+        return home;
+      }
+    }
+    if (!_session.onboardingSeen) return '/onboarding';
+    return _session.loginRoute;
   }
 }
 
@@ -49,6 +63,10 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   void initState() {
     super.initState();
     SplashController().resolveStart().then((r) {
+      if (r == null) {
+        _left = true; // 401: SessionExpiry تنقل إلى الدخول.
+        return;
+      }
       _route = r;
       _maybeLeave();
     });

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/core/widgets/change_role_link.dart';
 import 'package:project/core/services/push/push_service.dart';
 import 'package:get/get.dart';
 import 'package:project/core/config/app_env.dart';
@@ -208,6 +209,7 @@ class _DriverLoginScreenState extends State<DriverLoginScreen> {
               ]),
             ),
             const SizedBox(height: 16),
+            const ChangeRoleLink(),
             Entrance(index: 3, child: Text(l.driverLoginVersion(AppEnv.appVersion), textAlign: TextAlign.center, style: T.cap(c.tx3))),
           ]),
         ),

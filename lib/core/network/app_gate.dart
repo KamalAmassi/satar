@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:project/core/errors/api_error_codes.dart';
+import 'package:project/core/network/session_expiry.dart';
 
 /// بوابة الأخطاء الشاملة: أخطاء تمنع التطبيق كله تفتح شاشاتها (الحالات والأذونات).
 ///
@@ -16,7 +17,11 @@ abstract final class AppGate {
 
     String? route;
     if (status == 401 && hadToken) {
-      route = '/session-expired';
+      // 401 من استدعاء موثّق: تُنهى الجلسة وتُفتح شاشة الدخول مع رسالة (لا حلقات: لا توكن ⇒ لا معالجة).
+      if (_showing == '401') return;
+      _showing = '401';
+      SessionExpiry.handle().whenComplete(() => Future.delayed(const Duration(seconds: 1), () => _showing = null));
+      return;
     } else if (status == 426 || code == ApiErrorCodes.appUpdateRequired) {
       route = '/update-required';
     } else if (code == ApiErrorCodes.maintenance) {

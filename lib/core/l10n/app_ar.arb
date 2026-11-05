@@ -687,5 +687,12 @@
   "driverUnsettledOrders": "طلبات غير مسوّاة",
   "driverCashNote": "تُسلَّم الأموال للمشغّل ويسجّل التسوية. عند الوصول للحد الأقصى لا تصلك طلبات جديدة.",
   "driverLastSettlements": "آخر التسويات",
-  "driverNoSettlements": "لا تسويات بعد."
+  "driverNoSettlements": "لا تسويات بعد.",
+  "roleTitle": "كيف تريد استخدام سطر؟",
+  "roleSubtitle": "اختر دورك مرة واحدة، وتستطيع تغييره لاحقًا.",
+  "roleCustomer": "زبون",
+  "roleCustomerSub": "اطلب القرطاسية والكتب والطباعة",
+  "roleDriver": "سائق",
+  "roleDriverSub": "استلم الطلبات وأوصلها",
+  "roleLegal": "بالمتابعة فإنك توافق على شروط الاستخدام وسياسة الخصوصية."
 }

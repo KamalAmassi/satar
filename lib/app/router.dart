@@ -1,3 +1,4 @@
+import 'package:project/customer/features/entry/presentation/role_page.dart';
 import 'package:project/customer/features/entry/presentation/splash_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

@@ -233,13 +233,13 @@ abstract class AppLocalizations {
   /// No description provided for @roleCustomer.
   ///
   /// In ar, this message translates to:
-  /// **'أنا زبون'**
+  /// **'زبون'**
   String get roleCustomer;
 
   /// No description provided for @roleDriver.
   ///
   /// In ar, this message translates to:
-  /// **'أنا سائق'**
+  /// **'سائق'**
   String get roleDriver;
 
   /// No description provided for @roleTermsNote.
@@ -2917,6 +2917,36 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'لا تسويات بعد.'**
   String get driverNoSettlements;
+
+  /// No description provided for @roleTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'كيف تريد استخدام سطر؟'**
+  String get roleTitle;
+
+  /// No description provided for @roleSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر دورك مرة واحدة، وتستطيع تغييره لاحقًا.'**
+  String get roleSubtitle;
+
+  /// No description provided for @roleCustomerSub.
+  ///
+  /// In ar, this message translates to:
+  /// **'اطلب القرطاسية والكتب والطباعة'**
+  String get roleCustomerSub;
+
+  /// No description provided for @roleDriverSub.
+  ///
+  /// In ar, this message translates to:
+  /// **'استلم الطلبات وأوصلها'**
+  String get roleDriverSub;
+
+  /// No description provided for @roleLegal.
+  ///
+  /// In ar, this message translates to:
+  /// **'بالمتابعة فإنك توافق على شروط الاستخدام وسياسة الخصوصية.'**
+  String get roleLegal;
 }
 
 class _AppLocalizationsDelegate

@@ -121,28 +121,6 @@ class GateController extends GetxController {
   }
 }
 
-class RoleScreen extends StatelessWidget {
-  const RoleScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    final c = context.sc;
-    return Page2(
-      center: true,
-      body: Column(mainAxisSize: MainAxisSize.min, children: [
-        const Ill('welcome', width: 220),
-        const SizedBox(height: 24),
-        Text('مرحبًا بك في سطر', style: T.d2(c.tx)),
-        const SizedBox(height: 8),
-        Text('اختر كيف تريد استخدام التطبيق', style: T.bd(c.tx2)),
-        const SizedBox(height: 32),
-        OptCard(on: true, icon: 'bag', title: 'أنا زبون', sub: 'أتسوق، أطلب طباعة، أتابع التوصيل', onTap: () => Get.toNamed('/home')),
-        const SizedBox(height: 12),
-        OptCard(on: false, icon: 'truck', title: 'أنا سائق', sub: 'أستلم الطلبات وأوصلها للزبائن', onTap: () => Get.toNamed('/driver/login')),
-      ]),
-    );
-  }
-}
-
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
   @override

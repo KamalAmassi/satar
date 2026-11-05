@@ -495,5 +495,12 @@
   "driverUnsettledOrders": "Unsettled orders",
   "driverCashNote": "Cash is handed to the operator who records the settlement. At the maximum you won’t receive new orders.",
   "driverLastSettlements": "Recent settlements",
-  "driverNoSettlements": "No settlements yet."
+  "driverNoSettlements": "No settlements yet.",
+  "roleTitle": "How do you want to use Satr?",
+  "roleSubtitle": "Pick your role once. You can change it later.",
+  "roleCustomer": "Customer",
+  "roleCustomerSub": "Order stationery, books and printing",
+  "roleDriver": "Driver",
+  "roleDriverSub": "Receive orders and deliver them",
+  "roleLegal": "By continuing you agree to the Terms of Use and Privacy Policy."
 }

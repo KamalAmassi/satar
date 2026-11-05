@@ -80,10 +80,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get roleWelcomeSubtitle => 'اختر كيف بدك تكمل';
 
   @override
-  String get roleCustomer => 'أنا زبون';
+  String get roleCustomer => 'زبون';
 
   @override
-  String get roleDriver => 'أنا سائق';
+  String get roleDriver => 'سائق';
 
   @override
   String get roleTermsNote =>
@@ -1574,4 +1574,20 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get driverNoSettlements => 'لا تسويات بعد.';
+
+  @override
+  String get roleTitle => 'كيف تريد استخدام سطر؟';
+
+  @override
+  String get roleSubtitle => 'اختر دورك مرة واحدة، وتستطيع تغييره لاحقًا.';
+
+  @override
+  String get roleCustomerSub => 'اطلب القرطاسية والكتب والطباعة';
+
+  @override
+  String get roleDriverSub => 'استلم الطلبات وأوصلها';
+
+  @override
+  String get roleLegal =>
+      'بالمتابعة فإنك توافق على شروط الاستخدام وسياسة الخصوصية.';
 }

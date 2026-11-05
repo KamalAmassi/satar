@@ -12,6 +12,7 @@ class SessionStore {
   static const _tokenKey = 'session_token';
   static const _userKey = 'session_user_id';
   static const _roleKey = 'session_role';
+  static const _chosenRoleKey = 'chosen_role';
 
   int _generation = 0;
   int get generation => _generation;
@@ -28,6 +29,16 @@ class SessionStore {
       await _prefs.remove(_roleKey);
     } else {
       await _prefs.setString(_roleKey, r);
+    }
+  }
+
+  /// الدور المختار على هذا الجهاز؛ يبقى بعد الخروج حتى يُسأل المستخدم مرة واحدة فقط.
+  String? get chosenRole => _prefs.getString(_chosenRoleKey);
+  Future<void> setChosenRole(String? r) async {
+    if (r == null) {
+      await _prefs.remove(_chosenRoleKey);
+    } else {
+      await _prefs.setString(_chosenRoleKey, r);
     }
   }
 

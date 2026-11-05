@@ -14,9 +14,10 @@ abstract class GeminiExtractor {
 }
 
 class GeminiRestExtractor implements GeminiExtractor {
-  GeminiRestExtractor(this._dio);
+  GeminiRestExtractor(this._dio, {bool? hasKey}) : _hasKey = hasKey ?? AiConfig.hasGeminiKey;
 
   final Dio _dio;
+  final bool _hasKey;
 
   static const _systemPrompt = r'''
 أنت محرّك استخراج طلبات لمتجر "سطر" (قرطاسية، كتب، ألعاب، هدايا، طباعة) في فلسطين.
@@ -78,7 +79,7 @@ class GeminiRestExtractor implements GeminiExtractor {
       ]);
 
   Future<ExtractionModel> _generate(List<Map<String, dynamic>> parts) async {
-    if (!AiConfig.hasGeminiKey) throw const AiUnavailableFailure();
+    if (!_hasKey) throw const AiUnavailableFailure();
 
     final body = {
       'systemInstruction': {

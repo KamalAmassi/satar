@@ -80,7 +80,7 @@ class GeminiVoiceDataSource {
       // المحتوى يُحفظ كما هو (مع thoughtSignature) كما تتطلب النماذج الأحدث.
       _history.add(content);
       if (calls.isEmpty || !useTools) {
-        return parts.map((p) => p['text'] is String && p['thought'] != true ? p['text'] as String : '').join(' ').trim();
+        return stripMarkdown(parts.map((p) => p['text'] is String && p['thought'] != true ? p['text'] as String : '').join(' '));
       }
       final responses = <Map<String, dynamic>>[];
       for (final call in calls) {
@@ -164,3 +164,11 @@ class GeminiVoiceDataSource {
         headers: {'Content-Type': 'application/json', 'x-goog-api-key': AiConfig.geminiApiKey},
       ));
 }
+
+
+/// يزيل رموز Markdown قبل النطق (لا يقرؤها TTS كحروف).
+String stripMarkdown(String t) => t
+    .replaceAll(RegExp(r'[*_`#>~]+'), '')
+    .replaceAll(RegExp(r'^\s*[-•]\s+', multiLine: true), '')
+    .replaceAll(RegExp(r'\s+'), ' ')
+    .trim();

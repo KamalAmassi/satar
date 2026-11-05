@@ -8,6 +8,7 @@ import 'package:project/core/config/remote_config_repository.dart';
 import 'package:project/core/design/icons.dart';
 import 'package:project/core/design/illustrations.dart';
 import 'package:project/core/design/shell.dart';
+import 'package:project/customer/features/entry/presentation/splash_page.dart' show SplashScreen;
 import 'package:project/customer/features/orders/presentation/orders_page.dart' show callUrl;
 import 'package:project/core/design/tokens.dart';
 import 'package:project/core/design/widgets.dart';
@@ -22,58 +23,6 @@ import 'package:project/core/widgets/common_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    _start();
-  }
-
-  Future<void> _start() async {
-    final s = Get.find<SessionStore>();
-    final p = Get.find<SharedPreferences>();
-    await Get.find<RemoteConfigRepository>().load();
-    await Future.delayed(const Duration(milliseconds: 900));
-
-    if (!mounted) return;
-    if (s.isSignedIn) {
-      Get.offAllNamed(s.isDriver ? '/driver/home' : '/home');
-      return;
-    }
-    if (!(p.getBool('onboarded') ?? false)) {
-      Get.offAllNamed('/onboarding');
-      return;
-    }
-    Get.offAllNamed('/role');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.sc;
-    return Page2(
-      center: true,
-      body: Column(mainAxisSize: MainAxisSize.min, children: [
-        Container(
-          width: 96,
-          height: 96,
-          decoration: BoxDecoration(color: c.hero, borderRadius: BorderRadius.circular(Rad.xl)),
-          child: Center(child: Text('سطر', style: T.d1(c.onHero))),
-        ),
-        const SizedBox(height: 16),
-        Text('سطر', style: T.d1(c.tx)),
-        const SizedBox(height: 6),
-        Text('مكتبتك في جيبك', style: T.bd(c.tx2)),
-      ]),
-    );
-  }
-}
 
 class SystemStateScreen extends StatelessWidget {
   const SystemStateScreen({super.key, required this.ill, required this.title, required this.text, this.actions, this.extra});

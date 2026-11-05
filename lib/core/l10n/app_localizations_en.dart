@@ -1479,4 +1479,131 @@ class AppLocalizationsEn extends AppLocalizations {
   String voiceProposedCount(int count) {
     return '$count proposed items';
   }
+
+  @override
+  String get driverHomeAction => 'Home';
+
+  @override
+  String get driverLoadFailed => 'Couldn’t load';
+
+  @override
+  String get driverFailedTitle => 'Delivery failed';
+
+  @override
+  String get driverFailedQuestion => 'Why couldn’t you deliver?';
+
+  @override
+  String get driverFailReasonUnreachable =>
+      'Customer isn’t answering the phone';
+
+  @override
+  String get driverFailReasonAddress => 'Address is incorrect';
+
+  @override
+  String get driverFailReasonReschedule => 'Customer asked to reschedule';
+
+  @override
+  String get driverFailReasonAccess => 'Couldn’t reach the location';
+
+  @override
+  String get driverFailReasonOther => 'Other reason';
+
+  @override
+  String get driverNoteLabel => 'Note';
+
+  @override
+  String get driverNoteHint => 'Additional details…';
+
+  @override
+  String get driverAddPhotoOptional => 'Add a photo (optional)';
+
+  @override
+  String get driverPhotoAttached => 'Photo attached';
+
+  @override
+  String get driverRecordFailure => 'Record failed delivery';
+
+  @override
+  String get driverDeliveredTitle => 'Delivered';
+
+  @override
+  String get driverDeliveredBody =>
+      'Well done. Your earning was added to your history.';
+
+  @override
+  String get driverTaskEarning => 'Task earning';
+
+  @override
+  String get driverCashOnHandNow => 'Cash on hand now';
+
+  @override
+  String get driverHistoryEyebrow => 'Your past work';
+
+  @override
+  String get driverHistoryTitle => 'History';
+
+  @override
+  String get driverNoPastTasks => 'No past tasks';
+
+  @override
+  String get driverNoPastTasksText => 'Tasks you complete will show up here.';
+
+  @override
+  String driverDistanceKm(String km) {
+    return '$km km';
+  }
+
+  @override
+  String get driverEarningsEyebrow => 'Your earnings';
+
+  @override
+  String get driverEarningsTitle => 'Earnings';
+
+  @override
+  String get driverPeriodDay => 'Today';
+
+  @override
+  String get driverPeriodWeek => 'Week';
+
+  @override
+  String get driverPeriodMonth => 'Month';
+
+  @override
+  String get driverEarningsOfDay => 'Today’s earnings';
+
+  @override
+  String get driverEarningsOfWeek => 'This week’s earnings';
+
+  @override
+  String get driverEarningsOfMonth => 'This month’s earnings';
+
+  @override
+  String driverTasksAndCash(int orders) {
+    return '$orders tasks · cash collected ';
+  }
+
+  @override
+  String get driverWeekdayInitials => 'M,T,W,T,F,S,S';
+
+  @override
+  String get driverCashAndSettlements => 'Cash & settlements';
+
+  @override
+  String get driverCashTitle => 'Cash';
+
+  @override
+  String get driverRemainingToLimit => 'Remaining to limit';
+
+  @override
+  String get driverUnsettledOrders => 'Unsettled orders';
+
+  @override
+  String get driverCashNote =>
+      'Cash is handed to the operator who records the settlement. At the maximum you won’t receive new orders.';
+
+  @override
+  String get driverLastSettlements => 'Recent settlements';
+
+  @override
+  String get driverNoSettlements => 'No settlements yet.';
 }

@@ -1449,4 +1449,129 @@ class AppLocalizationsAr extends AppLocalizations {
   String voiceProposedCount(int count) {
     return '$count أصناف مقترحة';
   }
+
+  @override
+  String get driverHomeAction => 'الرئيسية';
+
+  @override
+  String get driverLoadFailed => 'تعذّر التحميل';
+
+  @override
+  String get driverFailedTitle => 'تعذّر التسليم';
+
+  @override
+  String get driverFailedQuestion => 'ما سبب تعذّر التسليم؟';
+
+  @override
+  String get driverFailReasonUnreachable => 'الزبون لا يرد على الهاتف';
+
+  @override
+  String get driverFailReasonAddress => 'العنوان غير صحيح';
+
+  @override
+  String get driverFailReasonReschedule => 'الزبون طلب إعادة الجدولة';
+
+  @override
+  String get driverFailReasonAccess => 'تعذّر الوصول إلى المكان';
+
+  @override
+  String get driverFailReasonOther => 'سبب آخر';
+
+  @override
+  String get driverNoteLabel => 'ملاحظة';
+
+  @override
+  String get driverNoteHint => 'تفاصيل إضافية…';
+
+  @override
+  String get driverAddPhotoOptional => 'أضف صورة (اختياري)';
+
+  @override
+  String get driverPhotoAttached => 'أُرفقت الصورة';
+
+  @override
+  String get driverRecordFailure => 'سجّل تعذّر التسليم';
+
+  @override
+  String get driverDeliveredTitle => 'تم التسليم';
+
+  @override
+  String get driverDeliveredBody => 'أحسنت. أُضيف ربحك إلى سجلك.';
+
+  @override
+  String get driverTaskEarning => 'ربح المهمة';
+
+  @override
+  String get driverCashOnHandNow => 'نقد معك الآن';
+
+  @override
+  String get driverHistoryEyebrow => 'أعمالك السابقة';
+
+  @override
+  String get driverHistoryTitle => 'السجل';
+
+  @override
+  String get driverNoPastTasks => 'لا مهام سابقة';
+
+  @override
+  String get driverNoPastTasksText => 'ستظهر هنا المهام التي أنجزتها.';
+
+  @override
+  String driverDistanceKm(String km) {
+    return '$km كم';
+  }
+
+  @override
+  String get driverEarningsEyebrow => 'أرباحك';
+
+  @override
+  String get driverEarningsTitle => 'الأرباح';
+
+  @override
+  String get driverPeriodDay => 'اليوم';
+
+  @override
+  String get driverPeriodWeek => 'الأسبوع';
+
+  @override
+  String get driverPeriodMonth => 'الشهر';
+
+  @override
+  String get driverEarningsOfDay => 'أرباح اليوم';
+
+  @override
+  String get driverEarningsOfWeek => 'أرباح الأسبوع';
+
+  @override
+  String get driverEarningsOfMonth => 'أرباح الشهر';
+
+  @override
+  String driverTasksAndCash(int orders) {
+    return '$orders مهمة · تحصيل نقدي ';
+  }
+
+  @override
+  String get driverWeekdayInitials => 'ن,ث,ر,خ,ج,س,ح';
+
+  @override
+  String get driverCashAndSettlements => 'النقد والتسويات';
+
+  @override
+  String get driverCashTitle => 'النقد';
+
+  @override
+  String get driverRemainingToLimit => 'المتبقي حتى الحد';
+
+  @override
+  String get driverUnsettledOrders => 'طلبات غير مسوّاة';
+
+  @override
+  String get driverCashNote =>
+      'تُسلَّم الأموال للمشغّل ويسجّل التسوية. عند الوصول للحد الأقصى لا تصلك طلبات جديدة.';
+
+  @override
+  String get driverLastSettlements => 'آخر التسويات';
+
+  @override
+  String get driverNoSettlements => 'لا تسويات بعد.';
 }

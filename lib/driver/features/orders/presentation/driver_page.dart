@@ -228,7 +228,7 @@ class _OnlineChip extends StatelessWidget {
       });
 }
 
-Widget _cashMeter(BuildContext context, CashModel cash) {
+Widget cashMeter(BuildContext context, CashModel cash) {
   final c = context.sc;
   final max = cash.max.amount == 0 ? 1 : cash.max.amount;
   return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -304,7 +304,7 @@ class DriverHomeScreen extends StatelessWidget {
           ]),
           const SizedBox(height: 24),
           if (d.cash.value != null) Card2(child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            _cashMeter(context, d.cash.value!),
+            cashMeter(context, d.cash.value!),
             const SizedBox(height: 12),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Row(children: [Text('متبقي حتى الحد: ', style: T.sm(c.tx2)), Mny((d.cash.value!.remaining?.amount) ?? (d.cash.value!.max.amount - d.cash.value!.onHand.amount), size: 14)]), SBtn('التفاصيل', kind: BtnKind.ghost, size: BtnSize.xs, onTap: () => Get.toNamed('/driver/cash'))]),
           ])),

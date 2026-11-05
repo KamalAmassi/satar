@@ -17,6 +17,11 @@ import 'package:project/customer/features/printing/presentation/printing_page.da
 import 'package:project/driver/features/auth/presentation/driver_login_page.dart';
 import 'package:project/driver/features/auth/presentation/driver_settings_page.dart';
 import 'package:project/driver/features/orders/presentation/driver_page.dart';
+import 'package:project/driver/features/orders/presentation/driver_delivered_page.dart';
+import 'package:project/driver/features/orders/presentation/driver_earnings_page.dart';
+import 'package:project/driver/features/orders/presentation/driver_failed_page.dart';
+import 'package:project/driver/features/orders/presentation/driver_history_page.dart';
+import 'package:project/driver/features/orders/presentation/failure_recorded_page.dart';
 
 GetPage<dynamic> _p(String name, Widget Function() page) => GetPage(name: name, page: page);
 

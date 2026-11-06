@@ -26,6 +26,9 @@ import 'package:project/customer/features/ai_assistant/data/matching/request_par
 import 'package:project/customer/features/ai_assistant/data/repositories/ai_assistant_repository_impl.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/assistant_result.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/audio_clip.dart';
+import 'package:project/customer/features/ai_assistant/domain/entities/intent.dart';
+import 'package:project/customer/features/ai_assistant/domain/entities/match_info.dart';
+import 'package:project/customer/features/ai_assistant/presentation/widgets/match_note_text.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/suggested_product.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/suggestion_item.dart';
 import 'package:project/customer/features/ai_assistant/domain/failures/ai_failures.dart';
@@ -50,6 +53,10 @@ class AssistantController extends GetxController {
   final selected = <int>{}.obs;
   final transcript = ''.obs;
   final errorText = RxnString();
+
+  /// سؤال توضيحي واحد (الإجابة بالنقر تكمل الطلب) وملخص البكج/الهدية.
+  final clarification = Rxn<Clarification>();
+  final plan = Rxn<PlanSummary>();
   final micDenied = false.obs;
   AudioClip? _clip;
   String _lastText = '';
@@ -77,6 +84,8 @@ class AssistantController extends GetxController {
     selected.clear();
     transcript.value = '';
     errorText.value = null;
+    clarification.value = null;
+    plan.value = null;
     phase.value = Phase.idle;
   }
 
@@ -167,18 +176,28 @@ class AssistantController extends GetxController {
       errorText.value = fail is AiUnavailableFailure ? 'خدمة المساعد غير متاحة الآن.' : (fail is AiQuotaFailure ? 'المساعد مشغول الآن. حاول بعد قليل.' : failureText(fail));
       phase.value = Phase.error;
     }, (res) {
-      if (res.unclear || res.items.isEmpty) {
+      if (res.clarification == null && (res.unclear || res.items.isEmpty)) {
         errorText.value = 'لم أفهم الطلب. جرّب صياغة أخرى.';
         phase.value = Phase.error;
         return;
       }
       if (res.transcript.isNotEmpty) transcript.value = res.transcript;
+      clarification.value = res.clarification;
+      plan.value = res.plan;
       items.assignAll(res.items);
       selected
         ..clear()
         ..addAll([for (var i = 0; i < res.items.length; i++) if (res.items[i].isIncluded) i]);
       phase.value = Phase.results;
     });
+  }
+
+  /// نقر خيار السؤال التوضيحي = جواب؛ نكمل بنص الطلب + الجواب.
+  Future<void> answerClarification(String option) async {
+    final base = (_lastText.isNotEmpty ? _lastText : transcript.value).trim();
+    clarification.value = null;
+    phase.value = Phase.idle;
+    await sendText(base.isEmpty ? option : '$base $option');
   }
 
   void cancelAnalyzing() {
@@ -197,8 +216,8 @@ class AssistantController extends GetxController {
     if (items[i].quantity == 0) selected.remove(i);
   }
 
-  void substitute(int i, SuggestedProduct alt) {
-    items[i] = items[i].substitutedWith(alt);
+  void substitute(int i, SuggestedProduct alt, {MatchLevel level = MatchLevel.exact, MatchNote? note}) {
+    items[i] = items[i].substitutedWith(alt, level: level, note: note);
     if (items[i].isIncluded) selected.add(i);
   }
 
@@ -398,13 +417,26 @@ class AssistantScreen extends StatelessWidget {
   Widget _results(BuildContext context, AssistantController ctl) {
     final c = context.sc;
     final found = ctl.items.where((i) => i.product != null).length;
+    final hasClarify = ctl.clarification.value != null;
     final missing = ctl.missing;
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       _bubbleUser(context, ctl.transcript.value),
       const SizedBox(height: 16),
-      _bubbleAssistant(context, found == 0 ? const Text('لم أجد في الكتالوج ما يطابق طلبك.') : Text.rich(TextSpan(children: [const TextSpan(text: 'وجدت '), TextSpan(text: '$found ${found == 1 ? 'منتجًا' : 'منتجات'}', style: const TextStyle(fontWeight: FontWeight.w700)), const TextSpan(text: ' تطابق طلبك. راجعها قبل إضافتها إلى السلة.')]))),
+      _bubbleAssistant(context, found == 0 ? Text(hasClarify ? 'أحتاج تفصيلًا واحدًا لأعطيك نتيجة دقيقة.' : 'لم أجد في الكتالوج ما يطابق تمامًا طلبك.') : Text.rich(TextSpan(children: [const TextSpan(text: 'وجدت '), TextSpan(text: '$found ${found == 1 ? 'منتجًا' : 'منتجات'}', style: const TextStyle(fontWeight: FontWeight.w700)), const TextSpan(text: ' تطابق طلبك. راجعها قبل إضافتها إلى السلة.')]))),
+      if (ctl.clarification.value != null) ...[
+        const SizedBox(height: 16),
+        _bubbleAssistant(context, Text(ctl.clarification.value!.question)),
+        const SizedBox(height: 10),
+        Wrap(spacing: 8, runSpacing: 8, children: [for (final o in ctl.clarification.value!.options) SChip(o, onTap: () => ctl.answerClarification(o))]),
+        const SizedBox(height: 6),
+        Text(context.l10n.aiClarifyHint, style: T.sm(c.tx3)),
+      ],
       for (var i = 0; i < ctl.items.length; i++)
-        if (ctl.items[i].product != null) ...[const SizedBox(height: 16), _SugRow(ctl, i)],
+        if (ctl.items[i].product != null)
+          ...[const SizedBox(height: 16), _SugRow(ctl, i)]
+        else if (ctl.items[i].close.isNotEmpty || ctl.items[i].similar.isNotEmpty)
+          ...[const SizedBox(height: 16), _CloseOnlyRow(ctl, i)],
+      if (ctl.plan.value != null) ...[const SizedBox(height: 16), _PlanPanel(ctl.plan.value!)],
       if (missing.isNotEmpty) ...[
         const SizedBox(height: 16),
         Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -466,7 +498,7 @@ class _SugRow extends StatelessWidget {
     final on = ctl.selected.contains(i);
     final clear = it.status == SuggestionStatus.available;
     final tag = switch (it.status) {
-      SuggestionStatus.available => ('مطابقة واضحة', 'plum'),
+      SuggestionStatus.available => (context.l10n.aiSecExact, 'plum'),
       SuggestionStatus.limited => ('تحقّق: المتوفر ${it.maxQuantity}', 'soft'),
       SuggestionStatus.outOfStock => ('غير متوفر', 'err'),
       _ => ('تحقّق: هل تقصد؟', 'soft'),
@@ -481,9 +513,11 @@ class _SugRow extends StatelessWidget {
           ProdThumb(imageUrl: p.imageUrl, name: p.name, seed: p.id, size: 56),
           const SizedBox(width: 12),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            if (it.role.isNotEmpty) Text(it.role, style: T.sm(c.tx3)),
             Text(p.name, style: T.h3(c.tx, size: 14.5).copyWith(height: 1.4)),
             const SizedBox(height: 2),
             Row(children: [STag(tag.$1, kind: tag.$2), const SizedBox(width: 6), Mny(p.priceAmount)]),
+            if (it.note != null) Padding(padding: const EdgeInsets.only(top: 4), child: Text(matchNoteText(context.l10n, it.note!), style: T.sm(c.tx2))),
           ])),
         ]),
         if (it.isSelectable) ...[
@@ -493,14 +527,78 @@ class _SugRow extends StatelessWidget {
             Stepper2(value: it.quantity, min: 1, maxed: it.quantity >= it.maxQuantity, onInc: () => ctl.setQty(i, it.quantity + 1), onDec: () => ctl.setQty(i, it.quantity - 1)),
           ]),
         ],
-        if (it.alternatives.isNotEmpty && (it.status == SuggestionStatus.outOfStock || !clear)) ...[
+        if (it.alternatives.isNotEmpty) ...[
           const SizedBox(height: 10),
-          Text('بدائل:', style: T.sm(c.tx2)),
+          Text(context.l10n.aiSecExact, style: T.sm(c.tx2)),
           const SizedBox(height: 6),
           Wrap(spacing: 8, runSpacing: 8, children: [for (final a in it.alternatives.take(3)) SChip(a.name, onTap: () => ctl.substitute(i, a))]),
         ],
+        ..._matchSections(context, ctl, i, it),
       ]),
     );
+  }
+}
+
+/// أقسام "قريب مما طلبت" و"بدائل مقترحة": غير محدَّدة مسبقًا، وكل صف بسببه في سطر.
+List<Widget> _matchSections(BuildContext context, AssistantController ctl, int i, SuggestionItem it) {
+  final c = context.sc;
+  final l = context.l10n;
+  Widget section(String title, List<MatchedProduct> list) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const SizedBox(height: 12),
+        Text(title, style: T.sm(c.tx2).copyWith(fontWeight: FontWeight.w700)),
+        const SizedBox(height: 6),
+        for (final m in list.take(3)) Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            SChip(m.product.name, onTap: () => ctl.substitute(i, m.product, level: m.level, note: m.note)),
+            if (m.note != null) Padding(padding: const EdgeInsets.only(top: 2, right: 6, left: 6), child: Text(matchNoteText(l, m.note!), style: T.sm(c.tx3))),
+          ]),
+        ),
+      ]);
+  return [
+    if (it.close.isNotEmpty) section(l.aiSecClose, it.close),
+    if (it.similar.isNotEmpty) section(l.aiSecAlternatives, it.similar),
+  ];
+}
+
+/// طلب بلا مطابق تمامًا: نقول ذلك بوضوح ونعرض الأقرب مسمّاةً، دون تحديد مسبق.
+class _CloseOnlyRow extends StatelessWidget {
+  const _CloseOnlyRow(this.ctl, this.i);
+  final AssistantController ctl;
+  final int i;
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sc;
+    final it = ctl.items[i];
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(color: c.sf, borderRadius: BorderRadius.circular(Rad.m), border: Border.all(color: c.ln)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        if (it.role.isNotEmpty) Text(it.role, style: T.sm(c.tx3)),
+        Text(it.requestText, style: T.h3(c.tx, size: 14.5)),
+        const SizedBox(height: 4),
+        Text(context.l10n.aiNoCloseHint, style: T.sm(c.tx2)),
+        ..._matchSections(context, ctl, i, it),
+      ]),
+    );
+  }
+}
+
+class _PlanPanel extends StatelessWidget {
+  const _PlanPanel(this.plan);
+  final PlanSummary plan;
+  String _m(int a) => '${(a / 100).toStringAsFixed(2)} ₪';
+  @override
+  Widget build(BuildContext context) {
+    final c = context.sc;
+    final l = context.l10n;
+    return Panel(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(l.aiPlanTotal(_m(plan.totalAmount)), style: T.h3(c.tx, size: 15.5)),
+      if (plan.budgetAmount != null) Text(l.aiPlanBudget(_m(plan.budgetAmount!)), style: T.sm(c.tx2)),
+      if (plan.overBudget) Padding(padding: const EdgeInsets.only(top: 4), child: Text(l.aiPlanOverBudget, style: T.sm(c.err))),
+      if (plan.replacedRoles.isNotEmpty) Padding(padding: const EdgeInsets.only(top: 4), child: Text(l.aiPlanReplaced(plan.replacedRoles.join('، ')), style: T.sm(c.tx2))),
+      if (plan.droppedRoles.isNotEmpty) Padding(padding: const EdgeInsets.only(top: 4), child: Text(l.aiPlanDropped(plan.droppedRoles.join('، ')), style: T.sm(c.tx2))),
+    ]));
   }
 }
 

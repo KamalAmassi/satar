@@ -20,48 +20,111 @@ class GeminiRestExtractor implements GeminiExtractor {
   final bool _hasKey;
 
   static const _systemPrompt = r'''
-أنت محرّك استخراج طلبات لمتجر "سطر" (قرطاسية، كتب، ألعاب، هدايا، طباعة) في فلسطين.
-المدخل: كلام أو نص بالعربية (غالباً لهجة شامية/فلسطينية) فيه أصناف يريد الزبون شراءها.
-مهمتك: استخراج الأصناف والكميات فقط، وإرجاع JSON حسب المخطط دون أي نص آخر.
-القواعد:
-- لا تخترع أصنافاً ولا تضف شيئاً لم يُذكر. لا أسعار ولا توصيات.
-- افصل الأصناف عند: "و"، "مع"، "كمان"، الفواصل، الأرقام.
-- الكمية: أرقام أو كلمات (ثلاث، خمسة...) أو المثنى (دفترين = 2). الافتراضي 1.
-- "ربطة/علبة/باكيت" جزء من اسم الصنف، لا تحوّلها لكمية.
-- احتفظ بتفاصيل الصنف (اللون، الحجم، اسم الكتاب بين علامتي تنصيص إن وُجد) داخل name.
-- search_terms: من 3 إلى 6 صيغ بحث (مفرد، جمع، مرادف، إملاء بديل) لتسهيل المطابقة مع كتالوج المنتجات.
-- الطباعة (مثل "طباعة A4") kind="print"، وما عداها "product".
-- transcript: النص المسموع منظّفاً من الحشو، بالعربية.
-- إذا الصوت غير مفهوم أو لا علاقة له بالتسوق: items فارغة و unclear=true.
-- quantity رقم صحيح دائماً.
+أنت محرّك "فهم الطلب" لمتجر "سطر" (قرطاسية، كتب، ألعاب، هدايا، طباعة) في فلسطين.
+المدخل: كلام أو نص بالعربية (لهجة شامية/فلسطينية). افهم ماذا يريد الزبون فعلاً ثم أرجع JSON حسب المخطط فقط.
+لا تخترع منتجات أو أسعاراً. لا تبحث ولا توصِ: فقط افهم وهيكل الطلب.
+
+أنواع الطلب (kind):
+- specific_item: صنف محدد. املأ item.
+- bundle_for_purpose: "بكج/كل اللي بدي إياه لـ..." (مثل بداية مدرسة). املأ purpose وaudience وage (إن ذُكر الصف/العمر) وbudget بالشيكل، وخطة needed_items من 3 إلى 8 أصناف، لكل منها role (مثل: حقيبة، دفاتر، أقلام، ممحاة، براية، مسطرة) وessential.
+- gift_or_toy_for_purpose: لعبة/هدية لشخص أو مناسبة. املأ recipient وage وoccasion وinterests وbudget وdesired_traits (تعليمية، إبداعية، هادئة...) وsearch_intents من 2 إلى 4 (كل منها product_type + صفات).
+- question: سؤال عام لا يطلب منتجاً. unclear: غير مفهوم أو لا علاقة له بالتسوق.
+
+قواعد المفردات:
+- "ربطة/باكيت/باكت/طقم/دزينة/علبة" = عبوة من عدة وحدات، فاجعل pack="pack". غير ذلك pack="single".
+- product_type هو الاسم الرئيسي المفرد فقط (دفتر، قلم، مقص، حقيبة) بلا صفات ولا كلمة العبوة.
+- "دفتر سلك" = دفتر حلزوني/سلك، وهو غير دفتر عادي أو ربطة دفاتر عادية. ضع "سلك" في ruling.
+- "نوتة/نوتات" = دفتر ملاحظات صغير وليس دفتراً مدرسياً. product_type="نوتة".
+- "كراسة" = كراسة مدرسية. "بكج" = حزمة/طقم متكامل.
+- الأرقام والمثنى كمية: دفترين = 2، ثلاث أقلام = 3. الافتراضي 1.
+- الصفات: size، pages (عدد الأوراق)، ruling (مسطر/مربعات/سلك/خياطة)، color، brand، grade (الصف). اتركها فارغة إن لم تُذكر.
+- must_have_terms: كلمات يجب أن تظهر. must_not_terms: كلمات تجعل النتيجة خاطئة. مثال: لـ"ربطة دفاتر" ضع must_not_terms=["سلك","نوتة","ملاحظات"] ما لم يطلبها الزبون صراحة. لـ"دفتر عادي" كذلك.
+- افصل الأصناف المتعددة إلى requests منفصلة (عند "و"، "مع"، "كمان"، الفواصل).
+- الطباعة (مثل "طباعة A4") اجعلها specific_item مع is_print=true.
+- original_text: عبارة الزبون لهذا الطلب بلا حشو. transcript: النص المسموع كاملاً منظّفاً.
+
+التوضيح (clarification_needed): املأه فقط إن كان النقص سيغيّر النتائج فعلاً (مثل "دفاتر" فقط: مدرسية عادية أم سلك أم نوتة؟ أو لعبة بلا عمر). سؤال واحد قصير بالعربية مع 2 إلى 4 خيارات قصيرة. إن كان الطلب واضحاً كفاية فلا تسأل.
 ''';
+
+  static const _itemSchema = {
+    'type': 'OBJECT',
+    'properties': {
+      'product_type': {'type': 'STRING'},
+      'pack': {
+        'type': 'STRING',
+        'enum': ['single', 'pack'],
+      },
+      'quantity': {'type': 'INTEGER'},
+      'size': {'type': 'STRING'},
+      'pages': {'type': 'STRING'},
+      'ruling': {'type': 'STRING'},
+      'color': {'type': 'STRING'},
+      'brand': {'type': 'STRING'},
+      'grade': {'type': 'STRING'},
+      'must_have_terms': {
+        'type': 'ARRAY',
+        'items': {'type': 'STRING'},
+      },
+      'must_not_terms': {
+        'type': 'ARRAY',
+        'items': {'type': 'STRING'},
+      },
+      'original_text': {'type': 'STRING'},
+      'role': {'type': 'STRING'},
+      'essential': {'type': 'BOOLEAN'},
+      'is_print': {'type': 'BOOLEAN'},
+    },
+    'required': ['product_type', 'pack', 'quantity'],
+  };
 
   static const _schema = {
     'type': 'OBJECT',
     'properties': {
       'transcript': {'type': 'STRING'},
       'unclear': {'type': 'BOOLEAN'},
-      'items': {
+      'requests': {
         'type': 'ARRAY',
         'items': {
           'type': 'OBJECT',
           'properties': {
-            'name': {'type': 'STRING'},
-            'quantity': {'type': 'INTEGER'},
             'kind': {
               'type': 'STRING',
-              'enum': ['product', 'print'],
+              'enum': ['specific_item', 'bundle_for_purpose', 'gift_or_toy_for_purpose', 'question', 'unclear'],
             },
-            'search_terms': {
+            'original_text': {'type': 'STRING'},
+            'item': _itemSchema,
+            'purpose': {'type': 'STRING'},
+            'audience': {'type': 'STRING'},
+            'age': {'type': 'INTEGER'},
+            'budget': {'type': 'INTEGER'},
+            'needed_items': {'type': 'ARRAY', 'items': _itemSchema},
+            'recipient': {'type': 'STRING'},
+            'occasion': {'type': 'STRING'},
+            'interests': {
               'type': 'ARRAY',
               'items': {'type': 'STRING'},
             },
+            'desired_traits': {
+              'type': 'ARRAY',
+              'items': {'type': 'STRING'},
+            },
+            'search_intents': {'type': 'ARRAY', 'items': _itemSchema},
           },
-          'required': ['name', 'quantity', 'kind', 'search_terms'],
+          'required': ['kind', 'original_text'],
+        },
+      },
+      'clarification_needed': {
+        'type': 'OBJECT',
+        'properties': {
+          'question': {'type': 'STRING'},
+          'options': {
+            'type': 'ARRAY',
+            'items': {'type': 'STRING'},
+          },
         },
       },
     },
-    'required': ['transcript', 'unclear', 'items'],
+    'required': ['transcript', 'unclear', 'requests'],
   };
 
   @override

@@ -88,9 +88,17 @@ Map<String, dynamic> extraction() => content([
         'text': jsonEncode({
           'transcript': 'بدي دفترين وقلم أزرق',
           'unclear': false,
-          'items': [
-            {'name': 'دفتر', 'quantity': 2, 'kind': 'product', 'search_terms': ['دفتر', 'دفاتر']},
-            {'name': 'قلم أزرق', 'quantity': 1, 'kind': 'product', 'search_terms': ['قلم أزرق', 'قلم']},
+          'requests': [
+            {
+              'kind': 'specific_item',
+              'original_text': 'دفترين',
+              'item': {'product_type': 'دفتر', 'pack': 'single', 'quantity': 2},
+            },
+            {
+              'kind': 'specific_item',
+              'original_text': 'قلم أزرق',
+              'item': {'product_type': 'قلم', 'pack': 'single', 'quantity': 1, 'color': 'أزرق'},
+            },
           ],
         }),
       },

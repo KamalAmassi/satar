@@ -10,6 +10,7 @@ import 'package:project/customer/features/ai_assistant/data/matching/request_par
 import 'package:project/customer/features/ai_assistant/data/models/extraction_model.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/assistant_result.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/audio_clip.dart';
+import 'package:project/customer/features/ai_assistant/domain/entities/intent.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/suggestion_item.dart';
 import 'package:project/customer/features/ai_assistant/domain/repositories/ai_assistant_repository.dart';
 
@@ -73,12 +74,12 @@ class AiAssistantRepositoryImpl implements AiAssistantRepository {
         extraction = null;
       }
 
-      if (extraction != null && extraction.unclear && extraction.items.isEmpty) {
+      if (extraction != null && extraction.unclear && !extraction.hasSearchable) {
         return AssistantResult(transcript: input, unclear: true, items: const []);
       }
 
       final List<SuggestionItem> items;
-      if (extraction != null && extraction.items.isNotEmpty) {
+      if (extraction != null && extraction.hasSearchable) {
         final products = await _candidates(_extractionQueries(extraction));
         items = _resolveExtraction(extraction, products);
       } else {
@@ -103,7 +104,7 @@ class AiAssistantRepositoryImpl implements AiAssistantRepository {
     return ErrorHandler.guard(() async {
       // أخطاء Gemini تُرمى كـ Failure جاهزة (حصة/شبكة/غير متاح).
       final extraction = await _gemini.fromAudio(clip.bytes, clip.mimeType);
-      if (extraction.unclear && extraction.items.isEmpty) {
+      if (extraction.unclear && !extraction.hasSearchable) {
         return AssistantResult(
           transcript: extraction.transcript,
           unclear: true,
@@ -120,9 +121,15 @@ class AiAssistantRepositoryImpl implements AiAssistantRepository {
     });
   }
 
+  // انتقالي (الخطوة 2): الطلبات المحددة فقط تُحوَّل لاستعلامات؛ يُستبدل بالمحرك الجديد في الخطوة 3.
+  List<ItemSpec> _specs(ExtractionModel e) => [
+        for (final r in e.requests)
+          if (r.item != null) r.item!,
+      ];
+
   Iterable<String> _extractionQueries(ExtractionModel e) => [
-        for (final i in e.items)
-          if (!i.isPrint) ...[i.name, ...i.searchTerms.take(3)],
+        for (final i in _specs(e))
+          if (!i.isPrint) i.productType,
       ];
 
   List<SuggestionItem> _resolveExtraction(
@@ -130,23 +137,15 @@ class AiAssistantRepositoryImpl implements AiAssistantRepository {
       List<Product> products,
       ) {
     final items = <SuggestionItem>[];
-    for (final item in extraction.items) {
+    for (final item in _specs(extraction)) {
       if (item.isPrint) {
-        items.add(SuggestionItem.printJob(requestText: item.name));
+        items.add(SuggestionItem.printJob(requestText: item.originalText));
         continue;
       }
-      final tokens = _tokens(item.name);
+      final tokens = _tokens('${item.productType} ${item.attributes.values.join(' ')}');
       if (tokens.isEmpty) continue;
       items.add(_matcher.resolve(
-        RequestedItem(
-          tokens: tokens,
-          quantity: item.quantity,
-          hasExplicitQuantity: true,
-          alternatives: [
-            for (final term in item.searchTerms)
-              if (_tokens(term).isNotEmpty) _tokens(term),
-          ],
-        ),
+        RequestedItem(tokens: tokens, quantity: item.quantity, hasExplicitQuantity: true),
         products,
       ));
     }

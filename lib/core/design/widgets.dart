@@ -1578,19 +1578,38 @@ class ProdThumb extends StatelessWidget {
 /// صورة المنتج من الخادم إن وُجدت، وإلا الرسم البديل المعتمد.
 /// عنصر نائب هادئ ثم ظهور تدريجي بعد التحميل، وفك ترميز بحجم العرض فقط.
 class ProductArt extends StatelessWidget {
-  const ProductArt({super.key, this.imageUrl, required this.name, this.seed = 0, this.fit = false, this.decodeWidth, this.semanticLabel});
+  const ProductArt({
+    super.key,
+    this.imageUrl,
+    required this.name,
+    this.seed = 0,
+    this.fit = false,
+    this.boxFit,
+    this.decodeWidth,
+    this.semanticLabel,
+  });
+
   final String? imageUrl;
   final String name;
   final int seed;
   final bool fit;
+  final BoxFit? boxFit;
 
   /// عرض فك الترميز بالبكسل؛ null ⇒ يُحسب من عرض التخطيط.
   final int? decodeWidth;
   final String? semanticLabel;
+
   @override
   Widget build(BuildContext context) {
     final fallback = ProductCover(kind: ProductCover.kindFor(name), tone: ProductCover.toneFor(seed), fit: fit);
-    return SatrNetworkImage(url: imageUrl, semanticLabel: semanticLabel, decodeWidth: decodeWidth, fallback: fallback);
+    final effectiveFit = boxFit ?? (fit ? BoxFit.contain : BoxFit.cover);
+    return SatrNetworkImage(
+      url: imageUrl,
+      fit: effectiveFit,
+      semanticLabel: semanticLabel,
+      decodeWidth: decodeWidth,
+      fallback: fallback,
+    );
   }
 }
 

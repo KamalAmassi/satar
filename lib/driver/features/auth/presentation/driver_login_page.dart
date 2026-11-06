@@ -6,7 +6,6 @@ import 'package:project/core/config/app_env.dart';
 import 'package:project/core/config/otp_config.dart';
 import 'package:project/core/config/remote_config_repository.dart';
 import 'package:project/core/design/icons.dart';
-import 'package:project/core/design/illustrations.dart';
 import 'package:project/core/design/shell.dart';
 import 'package:project/core/design/tokens.dart';
 import 'package:project/core/design/widgets.dart';
@@ -21,6 +20,7 @@ import 'package:project/core/storage/session_store.dart';
 import 'package:project/core/utils/haptics.dart';
 import 'package:project/core/utils/phone_normalizer.dart';
 import 'package:project/core/data/models.dart';
+import 'package:project/core/widgets/auth_header.dart';
 import 'package:project/core/widgets/common_widgets.dart';
 
 class DriverLoginScreen extends StatefulWidget {
@@ -139,19 +139,20 @@ class _DriverLoginScreenState extends State<DriverLoginScreen> {
     final l = context.l10n;
     if (_tried) _validate();
     return Page2(
-      flush: true,
-      body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Entrance(index: 0, child: _Header(brand: l.driverLoginBrand, headline: l.driverLoginHeadline, subtitle: l.driverLoginSubtitle)),
+      center: true,
+      body: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 480),
+        child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        AuthHeader(role: AuthRole.driver, title: l.driverLoginHeadline, subtitle: l.driverLoginSubtitle),
+        const SizedBox(height: 24),
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+          padding: EdgeInsets.zero,
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             Entrance(
               index: 1,
               child: ShakeOnChange(
                 trigger: _shake,
-                child: Container(
-                  padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(color: c.sf, borderRadius: BorderRadius.circular(Rad.l), border: Border.all(color: c.ln), boxShadow: c.cardShadow),
+                child: AuthCard(
                   child: AutofillGroup(
                     child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                       if (_generalErr != null) ...[
@@ -213,41 +214,8 @@ class _DriverLoginScreenState extends State<DriverLoginScreen> {
           ]),
         ),
       ]),
-      foot: Foot(child: SBtn(l.driverLoginSubmit, full: true, loading: busy, disabled: !_valid, onTap: _login)),
-    );
-  }
-}
-
-class _Header extends StatelessWidget {
-  const _Header({required this.brand, required this.headline, required this.subtitle});
-  final String brand;
-  final String headline;
-  final String subtitle;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.sc;
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(Rad.xl)),
-        gradient: LinearGradient(begin: AlignmentDirectional.topStart, end: AlignmentDirectional.bottomEnd, colors: [c.hero, c.hero2]),
       ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: [
-          const SatrLogo(width: 72),
-          const Spacer(),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(color: c.onHero.withValues(alpha: .12), borderRadius: BorderRadius.circular(999), border: Border.all(color: c.onHero.withValues(alpha: .25))),
-            child: Text(brand, style: T.sm(c.onHero).copyWith(fontWeight: FontWeight.w700)),
-          ),
-        ]),
-        const SizedBox(height: 22),
-        Semantics(header: true, child: Text(headline, style: T.d2(c.onHero))),
-        const SizedBox(height: 6),
-        Text(subtitle, style: T.bd(c.onHero.withValues(alpha: .85))),
-      ]),
+      foot: Foot(child: SBtn(l.driverLoginSubmit, full: true, loading: busy, disabled: !_valid, onTap: _login)),
     );
   }
 }

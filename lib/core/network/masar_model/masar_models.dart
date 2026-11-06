@@ -2,6 +2,8 @@
 // Regenerate from the Developer Center after publishing a new config version.
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'package:project/core/network/image_url.dart';
+
 /// Status keys of this project. Labels come from the ARB files (Flutter handoff pack).
 abstract final class StatusKeys {
   static const String awaitingPricing = 'awaiting_pricing';
@@ -1294,7 +1296,7 @@ class Product {
         id: (json['id'] as num).toInt(),
         name: json['name'] as String,
         description: json['description'] as String?,
-        imageUrl: json['image_url'] as String?,
+        imageUrl: extractImageUrl(json['image_url'] ?? json['image'] ?? json['photo'] ?? json['images'] ?? json['media'] ?? json['image_path']),
         price: Money.fromJson(Map<String, dynamic>.from(json['price'] as Map)),
         compareAtPrice: json['compare_at_price'] == null ? null : Money.fromJson(Map<String, dynamic>.from(json['compare_at_price'] as Map)),
         inStock: json['in_stock'] as bool,

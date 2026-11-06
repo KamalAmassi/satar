@@ -20,6 +20,7 @@ import 'package:project/core/storage/session_store.dart';
 import 'package:project/customer/features/account/presentation/account_page.dart';
 import 'package:project/core/data/models.dart';
 import 'package:project/core/widgets/common_widgets.dart';
+import 'package:project/core/widgets/auth_header.dart';
 import 'package:project/core/widgets/change_role_link.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -196,21 +197,34 @@ class PhoneScreen extends StatelessWidget {
   const PhoneScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    final c = context.sc;
     final ctl = Get.put(PhoneController());
     return Page2(
       top: const TopBar(title: 'تسجيل الدخول'),
-      body: Obx(() => Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            const Ill('pin', width: 170),
-            const SizedBox(height: 24),
-            Text('أدخل رقم جوالك', style: T.d2(c.tx)),
-            const SizedBox(height: 8),
-            Text('سنرسل لك رمز تحقق عبر واتساب أو SMS لتأكيد حسابك.', style: T.bd(c.tx2)),
-            const SizedBox(height: 24),
-            Fld(label: 'رقم الجوال', hint: '0599000000', controller: ctl.phone, keyboard: TextInputType.phone, ltr: true, error: ctl.failure.value == null ? null : failureText(ctl.failure.value!)),
-            const SizedBox(height: 8),
-            const ChangeRoleLink(),
-          ])),
+      center: true,
+      body: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 480),
+        child: Obx(() => Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              const AuthHeader(role: AuthRole.customer, title: 'أهلاً بعودتك', subtitle: 'أدخل رقم جوالك وسنرسل لك رمز تحقق عبر واتساب أو SMS لتأكيد حسابك.'),
+              const SizedBox(height: 24),
+              AuthCard(
+                child: AutofillGroup(
+                  child: Fld(
+                    label: 'رقم الجوال',
+                    hint: '0599000000',
+                    controller: ctl.phone,
+                    keyboard: TextInputType.phone,
+                    ltr: true,
+                    textInputAction: TextInputAction.done,
+                    autofillHints: const [AutofillHints.telephoneNumber],
+                    onSubmitted: (_) => ctl.send(),
+                    error: ctl.failure.value == null ? null : failureText(ctl.failure.value!),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              const ChangeRoleLink(),
+            ])),
+      ),
       foot: Foot(child: Obx(() => SBtn('أرسل الرمز', full: true, loading: ctl.sending.value, onTap: ctl.send))),
     );
   }

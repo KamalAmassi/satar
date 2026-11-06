@@ -111,7 +111,7 @@ class ProductModel {
         id: j['id'] as int,
         name: j['name'] as String? ?? '',
         description: j['description'] as String?,
-        imageUrl: resolveImageUrl(j['image_url'] as String?),
+        imageUrl: extractImageUrl(j['image_url'] ?? j['image'] ?? j['photo'] ?? j['images'] ?? j['media'] ?? j['image_path']),
         price: Money.fromJson(j['price']),
         comparePrice: j['compare_at_price'] == null ? null : Money.fromJson(j['compare_at_price']),
         inStock: j['in_stock'] as bool? ?? true,
@@ -264,7 +264,7 @@ class OrderItemModel {
       unitPrice: j['unit_price'] == null ? null : Money.fromJson(j['unit_price']),
       lineTotal: j['line_total'] == null ? null : Money.fromJson(j['line_total']),
       print: j['print'] is Map ? PrintSpecModel.fromJson(jm(j['print'])) : null,
-      imageUrl: resolveImageUrl(j['image_url'] as String?),
+      imageUrl: extractImageUrl(j['image_url'] ?? j['image'] ?? j['photo'] ?? j['images'] ?? j['media'] ?? j['image_path']),
       productId: (j['product_id'] as num?)?.toInt());
 }
 

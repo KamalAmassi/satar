@@ -39,19 +39,28 @@ class SatrNetworkImage extends StatelessWidget {
     } else {
       child = LayoutBuilder(builder: (context, box) {
         final w = decodeWidth ?? productImageCacheWidth(box.maxWidth, MediaQuery.devicePixelRatioOf(context));
-        return Image.network(
-          u,
-          fit: fit,
-          cacheWidth: w,
-          semanticLabel: semanticLabel,
-          excludeFromSemantics: semanticLabel == null,
-          errorBuilder: (_, __, ___) => fb,
-          frameBuilder: (_, img, frame, sync) => sync
-              ? img
-              : Stack(fit: StackFit.expand, children: [
-                  ColoredBox(color: c.sf2),
-                  AnimatedOpacity(opacity: frame == null ? 0 : 1, duration: Motion.imageFade, curve: Curves.easeOut, child: img),
-                ]),
+        return Container(
+          color: c.sf2,
+          alignment: Alignment.center,
+          child: Image.network(
+            u,
+            fit: fit,
+            cacheWidth: w,
+            semanticLabel: semanticLabel,
+            excludeFromSemantics: semanticLabel == null,
+            errorBuilder: (_, __, ___) => fb,
+            frameBuilder: (_, img, frame, sync) => sync
+                ? img
+                : Stack(fit: StackFit.expand, children: [
+                    ColoredBox(color: c.sf2),
+                    AnimatedOpacity(
+                      opacity: frame == null ? 0 : 1,
+                      duration: Motion.imageFade,
+                      curve: Curves.easeOut,
+                      child: img,
+                    ),
+                  ]),
+          ),
         );
       });
     }

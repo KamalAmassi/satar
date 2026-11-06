@@ -24,13 +24,36 @@ void main() {
     Haptics.platformSupported = () => false;
   });
 
-  testWidgets('missing target: no throw, no flight, onArrived + bump', (tester) async {
+  testWidgets('no visible cart icon: still flies to the fixed fallback point, then bumps', (tester) async {
     await tester.pumpWidget(app(withTarget: false));
     var arrived = 0;
     FlyToCart.run(tester.element(find.byType(Scaffold)), sourceKey: source, image: null, onArrived: () => arrived++);
+    expect(FlyToCart.active, 1);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 1300));
+    await tester.pumpAndSettle();
     expect(arrived, 1);
     expect(FlyToCart.active, 0);
     expect(CartTarget.bumpTick.value, 1);
+  });
+
+  testWidgets('cart icon scrolled off-screen is ignored; fallback anchor is used', (tester) async {
+    final off = GlobalKey();
+    final fb = GlobalKey();
+    await tester.pumpWidget(MaterialApp(
+      theme: ThemeData(extensions: const [SatrColors.light]),
+      home: Scaffold(
+        body: Stack(children: [
+          Positioned(top: -500, left: 0, child: CartTargetAnchor(child: SizedBox(key: off, width: 48, height: 48))),
+          Positioned(bottom: 20, left: 40, child: CartTargetAnchor(fallback: true, child: SizedBox(key: fb, width: 100, height: 50))),
+          Positioned(top: 300, left: 40, child: SizedBox(key: source, width: 120, height: 120)),
+        ]),
+      ),
+    ));
+    final screen = tester.getRect(find.byType(Scaffold));
+    final r = CartTarget.rect(within: screen)!;
+    expect(r, tester.getRect(find.byKey(fb)));
+    expect(CartTarget.rect(), isNotNull);
   });
 
   testWidgets('missing source key: skipped safely', (tester) async {
@@ -58,8 +81,8 @@ void main() {
     expect(find.byType(IgnorePointer).evaluate().where((e) => e.widget is IgnorePointer && (e.widget as IgnorePointer).ignoring).length, lessThanOrEqualTo(1));
   });
 
-  test('default style is arrow, flight is 1100ms', () {
-    expect(FlyStyle.values.first, FlyStyle.arrow);
+  test('default style is bag, flight is 1100ms', () {
+    expect(FlyStyle.values.first, FlyStyle.bag);
     expect(FlyToCartConfig.flightDuration, const Duration(milliseconds: 1100));
   });
 

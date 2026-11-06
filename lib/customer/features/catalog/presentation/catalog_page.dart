@@ -132,7 +132,11 @@ Widget stickyCartOverlay() => Obx(() {
       cartCtl.productInfo.length;
       if (cartCtl.isEmpty) return const SizedBox.shrink();
       final e = cartEstimate();
-      return StickyCart(count: cartCtl.itemCount, totalMinor: e.products + e.printing, onTap: () => Get.toNamed('/cart'));
+      return CartTargetAnchor(
+        fallback: true,
+        bumpScale: 1.04,
+        child: StickyCart(count: cartCtl.itemCount, totalMinor: e.products + e.printing, onTap: () => Get.toNamed('/cart')),
+      );
     });
 
 class HomeController extends GetxController {

@@ -39,7 +39,7 @@ class ProductInfo extends Equatable {
         inStock: json['in_stock'] as bool? ?? true,
         stock: json['stock'] as int?,
         priceMode: json['price_mode'] as String? ?? 'fixed',
-        imageUrl: resolveImageUrl(json['image_url'] as String?),
+        imageUrl: extractImageUrl(json['image_url'] ?? json['image'] ?? json['photo'] ?? json['images'] ?? json['media'] ?? json['image_path']),
         options: [
           for (final o in json['options'] as List? ?? const [])
             ProductOptionInfo.fromJson(Map<String, dynamic>.from(o as Map)),

@@ -1,3 +1,4 @@
+import 'package:project/core/network/image_url.dart';
 import 'package:project/customer/features/cart/domain/entities/cart_item.dart';
 
 class CartItemModel extends CartItem {
@@ -24,7 +25,7 @@ class CartItemModel extends CartItem {
     name: json['name'] as String,
     quantity: (json['qty'] as num).toInt(),
     priceLabel: json['price_label'] as String,
-    imageUrl: json['image_url'] as String?,
+    imageUrl: extractImageUrl(json['image_url'] ?? json['image'] ?? json['photo'] ?? json['images'] ?? json['media'] ?? json['image_path']),
     options: Map<String, String>.from(json['options'] as Map? ?? const {}),
   );
 

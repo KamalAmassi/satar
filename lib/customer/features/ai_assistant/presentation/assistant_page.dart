@@ -20,6 +20,7 @@ import 'package:project/core/network/api_client.dart';
 import 'package:project/core/services/audio_recorder_service.dart';
 import 'package:project/customer/features/ai_assistant/data/datasources/catalog_remote_datasource.dart';
 import 'package:project/customer/features/ai_assistant/data/datasources/gemini_extractor.dart';
+import 'package:project/customer/features/ai_assistant/data/datasources/gemini_judge.dart';
 import 'package:project/customer/features/ai_assistant/data/matching/product_matcher.dart';
 import 'package:project/customer/features/ai_assistant/data/matching/request_parser.dart';
 import 'package:project/customer/features/ai_assistant/data/repositories/ai_assistant_repository_impl.dart';
@@ -62,7 +63,7 @@ class AssistantController extends GetxController {
   void onInit() {
     super.onInit();
     final geminiDio = Dio(BaseOptions(baseUrl: AiConfig.geminiBaseUrl, connectTimeout: const Duration(seconds: 15), receiveTimeout: const Duration(seconds: 40), headers: {'Content-Type': 'application/json', 'x-goog-api-key': AiConfig.geminiApiKey}));
-    _repo = AiAssistantRepositoryImpl(CatalogRemoteDataSourceImpl(Get.find<ApiClient>().dio), GeminiRestExtractor(geminiDio), const RequestParser(), const ProductMatcher());
+    _repo = AiAssistantRepositoryImpl(CatalogRemoteDataSourceImpl(Get.find<ApiClient>().dio), GeminiRestExtractor(geminiDio), const RequestParser(), const ProductMatcher(), judge: GeminiRestJudge(geminiDio));
     final a = Get.arguments;
     if (a is Map && a['listen'] == true) {
       WidgetsBinding.instance.addPostFrameCallback((_) => startRecording());

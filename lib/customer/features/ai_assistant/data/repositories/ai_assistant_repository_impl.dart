@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
 import 'package:project/core/errors/error_handler.dart';
 import 'package:project/core/errors/failure.dart';
 import 'package:project/core/utils/arabic_text.dart';
@@ -6,6 +7,8 @@ import 'package:project/customer/features/ai_assistant/data/catalog/catalog_inde
 import 'package:project/customer/features/ai_assistant/data/datasources/catalog_remote_datasource.dart';
 import 'package:project/customer/features/ai_assistant/data/matching/arabic_lexicon.dart';
 import 'package:project/customer/features/ai_assistant/data/datasources/gemini_extractor.dart';
+import 'package:project/customer/features/ai_assistant/data/datasources/gemini_judge.dart';
+import 'package:project/customer/features/ai_assistant/data/matching/product_scorer.dart';
 import 'package:project/customer/features/ai_assistant/data/matching/product_matcher.dart';
 import 'package:project/customer/features/ai_assistant/data/matching/request_parser.dart';
 import 'package:project/customer/features/ai_assistant/data/models/extraction_model.dart';
@@ -22,12 +25,15 @@ class AiAssistantRepositoryImpl implements AiAssistantRepository {
       this._parser,
       this._matcher, {
       CatalogProvider? provider,
-      })  : _provider = provider ?? CatalogProvider(catalog);
+      GeminiJudge? judge,
+      })  : _provider = provider ?? CatalogProvider(catalog),
+        _judge = judge;
 
   final GeminiExtractor _gemini;
   final RequestParser _parser;
   final ProductMatcher _matcher;
   final CatalogProvider _provider;
+  final GeminiJudge? _judge;
 
   static const _maxTextLength = 500;
 
@@ -81,13 +87,45 @@ class AiAssistantRepositoryImpl implements AiAssistantRepository {
 
   Future<AssistantResult> _build(String transcript, ExtractionModel extraction) async {
     final index = await _provider.load();
+    final specs = [
+      for (final r in extraction.requests)
+        if (r.kind == IntentKind.specificItem && r.item != null) r.item!,
+    ];
+    final scored = <int, List<ScoredMatch>>{
+      for (var i = 0; i < specs.length; i++)
+        if (!specs[i].isPrint) i: _matcher.scorer.score(specs[i], index),
+    };
+
+    // حكم اختياري: نداء واحد لكل الطلب، فقط حين تكون نتيجة صنف ما ملتبسة (أكثر من exact).
+    final ambiguous = [
+      for (final e in scored.entries)
+        if (_matcher.scorer.rank(e.value).exact.length >= 2)
+          JudgeRequest(index: e.key, spec: specs[e.key], candidates: e.value.take(GeminiRestJudge.maxCandidates).toList()),
+    ];
+    if (ambiguous.isNotEmpty && _judge != null) {
+      try {
+        final verdicts = await _judge.judge(ambiguous);
+        for (final req in ambiguous) {
+          scored[req.index] = applyJudge(scored[req.index]!, [for (final v in verdicts) if (v.request == req.index) v]);
+        }
+      } catch (_) {
+        // الحكم اختياري؛ نكمل بالنتيجة الحتمية.
+      }
+    }
+
     final items = <SuggestionItem>[];
-    for (final r in extraction.requests) {
-      if (r.kind != IntentKind.specificItem || r.item == null) continue;
-      final spec = r.item!;
-      items.add(spec.isPrint
-          ? SuggestionItem.printJob(requestText: spec.originalText.isEmpty ? spec.productType : spec.originalText)
-          : _matcher.resolve(spec, index));
+    for (var i = 0; i < specs.length; i++) {
+      final spec = specs[i];
+      if (spec.isPrint) {
+        items.add(SuggestionItem.printJob(requestText: spec.originalText.isEmpty ? spec.productType : spec.originalText));
+        continue;
+      }
+      final ranked = _matcher.scorer.rank(scored[i]!);
+      if (kDebugMode) {
+        debugPrint('[ai] kind=specific_item candidates=${scored[i]!.length} '
+            'exact=${ranked.exact.map((m) => m.entry.id).toList()} close=${ranked.close.map((m) => m.entry.id).toList()}');
+      }
+      items.add(_matcher.fromRanked(spec, ranked));
     }
     final merged = _mergeDuplicates(items);
     return AssistantResult(

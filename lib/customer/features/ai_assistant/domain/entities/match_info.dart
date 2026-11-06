@@ -32,6 +32,9 @@ enum NoteCode {
 
   /// عمر الوصف خارج المطلوب (arg).
   ageOutside,
+
+  /// سبب من الحكم (arg = جملة قصيرة من النموذج).
+  judged,
 }
 
 class MatchNote extends Equatable {

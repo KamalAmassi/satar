@@ -33,6 +33,9 @@ enum NoteCode {
   /// عمر الوصف خارج المطلوب (arg).
   ageOutside,
 
+  /// اسم مشابه للمطلوب (arg = ما طُلب).
+  similarName,
+
   /// سبب من الحكم (arg = جملة قصيرة من النموذج).
   judged,
 }

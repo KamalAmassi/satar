@@ -1676,4 +1676,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get aiClarifyHint => 'اختر أو اكتب التفاصيل';
+
+  @override
+  String aiNoteSimilarName(String term) {
+    return 'قريب من «$term»';
+  }
 }

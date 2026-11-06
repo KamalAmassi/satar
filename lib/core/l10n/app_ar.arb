@@ -726,5 +726,7 @@
   "@aiPlanDropped": { "placeholders": { "roles": { "type": "String" } } },
   "aiPlanReplaced": "بدّلنا بأرخص: {roles}",
   "@aiPlanReplaced": { "placeholders": { "roles": { "type": "String" } } },
-  "aiClarifyHint": "اختر أو اكتب التفاصيل"
+  "aiClarifyHint": "اختر أو اكتب التفاصيل",
+  "aiNoteSimilarName": "قريب من «{term}»",
+  "@aiNoteSimilarName": { "placeholders": { "term": { "type": "String" } } }
 }

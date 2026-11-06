@@ -40,6 +40,11 @@
     {"id": 46, "name": "لعبة ذاكرة تعليمية", "description": "4+ سنوات", "category_id": 4, "price": 2500, "stock": 0},
     {"id": 47, "name": "لعبة بناء مكعبات صغيرة", "description": "12+ سنة", "category_id": 4, "price": 12000, "stock": 5},
     {"id": 50, "name": "بطاقة هدية", "category_id": 5, "price": 1000, "stock": 100},
-    {"id": 51, "name": "دفتر هدية مع قلم للمعلمة", "category_id": 5, "price": 2500, "stock": 12}
+    {"id": 51, "name": "دفتر هدية مع قلم للمعلمة", "category_id": 5, "price": 2500, "stock": 12},
+    {"id": 60, "name": "شطرنج خشبي", "category_id": 4, "price": 3000, "stock": 10},
+    {"id": 61, "name": "آلة حاسبة علمية", "category_id": 3, "price": 4500, "stock": 15},
+    {"id": 62, "name": "فلاشة 32GB", "category_id": 3, "price": 3500, "stock": 30},
+    {"id": 63, "name": "ملف بلاستيك شفاف", "category_id": 3, "price": 300, "stock": 80},
+    {"id": 64, "name": "هايلايتر أصفر", "category_id": 3, "price": 400, "stock": 60}
   ]
 }

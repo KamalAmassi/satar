@@ -81,7 +81,7 @@ void main() {
         ],
       };
       expect(shown, isNotEmpty);
-      expect(shown.every((id) => const {40, 41, 42, 43, 44, 45, 46, 47}.contains(id)), isTrue);
+      expect(shown.every((id) => const {40, 41, 42, 43, 44, 45, 46, 47, 60}.contains(id)), isTrue);
       // خارج العمر بحسب الكتالوج (6+ و12+) لا يظهر.
       expect(shown.intersection({42, 47}), isEmpty);
       // لا ادعاء ضمان: الملاحظات فقط ageFits/ageUnknown (مناسبة غالبًا).
@@ -116,6 +116,56 @@ void main() {
       expect(BundlePlanner.parseAgeRange('مناسبة من 5 سنوات'), (5, null));
       expect(BundlePlanner.parseAgeRange('٣-٦ سنوات'), (3, 6));
       expect(BundlePlanner.parseAgeRange('لعبة جميلة'), isNull);
+    });
+  });
+
+  group('robustness: any audience gets a useful kit; typos/similar items are suggested', () {
+    test('توجيهي with no model plan -> default kit from catalog (not an error)', () {
+      const req = IntentRequest(kind: IntentKind.bundleForPurpose, originalText: 'بكج لطالب توجيهي');
+      final r = planner.bundle(req, index);
+      final found = [for (final i in r.items) if (i.product != null) i.product!.id];
+      expect(found, isNotEmpty);
+      expect(found, containsAll([61, 63])); // حاسبة وملف
+      expect(r.items.map((i) => i.role), contains('دفاتر'));
+    });
+
+    test('طالب جامعة IT -> flash drive, calculator, notebook ... from the catalog only', () {
+      const req = IntentRequest(kind: IntentKind.bundleForPurpose, originalText: 'بكج لطالب جامعة تخصص IT');
+      final r = planner.bundle(req, index);
+      final found = {for (final i in r.items) if (i.product != null) i.product!.id};
+      expect(found, containsAll([62, 61, 63]));
+      expect(found.every(allIds.contains), isTrue);
+    });
+
+    test('model plan that matches nothing falls back to the default kit', () {
+      const req = IntentRequest(kind: IntentKind.bundleForPurpose, originalText: 'بكج لطالب توجيهي', neededItems: [
+        ItemSpec(productType: 'طائرة', role: 'x'),
+      ]);
+      final r = planner.bundle(req, index);
+      expect(r.items.any((i) => i.product != null), isTrue);
+    });
+
+    test('طرنج (typo of شطرنج) -> similar-name suggestion, labelled, not preselected', () {
+      final item = const ProductMatcher().resolve(const ItemSpec(productType: 'طرنج', originalText: 'طرنج'), index);
+      expect(item.product, isNull);
+      expect(item.close.map((m) => m.product.id), [60]);
+      expect(item.close.single.note!.code, NoteCode.similarName);
+    });
+
+    test('missing item -> related types from similar_terms offered as alternatives', () {
+      final item = const ProductMatcher().resolve(
+        const ItemSpec(productType: 'لعبة ذكاء', originalText: 'لعبة ذكاء', similar: ['بازل', 'مكعبات']),
+        index,
+      );
+      expect(item.product, isNull);
+      final ids = [...item.close, ...item.similar].map((m) => m.product.id);
+      expect(ids, containsAll([42, 40]));
+    });
+
+    test('looksLikeBundle', () {
+      expect(BundlePlanner.looksLikeBundle('بكج لطالب جامعة'), isTrue);
+      expect(BundlePlanner.looksLikeBundle('بدي طالب توجيهي كل اللي بحتاجه'), isTrue);
+      expect(BundlePlanner.looksLikeBundle('دفتر سلك'), isFalse);
     });
   });
 }

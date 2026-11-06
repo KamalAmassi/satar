@@ -12,5 +12,6 @@ String matchNoteText(AppLocalizations l, MatchNote n) => switch (n.code) {
       NoteCode.ageFits => l.aiNoteAgeFits(n.arg),
       NoteCode.ageUnknown => l.aiNoteAgeUnknown,
       NoteCode.ageOutside => l.aiNoteAgeOutside(n.arg),
+      NoteCode.similarName => l.aiNoteSimilarName(n.arg),
       NoteCode.judged => n.arg,
     };

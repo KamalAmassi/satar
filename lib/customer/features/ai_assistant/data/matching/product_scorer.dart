@@ -135,6 +135,26 @@ class ProductScorer {
       if (level == MatchLevel.reject) continue;
       out.add(ScoredMatch(entry: e, score: score, level: level, note: note));
     }
+    // لا مطابق ولا قريب: نبحث عن أشباه (اسم مشابه، ثم أنواع قريبة اقترحها الفهم) ونسمّيها بدائل.
+    if (!out.any((m) => m.level == MatchLevel.exact || m.level == MatchLevel.close)) {
+      final seen = {for (final m in out) m.entry.id};
+      for (final e in index.looseCandidates(spec.productType)) {
+        if (seen.add(e.id)) {
+          out.add(ScoredMatch(entry: e, score: 15 - (e.available ? 0 : 5), level: MatchLevel.close, note: MatchNote(NoteCode.similarName, spec.productType)));
+        }
+      }
+      for (final term in spec.similar) {
+        final found = {
+          ...index.candidates(term).map((c) => c.entry),
+          ...index.looseCandidates(term),
+        };
+        for (final e in found) {
+          if (seen.add(e.id)) {
+            out.add(ScoredMatch(entry: e, score: 8 - (e.available ? 0 : 5), level: MatchLevel.alternative, note: MatchNote(NoteCode.similarName, term)));
+          }
+        }
+      }
+    }
     out.sort((a, b) {
       final byLevel = a.level.index.compareTo(b.level.index);
       if (byLevel != 0) return byLevel;

@@ -3079,6 +3079,12 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'اختر أو اكتب التفاصيل'**
   String get aiClarifyHint;
+
+  /// No description provided for @aiNoteSimilarName.
+  ///
+  /// In ar, this message translates to:
+  /// **'قريب من «{term}»'**
+  String aiNoteSimilarName(String term);
 }
 
 class _AppLocalizationsDelegate

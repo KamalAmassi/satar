@@ -54,6 +54,10 @@ class AiAssistantRepositoryImpl implements AiAssistantRepository {
       if (extraction != null && extraction.hasSearchable) {
         return _build(input, extraction);
       }
+      // شبكة أمان: طلب بكج/مجموعة لم يفهمه النموذج -> خطة جاهزة بدل "تعذر الفهم".
+      if (extraction?.clarification == null && BundlePlanner.looksLikeBundle(input)) {
+        return _build(input, _bundleFallback(input));
+      }
       if (extraction != null && extraction.clarification != null) {
         return AssistantResult(transcript: input, unclear: false, items: const [], clarification: extraction.clarification);
       }
@@ -75,6 +79,9 @@ class AiAssistantRepositoryImpl implements AiAssistantRepository {
     return ErrorHandler.guard(() async {
       // أخطاء Gemini تُرمى كـ Failure جاهزة (حصة/شبكة/غير متاح).
       final extraction = await _gemini.fromAudio(clip.bytes, clip.mimeType);
+      if (!extraction.hasSearchable && extraction.clarification == null && BundlePlanner.looksLikeBundle(extraction.transcript)) {
+        return _build(extraction.transcript, _bundleFallback(extraction.transcript));
+      }
       if (!extraction.hasSearchable) {
         return AssistantResult(
           transcript: extraction.transcript,
@@ -154,6 +161,12 @@ class AiAssistantRepositoryImpl implements AiAssistantRepository {
       plan: plan,
     );
   }
+
+  ExtractionModel _bundleFallback(String text) => ExtractionModel(
+        transcript: text,
+        unclear: false,
+        requests: [IntentRequest(kind: IntentKind.bundleForPurpose, originalText: text, purpose: text)],
+      );
 
   /// احتياطي بلا نموذج: أول كلمة = النوع، الكلمات الباقية شروط، وكلمات العبوة تحدد pack.
   ItemSpec _specFromTokens(RequestedItem r) {

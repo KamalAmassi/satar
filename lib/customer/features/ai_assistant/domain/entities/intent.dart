@@ -17,6 +17,7 @@ class ItemSpec extends Equatable {
     this.role = '',
     this.essential = true,
     this.isPrint = false,
+    this.similar = const [],
   });
 
   /// الاسم الرئيسي المعياري ("دفتر"، "قلم"، "مقص").
@@ -35,6 +36,9 @@ class ItemSpec extends Equatable {
   final bool essential;
   final bool isPrint;
 
+  /// أنواع قريبة/مرادفات تُجرَّب فقط إن لم يوجد الأصل (بدائل مشابهة).
+  final List<String> similar;
+
   ItemSpec copyWith({int? quantity, PackMode? pack}) => ItemSpec(
         productType: productType,
         pack: pack ?? this.pack,
@@ -46,10 +50,11 @@ class ItemSpec extends Equatable {
         role: role,
         essential: essential,
         isPrint: isPrint,
+        similar: similar,
       );
 
   @override
-  List<Object?> get props => [productType, pack, quantity, attributes, mustHave, mustNot, originalText, role, essential, isPrint];
+  List<Object?> get props => [productType, pack, quantity, attributes, mustHave, mustNot, originalText, role, essential, isPrint, similar];
 }
 
 class Clarification extends Equatable {

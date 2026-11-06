@@ -73,6 +73,7 @@ class ExtractionModel {
       role: _s(m['role']),
       essential: m['essential'] != false,
       isPrint: m['is_print'] == true,
+      similar: _list(m['similar_terms']).take(4).toList(),
     );
   }
 

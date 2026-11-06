@@ -90,6 +90,16 @@ class CatalogIndex {
     return out;
   }
 
+  /// مطابقة تقريبية (اسم مشابه): جذع أحدهما يحتوي الآخر (4 أحرف فأكثر)، مثل طرنج ↔ شطرنج.
+  List<CatalogEntry> looseCandidates(String productType) {
+    final head = [for (final h in ArabicLexicon.stems(productType)) if (h.length >= 4) h];
+    if (head.isEmpty) return const [];
+    return [
+      for (final e in entries)
+        if (head.any((h) => e.nameStems.any((t) => t != h && t.length >= 4 && (t.contains(h) || h.contains(t))))) e,
+    ];
+  }
+
   /// للتطوير فقط: كم منتجاً في الكتالوج يطابق كل مفردة من القاموس.
   void lexiconCoverage() {
     if (!kDebugMode) return;

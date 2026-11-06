@@ -22,8 +22,12 @@ class BundlePlanner {
   // ---------------- بكج ----------------
 
   PlanResult bundle(IntentRequest r, CatalogIndex index) {
+    final hint = '${r.purpose} ${r.audience} ${r.originalText}';
+    var needed = r.neededItems.isEmpty ? defaultKit(hint) : r.neededItems;
+    // خطة النموذج لم تعطِ أي نتيجة (لا مطابق ولا قريب ولا مشابه): جرّب الخطة الجاهزة.
+    if (r.neededItems.isNotEmpty && !_anyHit(r.neededItems, index)) needed = defaultKit(hint);
     var items = <SuggestionItem>[];
-    for (final spec in r.neededItems) {
+    for (final spec in needed) {
       final role = spec.role.isNotEmpty ? spec.role : spec.productType;
       final withRole = ItemSpec(
         productType: spec.productType,
@@ -35,11 +39,12 @@ class BundlePlanner {
         originalText: role,
         role: role,
         essential: spec.essential,
+        similar: spec.similar,
       );
       items.add(matcher.resolve(withRole, index));
     }
     // أدوار بلا أي نتيجة (لا exact ولا قريب) لا تُعرض كصفوف فارغة.
-    final specsByRole = {for (final s in r.neededItems) (s.role.isNotEmpty ? s.role : s.productType): s};
+    final specsByRole = {for (final s in needed) (s.role.isNotEmpty ? s.role : s.productType): s};
 
     final dropped = <String>[];
     final replaced = <String>[];
@@ -91,8 +96,63 @@ class BundlePlanner {
     );
   }
 
+  bool _anyHit(List<ItemSpec> specs, CatalogIndex index) {
+    for (final s in specs) {
+      if (_scorer.score(s, index).isNotEmpty) return true;
+    }
+    return false;
+  }
+
   int _line(SuggestionItem i) => i.isIncluded ? i.product!.priceAmount * i.quantity : 0;
   int _total(List<SuggestionItem> items) => items.fold(0, (s, i) => s + _line(i));
+
+  // ---------------- خطط جاهزة (شبكة أمان) ----------------
+
+  static final _bundleWords = RegExp(r'بكج|طالب|طلاب|توجيهي|ثانوي|جامع|مدرس|تخصص|لوازم|مجموع');
+
+  /// هل النص يطلب مجموعة/بكج؟
+  static bool looksLikeBundle(String text) => _bundleWords.hasMatch(ArabicLexicon.stems(text).join(' '));
+
+  static ItemSpec _k(String type, String role, {PackMode pack = PackMode.single, bool essential = true, List<String> similar = const []}) =>
+      ItemSpec(productType: type, pack: pack, role: role, essential: essential, similar: similar);
+
+  /// خطة افتراضية حسب الفئة المذكورة؛ تُستخدم حين لا يعطي النموذج خطة أو تفشل كلها.
+  static List<ItemSpec> defaultKit(String text) {
+    final t = ArabicLexicon.stems(text).join(' ');
+    bool has(String w) => t.contains(w);
+    if (has('جامع') || has('تخصص') || has('برمج') || has('حاسوب') || RegExp(r'(^| )it( |$)').hasMatch(t)) {
+      return [
+        _k('دفتر', 'دفاتر', similar: ['كراسة']),
+        _k('قلم', 'أقلام'),
+        _k('فلاشة', 'فلاشة', similar: ['ذاكرة']),
+        _k('ماوس', 'ماوس', essential: false),
+        _k('حاسبة', 'آلة حاسبة', similar: ['آلة']),
+        _k('ملف', 'ملفات'),
+        _k('حقيبة', 'حقيبة', similar: ['شنطة']),
+        _k('سماعات', 'سماعات', essential: false),
+      ];
+    }
+    if (has('توجيهي') || has('ثانوي')) {
+      return [
+        _k('دفتر', 'دفاتر', pack: PackMode.pack),
+        _k('قلم', 'أقلام'),
+        _k('قلم رصاص', 'قلم رصاص'),
+        _k('هايلايتر', 'هايلايتر', similar: ['ماركر', 'قلم تحديد']),
+        _k('حاسبة', 'آلة حاسبة', similar: ['آلة']),
+        _k('ملف', 'ملفات'),
+        _k('ورق', 'ورق', essential: false),
+        _k('ممحاة', 'ممحاة', essential: false),
+      ];
+    }
+    return [
+      _k('حقيبة', 'حقيبة', similar: ['شنطة']),
+      _k('دفتر', 'دفاتر', pack: PackMode.pack),
+      _k('قلم', 'أقلام'),
+      _k('ممحاة', 'ممحاة'),
+      _k('مبراة', 'براية'),
+      _k('مسطرة', 'مسطرة'),
+    ];
+  }
 
   // ---------------- هدية / لعبة ----------------
 

@@ -1710,4 +1710,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aiClarifyHint => 'Pick one or type the details';
+
+  @override
+  String aiNoteSimilarName(String term) {
+    return 'Similar to “$term”';
+  }
 }

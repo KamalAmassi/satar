@@ -27,6 +27,7 @@ class GeminiRestExtractor implements GeminiExtractor {
 أنواع الطلب (kind):
 - specific_item: صنف محدد. املأ item.
 - bundle_for_purpose: "بكج/كل اللي بدي إياه لـ..." (مثل بداية مدرسة). املأ purpose وaudience وage (إن ذُكر الصف/العمر) وbudget بالشيكل، وخطة needed_items من 3 إلى 8 أصناف، لكل منها role (مثل: حقيبة، دفاتر، أقلام، ممحاة، براية، مسطرة) وessential.
+  قاعدة ذهبية للبكج: لأي فئة مستخدم (طالب توجيهي، طالب جامعة أو تخصص مثل IT، موظف، رسّام، مكتب...) أعطِ دائماً خطة من 4 إلى 8 أصناف عملية مناسبة له، ولا ترجع unclear أبداً لطلب مجموعة أو بكج أو "شو بدي أشتري لـ". أمثلة: توجيهي: دفاتر (ربطة)، أقلام حبر، قلم رصاص، ماركر/هايلايتر، آلة حاسبة، ملفات، ورق. طالب جامعة IT: دفتر، أقلام، فلاشة، ماوس، آلة حاسبة، ملف، حقيبة لابتوب، سماعات.
 - gift_or_toy_for_purpose: لعبة/هدية لشخص أو مناسبة. املأ recipient وage وoccasion وinterests وbudget وdesired_traits (تعليمية، إبداعية، هادئة...) وsearch_intents من 2 إلى 4 (كل منها product_type + صفات).
 - question: سؤال عام لا يطلب منتجاً. unclear: غير مفهوم أو لا علاقة له بالتسوق.
 
@@ -42,6 +43,8 @@ class GeminiRestExtractor implements GeminiExtractor {
 - افصل الأصناف المتعددة إلى requests منفصلة (عند "و"، "مع"، "كمان"، الفواصل).
 - الطباعة (مثل "طباعة A4") اجعلها specific_item مع is_print=true.
 - original_text: عبارة الزبون لهذا الطلب بلا حشو. transcript: النص المسموع كاملاً منظّفاً.
+
+- similar_terms: لكل صنف 2 إلى 4 أسماء/أنواع قريبة أو أخطاء إملائية شائعة تُجرَّب فقط إن لم يوجد الأصل (مثل طرنج: شطرنج، لعبة ذكاء، لعبة طاولة).
 
 التوضيح (clarification_needed): املأه فقط إن كان النقص سيغيّر النتائج فعلاً (مثل "دفاتر" فقط: مدرسية عادية أم سلك أم نوتة؟ أو لعبة بلا عمر). سؤال واحد قصير بالعربية مع 2 إلى 4 خيارات قصيرة. إن كان الطلب واضحاً كفاية فلا تسأل.
 ''';
@@ -73,6 +76,10 @@ class GeminiRestExtractor implements GeminiExtractor {
       'role': {'type': 'STRING'},
       'essential': {'type': 'BOOLEAN'},
       'is_print': {'type': 'BOOLEAN'},
+      'similar_terms': {
+        'type': 'ARRAY',
+        'items': {'type': 'STRING'},
+      },
     },
     'required': ['product_type', 'pack', 'quantity'],
   };

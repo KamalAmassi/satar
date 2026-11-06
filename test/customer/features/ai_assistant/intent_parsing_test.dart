@@ -10,7 +10,7 @@ import 'package:project/customer/features/ai_assistant/data/repositories/ai_assi
 import 'package:project/customer/features/ai_assistant/domain/entities/intent.dart';
 import 'package:project/customer/features/ai_assistant/domain/failures/ai_failures.dart';
 
-import 'assistant_flows_test.dart' show FakeNet, content;
+import 'assistant_flows_test.dart' show FakeNet, content, product;
 
 GeminiRestExtractor extractor(FakeNet net) =>
     GeminiRestExtractor(Dio(BaseOptions(baseUrl: 'https://g.test'))..httpClientAdapter = net, hasKey: true);
@@ -138,5 +138,19 @@ void clarificationFlow() {
     expect(r.clarification!.options, ['مدرسية عادية', 'سلك', 'نوتة']);
     expect(net.geminiBodies.length, 1); // سؤال التوضيح لا يستهلك نداءً ثانيًا
     expect(net.catalogQueries, isEmpty); // ولا يحمّل الكتالوج
+  });
+
+  test('model says unclear for a bundle request -> safety net builds a default kit (no "could not understand")', () async {
+    final net = FakeNet(
+      gemini: [reply({'transcript': 'بكج لطالب جامعة IT', 'unclear': true, 'requests': <dynamic>[]})],
+      catalog: [product(1, 'دفتر 80 ورقة'), product(2, 'فلاشة 32GB'), product(3, 'قلم أزرق')],
+    );
+    final g = Dio(BaseOptions(baseUrl: 'https://g.test'))..httpClientAdapter = net;
+    final app = Dio(BaseOptions(baseUrl: 'https://api.test/api/'))..httpClientAdapter = net;
+    final repo = AiAssistantRepositoryImpl(CatalogRemoteDataSourceImpl(app), GeminiRestExtractor(g, hasKey: true), const RequestParser(), const ProductMatcher());
+    final r = (await repo.suggestFromText('بكج لطالب جامعة IT')).getOrElse(() => throw StateError('x'));
+    expect(r.unclear, isFalse);
+    expect(r.plan, isNotNull);
+    expect(r.items.where((i) => i.product != null).map((i) => i.product!.id), containsAll([1, 2, 3]));
   });
 }

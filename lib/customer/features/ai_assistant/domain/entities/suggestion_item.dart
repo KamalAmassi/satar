@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:project/customer/features/ai_assistant/domain/entities/match_info.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/suggested_product.dart';
 
 enum SuggestionStatus {
@@ -27,6 +28,11 @@ class SuggestionItem extends Equatable {
     required this.status,
     this.product,
     this.alternatives = const [],
+    this.level = MatchLevel.exact,
+    this.note,
+    this.close = const [],
+    this.similar = const [],
+    this.role = '',
   });
 
   factory SuggestionItem.printJob({required String requestText}) =>
@@ -42,6 +48,11 @@ class SuggestionItem extends Equatable {
     required int requestedQty,
     SuggestedProduct? product,
     List<SuggestedProduct> alternatives = const [],
+    MatchLevel level = MatchLevel.exact,
+    MatchNote? note,
+    List<MatchedProduct> close = const [],
+    List<MatchedProduct> similar = const [],
+    String role = '',
   }) {
     if (product == null) {
       return SuggestionItem(
@@ -49,6 +60,9 @@ class SuggestionItem extends Equatable {
         requestedQty: requestedQty,
         quantity: 0,
         status: SuggestionStatus.notFound,
+        close: close,
+        similar: similar,
+        role: role,
       );
     }
     if (!product.isAvailable) {
@@ -59,6 +73,11 @@ class SuggestionItem extends Equatable {
         status: SuggestionStatus.outOfStock,
         product: product,
         alternatives: alternatives,
+        level: level,
+        note: note,
+        close: close,
+        similar: similar,
+        role: role,
       );
     }
     final max = product.maxQuantity;
@@ -70,6 +89,11 @@ class SuggestionItem extends Equatable {
       status: limited ? SuggestionStatus.limited : SuggestionStatus.available,
       product: product,
       alternatives: alternatives,
+      level: level,
+      note: note,
+      close: close,
+      similar: similar,
+      role: role,
     );
   }
 
@@ -78,7 +102,20 @@ class SuggestionItem extends Equatable {
   final int quantity;
   final SuggestionStatus status;
   final SuggestedProduct? product;
+
+  /// بدائل مطابقة تمامًا (للاستبدال عند عدم التوفر).
   final List<SuggestedProduct> alternatives;
+
+  /// مستوى مطابقة [product] وسببه إن لم يكن exact.
+  final MatchLevel level;
+  final MatchNote? note;
+
+  /// "قريب مما طلبت" و"بدائل مقترحة" (لا تُحدَّد مسبقًا).
+  final List<MatchedProduct> close;
+  final List<MatchedProduct> similar;
+
+  /// دور الصنف في بكج/هدية (فارغ للطلب العادي).
+  final String role;
 
   bool get isSelectable =>
       status == SuggestionStatus.available || status == SuggestionStatus.limited;
@@ -95,18 +132,31 @@ class SuggestionItem extends Equatable {
     status: status,
     product: product,
     alternatives: alternatives,
+    level: level,
+    note: note,
+    close: close,
+    similar: similar,
+    role: role,
   );
 
-  SuggestionItem substitutedWith(SuggestedProduct replacement) =>
+  SuggestionItem substitutedWith(
+    SuggestedProduct replacement, {
+    MatchLevel level = MatchLevel.exact,
+    MatchNote? note,
+  }) =>
       SuggestionItem.resolve(
         requestText: requestText,
         requestedQty: requestedQty,
         product: replacement,
-        alternatives:
-        alternatives.where((a) => a.id != replacement.id).toList(),
+        alternatives: alternatives.where((a) => a.id != replacement.id).toList(),
+        level: level,
+        note: note,
+        close: close.where((m) => m.product.id != replacement.id).toList(),
+        similar: similar.where((m) => m.product.id != replacement.id).toList(),
+        role: role,
       );
 
   @override
   List<Object?> get props =>
-      [requestText, requestedQty, quantity, status, product, alternatives];
+      [requestText, requestedQty, quantity, status, product, alternatives, level, note, close, similar, role];
 }

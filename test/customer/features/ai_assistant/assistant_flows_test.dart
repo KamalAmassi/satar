@@ -143,9 +143,10 @@ void main() {
       expect(notebook.status, SuggestionStatus.available);
       final pen = r.items.firstWhere((i) => i.requestText.contains('قلم'));
       expect(pen.status, SuggestionStatus.outOfStock);
-      expect(pen.alternatives.map((a) => a.id), contains(3));
+      expect(pen.close.map((a) => a.product.id), contains(3)); // قلم رصاص: قريب لا مطابق
+      expect(pen.close.first.note, isNotNull);
       expect(net.catalogQueries, isNotEmpty);
-      expect(net.catalogQueries.every((q) => !q.containsKey('page')), isTrue);
+      expect(net.catalogQueries.first.containsKey('page'), isFalse); // الصفحة الأولى بلا page
     });
   });
 

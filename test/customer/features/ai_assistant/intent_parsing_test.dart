@@ -2,7 +2,11 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:project/customer/features/ai_assistant/data/datasources/catalog_remote_datasource.dart';
 import 'package:project/customer/features/ai_assistant/data/datasources/gemini_extractor.dart';
+import 'package:project/customer/features/ai_assistant/data/matching/product_matcher.dart';
+import 'package:project/customer/features/ai_assistant/data/matching/request_parser.dart';
+import 'package:project/customer/features/ai_assistant/data/repositories/ai_assistant_repository_impl.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/intent.dart';
 import 'package:project/customer/features/ai_assistant/domain/failures/ai_failures.dart';
 
@@ -16,6 +20,7 @@ Map<String, dynamic> reply(Map<String, dynamic> json) => content([
     ]);
 
 void main() {
+  clarificationFlow();
   test('specific item with pack, attributes and must_not parses', () async {
     final net = FakeNet(gemini: [
       reply({
@@ -107,5 +112,31 @@ void main() {
 
   test('429 on all models -> AiQuotaFailure', () async {
     expect(extractor(FakeNet(geminiStatus: 429)).fromText('x'), throwsA(isA<AiQuotaFailure>()));
+  });
+}
+
+// ---- repository-level clarification flow (mocked Gemini, no network) ----
+void clarificationFlow() {
+  test('clarification_needed with no searchable request -> result carries question + options, no items', () async {
+    final net = FakeNet(gemini: [
+      reply({
+        'transcript': 'دفاتر',
+        'unclear': false,
+        'requests': <dynamic>[],
+        'clarification_needed': {
+          'question': 'أي نوع دفاتر؟',
+          'options': ['مدرسية عادية', 'سلك', 'نوتة'],
+        },
+      }),
+    ]);
+    final g = Dio(BaseOptions(baseUrl: 'https://g.test'))..httpClientAdapter = net;
+    final app = Dio(BaseOptions(baseUrl: 'https://api.test/api/'))..httpClientAdapter = net;
+    final repo = AiAssistantRepositoryImpl(CatalogRemoteDataSourceImpl(app), GeminiRestExtractor(g, hasKey: true), const RequestParser(), const ProductMatcher());
+    final r = (await repo.suggestFromText('دفاتر')).getOrElse(() => throw StateError('x'));
+    expect(r.items, isEmpty);
+    expect(r.unclear, isFalse);
+    expect(r.clarification!.options, ['مدرسية عادية', 'سلك', 'نوتة']);
+    expect(net.geminiBodies.length, 1); // سؤال التوضيح لا يستهلك نداءً ثانيًا
+    expect(net.catalogQueries, isEmpty); // ولا يحمّل الكتالوج
   });
 }

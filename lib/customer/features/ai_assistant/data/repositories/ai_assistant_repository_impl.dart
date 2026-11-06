@@ -142,7 +142,7 @@ class AiAssistantRepositoryImpl implements AiAssistantRepository {
     final planned = <SuggestionItem>[];
     PlanSummary? plan;
     for (final r in extraction.requests) {
-      if (r.kind == IntentKind.bundleForPurpose && r.neededItems.isNotEmpty) {
+      if (r.kind == IntentKind.bundleForPurpose) {
         final p = _planner.bundle(r, index);
         planned.addAll(p.items);
         plan ??= p.plan;

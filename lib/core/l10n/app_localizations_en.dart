@@ -1629,4 +1629,85 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get changeRole => 'Change role';
+
+  @override
+  String get aiSecExact => 'Exact match';
+
+  @override
+  String get aiSecClose => 'Close to what you asked';
+
+  @override
+  String get aiSecAlternatives => 'Suggested alternatives';
+
+  @override
+  String get aiNoteSingleNotPack => 'Single item instead of a pack';
+
+  @override
+  String get aiNotePackNotSingle => 'A pack instead of a single item';
+
+  @override
+  String aiNoteUnwanted(String term) {
+    return 'Contains “$term”';
+  }
+
+  @override
+  String aiNoteAttrDiffers(String value) {
+    return 'Not “$value”';
+  }
+
+  @override
+  String aiNoteAttrUnknown(String value) {
+    return 'Couldn’t confirm “$value”';
+  }
+
+  @override
+  String get aiNoteDifferentType => 'A different type';
+
+  @override
+  String aiNoteDifferentTypeIn(String category) {
+    return 'A different type (from “$category”)';
+  }
+
+  @override
+  String aiNoteAgeFits(String age) {
+    return 'Fits by its description ($age)';
+  }
+
+  @override
+  String get aiNoteAgeUnknown => 'Probably suitable (the catalog lists no age)';
+
+  @override
+  String aiNoteAgeOutside(String age) {
+    return 'Listed age differs ($age)';
+  }
+
+  @override
+  String get aiNoCloseHint =>
+      'No exact match found; these are the closest options:';
+
+  @override
+  String aiPlanTotal(String total) {
+    return 'Total: $total';
+  }
+
+  @override
+  String aiPlanBudget(String budget) {
+    return 'Budget: $budget';
+  }
+
+  @override
+  String get aiPlanOverBudget => 'The total is above your budget';
+
+  @override
+  String aiPlanDropped(String roles) {
+    return 'Removed to fit your budget: $roles';
+  }
+
+  @override
+  String aiPlanReplaced(String roles) {
+    return 'Swapped for cheaper: $roles';
+  }
+
+  @override
+  String get aiClarifyHint => 'Pick one or type the details';
 }

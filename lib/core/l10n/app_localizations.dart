@@ -2959,6 +2959,126 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'تغيير الدور'**
   String get changeRole;
+
+  /// No description provided for @aiSecExact.
+  ///
+  /// In ar, this message translates to:
+  /// **'مطابق تمامًا'**
+  String get aiSecExact;
+
+  /// No description provided for @aiSecClose.
+  ///
+  /// In ar, this message translates to:
+  /// **'قريب مما طلبت'**
+  String get aiSecClose;
+
+  /// No description provided for @aiSecAlternatives.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدائل مقترحة'**
+  String get aiSecAlternatives;
+
+  /// No description provided for @aiNoteSingleNotPack.
+  ///
+  /// In ar, this message translates to:
+  /// **'مفرد بدل ربطة'**
+  String get aiNoteSingleNotPack;
+
+  /// No description provided for @aiNotePackNotSingle.
+  ///
+  /// In ar, this message translates to:
+  /// **'عبوة بدل قطعة واحدة'**
+  String get aiNotePackNotSingle;
+
+  /// No description provided for @aiNoteUnwanted.
+  ///
+  /// In ar, this message translates to:
+  /// **'فيه «{term}»'**
+  String aiNoteUnwanted(String term);
+
+  /// No description provided for @aiNoteAttrDiffers.
+  ///
+  /// In ar, this message translates to:
+  /// **'مش «{value}»'**
+  String aiNoteAttrDiffers(String value);
+
+  /// No description provided for @aiNoteAttrUnknown.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما تأكدنا إنه «{value}»'**
+  String aiNoteAttrUnknown(String value);
+
+  /// No description provided for @aiNoteDifferentType.
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع مختلف'**
+  String get aiNoteDifferentType;
+
+  /// No description provided for @aiNoteDifferentTypeIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع مختلف (من «{category}»)'**
+  String aiNoteDifferentTypeIn(String category);
+
+  /// No description provided for @aiNoteAgeFits.
+  ///
+  /// In ar, this message translates to:
+  /// **'مناسبة حسب الوصف ({age})'**
+  String aiNoteAgeFits(String age);
+
+  /// No description provided for @aiNoteAgeUnknown.
+  ///
+  /// In ar, this message translates to:
+  /// **'مناسبة غالبًا (الكتالوج ما بذكر عمر)'**
+  String get aiNoteAgeUnknown;
+
+  /// No description provided for @aiNoteAgeOutside.
+  ///
+  /// In ar, this message translates to:
+  /// **'العمر المذكور مختلف ({age})'**
+  String aiNoteAgeOutside(String age);
+
+  /// No description provided for @aiNoCloseHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'ما لقيت المطابق تمامًا، هاي أقرب الخيارات:'**
+  String get aiNoCloseHint;
+
+  /// No description provided for @aiPlanTotal.
+  ///
+  /// In ar, this message translates to:
+  /// **'المجموع: {total}'**
+  String aiPlanTotal(String total);
+
+  /// No description provided for @aiPlanBudget.
+  ///
+  /// In ar, this message translates to:
+  /// **'الميزانية: {budget}'**
+  String aiPlanBudget(String budget);
+
+  /// No description provided for @aiPlanOverBudget.
+  ///
+  /// In ar, this message translates to:
+  /// **'المجموع أعلى من الميزانية'**
+  String get aiPlanOverBudget;
+
+  /// No description provided for @aiPlanDropped.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذفنا لتناسب الميزانية: {roles}'**
+  String aiPlanDropped(String roles);
+
+  /// No description provided for @aiPlanReplaced.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدّلنا بأرخص: {roles}'**
+  String aiPlanReplaced(String roles);
+
+  /// No description provided for @aiClarifyHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر أو اكتب التفاصيل'**
+  String get aiClarifyHint;
 }
 
 class _AppLocalizationsDelegate

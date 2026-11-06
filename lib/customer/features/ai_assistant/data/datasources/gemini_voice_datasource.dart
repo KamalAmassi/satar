@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:project/core/config/ai_config.dart';
-import 'package:project/customer/features/ai_assistant/domain/entities/suggested_product.dart';
+import 'package:project/customer/features/ai_assistant/domain/entities/match_info.dart';
 import 'package:project/customer/features/ai_assistant/domain/failures/ai_failures.dart';
 import 'package:project/customer/features/ai_assistant/domain/repositories/voice_repository.dart';
 
@@ -22,22 +22,48 @@ class GeminiVoiceDataSource {
   static const systemPrompt = 'أنت "قلم"، المساعد الصوتي لمتجر سطر للكتب والقرطاسية والألعاب والهدايا والطباعة. '
       'تحدّث باللهجة الفلسطينية، بجمل قصيرة منطوقة فقط (12 كلمة كحد أقصى). '
       'ممنوع Markdown أو نقاط أو إيموجي أو رموز مثل * # - _ لأن القارئ الصوتي يقرؤها حرفيًا. '
-      'لا تخترع منتجات أو أسعارًا أو توفرًا: استدعِ search_catalog دائمًا قبل ذكر أي منتج أو سعر، وقل فقط ما أرجعته. '
-      'إن لم يوجد شيء مطابق قل ذلك واطلب وصفًا آخر. اسأل عن الكمية إن كانت ناقصة. '
-      'أكّد مع المستخدم قبل استدعاء propose_item. لا تقل أبدًا إن الطلب تم؛ اطلب منه أن يقول "خلصت" ليراجع ويضيف للسلة. سؤال واحد فقط في كل مرة.';
+      'في كل دور: أولًا قل بجملة قصيرة ما فهمته من الطلب. '
+      'إن كان نقص المعلومة سيغيّر النتيجة فعلًا اسأل سؤالًا توضيحيًا واحدًا فقط، وإلا ابحث مباشرة وقل افتراضك. '
+      'للبحث استدعِ search_catalog بـ product_type (الاسم المفرد مثل دفتر)، وpack="pack" عند ربطة أو باكيت أو طقم، '
+      'وattributes للون والحجم والنوع، وmust_not_terms لما يجعل النتيجة خاطئة (مثل سلك ونوتة لربطة دفاتر عادية). '
+      'ممنوع تخترع منتجات أو أسعارًا أو توفرًا، ولا ترتّب النتائج بنفسك؛ قل فقط ما أرجعته الأداة. '
+      'اعرض بالاسم والسعر فقط النتائج التي match_level فيها exact، وبحد أقصى 3 أصناف في الدور. '
+      'النتائج close اذكرها فقط بصيغة: وفي كمان كذا، بس مش نفس اللي طلبته، مع السبب. '
+      'البدائل alternative فقط إن لم يوجد غيرها. إن لم يوجد شيء قل ذلك واسأل سؤالًا واحدًا مفيدًا. '
+      'لا تستدعِ propose_item إلا بعد موافقة المستخدم الصريحة على صنف وكمية. '
+      'لا تقل أبدًا إن الطلب تم؛ اطلب منه أن يقول "خلصت" ليراجع ويضيف للسلة.';
 
   static const _tools = [
     {
       'functionDeclarations': [
         {
           'name': 'search_catalog',
-          'description': 'البحث عن الكتب والقرطاسية والألعاب والهدايا في كتالوج متجر سطر',
+          'description': 'بحث محقَّق في كتالوج متجر سطر. يرجع المنتجات مع match_level (exact/close/alternative) وسببها.',
           'parameters': {
             'type': 'OBJECT',
             'properties': {
-              'query': {'type': 'STRING', 'description': 'ما يبحث عنه المستخدم'},
+              'product_type': {'type': 'STRING', 'description': 'الاسم الرئيسي المفرد: دفتر، قلم، مقص'},
+              'pack': {
+                'type': 'STRING',
+                'enum': ['single', 'pack'],
+              },
+              'attributes': {
+                'type': 'OBJECT',
+                'properties': {
+                  'size': {'type': 'STRING'},
+                  'pages': {'type': 'STRING'},
+                  'ruling': {'type': 'STRING'},
+                  'color': {'type': 'STRING'},
+                  'brand': {'type': 'STRING'},
+                  'grade': {'type': 'STRING'},
+                },
+              },
+              'must_not_terms': {
+                'type': 'ARRAY',
+                'items': {'type': 'STRING'},
+              },
             },
-            'required': ['query'],
+            'required': ['product_type'],
           },
         },
         {
@@ -97,10 +123,20 @@ class GeminiVoiceDataSource {
     final args = Map<String, dynamic>.from((call['args'] as Map?) ?? const {});
     switch (call['name']) {
       case 'search_catalog':
-        final List<SuggestedProduct> found = await tools.search('${args['query'] ?? ''}');
+        final found = await tools.search(VoiceSearchArgs.fromJson(args));
+        final exact = found.where((m) => m.level == MatchLevel.exact).length;
         return {
+          'status': exact > 0 ? 'exact_found' : (found.isEmpty ? 'none' : 'no_exact'),
           'items': [
-            for (final p in found.take(5)) {'id': p.id, 'name': p.name, 'price': p.priceLabel, 'available': p.isAvailable},
+            for (final m in found.take(5))
+              {
+                'id': m.product.id,
+                'name': m.product.name,
+                'price': m.product.priceLabel,
+                'available': m.product.isAvailable,
+                'match_level': m.level.name,
+                if (m.reason.isNotEmpty) 'reason': m.reason,
+              },
           ],
         };
       case 'propose_item':
@@ -122,7 +158,7 @@ class GeminiVoiceDataSource {
       },
       'contents': _history,
       if (useTools) 'tools': _tools,
-      'generationConfig': {'temperature': 0.6, 'maxOutputTokens': 300},
+      'generationConfig': {'temperature': 0, 'maxOutputTokens': 300},
     };
     Object? last;
     for (final model in AiConfig.geminiModels) {

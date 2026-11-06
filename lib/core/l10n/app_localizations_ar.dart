@@ -1596,4 +1596,84 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get changeRole => 'تغيير الدور';
+
+  @override
+  String get aiSecExact => 'مطابق تمامًا';
+
+  @override
+  String get aiSecClose => 'قريب مما طلبت';
+
+  @override
+  String get aiSecAlternatives => 'بدائل مقترحة';
+
+  @override
+  String get aiNoteSingleNotPack => 'مفرد بدل ربطة';
+
+  @override
+  String get aiNotePackNotSingle => 'عبوة بدل قطعة واحدة';
+
+  @override
+  String aiNoteUnwanted(String term) {
+    return 'فيه «$term»';
+  }
+
+  @override
+  String aiNoteAttrDiffers(String value) {
+    return 'مش «$value»';
+  }
+
+  @override
+  String aiNoteAttrUnknown(String value) {
+    return 'ما تأكدنا إنه «$value»';
+  }
+
+  @override
+  String get aiNoteDifferentType => 'نوع مختلف';
+
+  @override
+  String aiNoteDifferentTypeIn(String category) {
+    return 'نوع مختلف (من «$category»)';
+  }
+
+  @override
+  String aiNoteAgeFits(String age) {
+    return 'مناسبة حسب الوصف ($age)';
+  }
+
+  @override
+  String get aiNoteAgeUnknown => 'مناسبة غالبًا (الكتالوج ما بذكر عمر)';
+
+  @override
+  String aiNoteAgeOutside(String age) {
+    return 'العمر المذكور مختلف ($age)';
+  }
+
+  @override
+  String get aiNoCloseHint => 'ما لقيت المطابق تمامًا، هاي أقرب الخيارات:';
+
+  @override
+  String aiPlanTotal(String total) {
+    return 'المجموع: $total';
+  }
+
+  @override
+  String aiPlanBudget(String budget) {
+    return 'الميزانية: $budget';
+  }
+
+  @override
+  String get aiPlanOverBudget => 'المجموع أعلى من الميزانية';
+
+  @override
+  String aiPlanDropped(String roles) {
+    return 'حذفنا لتناسب الميزانية: $roles';
+  }
+
+  @override
+  String aiPlanReplaced(String roles) {
+    return 'بدّلنا بأرخص: $roles';
+  }
+
+  @override
+  String get aiClarifyHint => 'اختر أو اكتب التفاصيل';
 }

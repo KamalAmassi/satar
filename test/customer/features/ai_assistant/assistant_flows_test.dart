@@ -17,6 +17,7 @@ import 'package:project/customer/features/ai_assistant/data/matching/request_par
 import 'package:project/customer/features/ai_assistant/data/repositories/ai_assistant_repository_impl.dart';
 import 'package:project/customer/features/ai_assistant/data/repositories/voice_repository_impl.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/audio_clip.dart';
+import 'package:project/customer/features/ai_assistant/domain/entities/match_info.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/suggested_product.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/suggestion_item.dart';
 import 'package:project/customer/features/ai_assistant/domain/failures/ai_failures.dart';
@@ -122,9 +123,9 @@ class _Tools implements VoiceTools {
   @override
   bool propose(int id, int q) => false;
   @override
-  Future<List<SuggestedProduct>> search(String q) async {
+  Future<List<VerifiedMatch>> search(VoiceSearchArgs a) async {
     onSearch();
-    return [const SuggestedProduct(id: 1, name: 'دفتر 80 ورقة', priceAmount: 500, priceLabel: '5.00 ₪', inStock: true)];
+    return [const VerifiedMatch(product: SuggestedProduct(id: 1, name: 'دفتر 80 ورقة', priceAmount: 500, priceLabel: '5.00 ₪', inStock: true), level: MatchLevel.exact)];
   }
 }
 
@@ -171,7 +172,7 @@ void main() {
           {
             'functionCall': {
               'name': 'search_catalog',
-              'args': {'query': 'دفتر'}
+              'args': {'product_type': 'دفتر'}
             },
             'thoughtSignature': 'sig1'
           },

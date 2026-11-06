@@ -7,6 +7,8 @@ import 'package:project/core/errors/failure.dart';
 import 'package:project/core/services/stt_service.dart';
 import 'package:project/core/services/tts_service.dart';
 import 'package:project/customer/features/ai_assistant/data/datasources/gemini_voice_datasource.dart';
+import 'package:project/customer/features/ai_assistant/domain/entities/intent.dart';
+import 'package:project/customer/features/ai_assistant/domain/entities/match_info.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/suggested_product.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/voice_turn.dart';
 import 'package:project/customer/features/ai_assistant/domain/repositories/voice_repository.dart';
@@ -84,11 +86,11 @@ class FakeRepo implements VoiceRepository {
 
 SuggestedProduct prod(int id, {bool inStock = true}) => SuggestedProduct(id: id, name: 'دفتر $id', priceAmount: 500, priceLabel: '5.00 ₪', inStock: inStock);
 
-VoiceController make(FakeStt stt, FakeTts tts, {List<SuggestedProduct>? catalog}) => VoiceController(
+VoiceController make(FakeStt stt, FakeTts tts, {List<MatchedProduct>? catalog}) => VoiceController(
       stt: stt,
       tts: tts,
       runTurn: RunVoiceTurnUseCase(FakeRepo()),
-      searchCatalog: (_) async => catalog ?? [prod(1), prod(2, inStock: false)],
+      searchCatalog: (_) async => catalog ?? [MatchedProduct(product: prod(1), level: MatchLevel.exact), MatchedProduct(product: prod(2, inStock: false), level: MatchLevel.close, note: const MatchNote(NoteCode.singleNotPack))],
       requestMic: () async => true,
       echoGuard: Duration.zero,
     );
@@ -146,7 +148,12 @@ class _Tools implements VoiceTools {
   }
 
   @override
-  Future<List<SuggestedProduct>> search(String q) async => [prod(1)];
+  Future<List<VerifiedMatch>> search(VoiceSearchArgs a) async {
+    lastArgs = a;
+    return [VerifiedMatch(product: prod(1), level: MatchLevel.exact)];
+  }
+
+  VoiceSearchArgs? lastArgs;
 }
 
 void main() {
@@ -202,7 +209,7 @@ void main() {
     final stt = FakeStt();
     final c = make(stt, FakeTts(stt));
     expect(c.propose(1, 2), isFalse); // لم يُبحث عنه بعد
-    await c.search('دفتر');
+    await c.search(const VoiceSearchArgs(productType: 'دفتر'));
     expect(c.propose(99, 1), isFalse);
     expect(c.propose(2, 1), isFalse); // غير متوفر
     expect(c.propose(1, 2), isTrue);
@@ -214,7 +221,7 @@ void main() {
 
   test('function-call loop: tools executed, history sent verbatim, max rounds', () async {
     final adapter = _Adapter([
-      _call('search_catalog', {'query': 'دفتر'}),
+      _call('search_catalog', {'product_type': 'دفتر', 'pack': 'pack', 'attributes': {'ruling': 'مسطر'}, 'must_not_terms': ['سلك']}),
       _call('propose_item', {'product_id': 1, 'quantity': 2}),
       _call('propose_item', {'product_id': 7, 'quantity': 1}),
       _text('تمام'),
@@ -226,6 +233,11 @@ void main() {
     expect(reply, 'تمام');
     expect(adapter.bodies.length, 4);
     expect(tools.proposed, [1]); // id=7 رُفض
+    expect(tools.lastArgs!.pack, PackMode.pack);
+    expect(tools.lastArgs!.attributes, {'ruling': 'مسطر'});
+    expect(tools.lastArgs!.mustNot, ['سلك']);
+    // نتيجة الأداة تحمل المستوى المحقَّق، ولا تُرتّب خارج المحرك.
+    expect(jsonEncode(adapter.bodies[1]['contents']), contains('match_level'));
     expect(adapter.bodies.last.containsKey('tools'), isFalse);
     expect(jsonEncode(adapter.bodies.last['contents']), contains('thoughtSignature'));
   });

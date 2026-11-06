@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:project/core/l10n/app_localizations_ar.dart';
@@ -7,11 +8,13 @@ import 'package:project/core/services/stt_service.dart';
 import 'package:project/core/services/tts_service.dart';
 import 'package:project/core/utils/arabic_text.dart';
 import 'package:project/core/utils/haptics.dart';
+import 'package:project/customer/features/ai_assistant/domain/entities/match_info.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/proposed_item.dart';
 import 'package:project/customer/features/ai_assistant/domain/entities/suggested_product.dart';
 import 'package:project/customer/features/ai_assistant/domain/failures/ai_failures.dart';
 import 'package:project/customer/features/ai_assistant/domain/repositories/voice_repository.dart';
 import 'package:project/customer/features/ai_assistant/domain/usecases/run_voice_turn_usecase.dart';
+import 'package:project/customer/features/ai_assistant/presentation/widgets/match_note_text.dart';
 
 enum VoiceState { idle, listening, thinking, speaking, error }
 
@@ -31,7 +34,8 @@ class VoiceController extends GetxController with WidgetsBindingObserver impleme
   final SttService stt;
   final TtsService tts;
   final RunVoiceTurnUseCase runTurn;
-  final Future<List<SuggestedProduct>> Function(String query) searchCatalog;
+  /// بحث محقَّق (الخطوتان B–C): يرجع exact ثم close مع مستواها وسببها.
+  final Future<List<MatchedProduct>> Function(VoiceSearchArgs args) searchCatalog;
 
   /// يطلب إذن الميكروفون؛ true إن مُنح.
   final Future<bool> Function() requestMic;
@@ -212,19 +216,25 @@ class VoiceController extends GetxController with WidgetsBindingObserver impleme
   // ---- أدوات النموذج ----
 
   @override
-  Future<List<SuggestedProduct>> search(String query) async {
-    var found = await searchCatalog(query);
-    if (found.isEmpty) {
-      // احتياط: أطول كلمة في الاستعلام.
-      final words = query.split(RegExp(r'\s+'))..sort((a, b) => b.length.compareTo(a.length));
-      if (words.length > 1 && words.first.length > 2) found = await searchCatalog(words.first);
+  Future<List<VerifiedMatch>> search(VoiceSearchArgs args) async {
+    final found = await searchCatalog(args);
+    final matches = [
+      for (final m in found.take(5))
+        VerifiedMatch(
+          product: m.product,
+          level: m.level,
+          reason: m.note == null ? '' : matchNoteText(_ar, m.note!),
+        ),
+    ];
+    for (final m in matches) {
+      _known[m.product.id] = m.product;
     }
-    found = found.take(5).toList();
-    for (final p in found) {
-      _known[p.id] = p;
+    foundItems.assignAll([for (final m in matches) m.product]);
+    if (kDebugMode) {
+      debugPrint('[ai-voice] search type_len=${args.productType.length} pack=${args.pack.name} '
+          'results=${[for (final m in matches) '${m.product.id}:${m.level.name}'].join(',')}');
     }
-    foundItems.assignAll(found);
-    return found;
+    return matches;
   }
 
   @override

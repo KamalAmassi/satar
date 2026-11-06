@@ -35,6 +35,7 @@ class ProductMatcher {
       product: SuggestedProductModel.fromProduct(main.entry.product),
       alternatives: [for (final m in r.exact.skip(1)) if (m.entry.available) SuggestedProductModel.fromProduct(m.entry.product)],
       level: MatchLevel.exact,
+      note: main.note,
       close: close,
       similar: similar,
       role: spec.role,

@@ -6,6 +6,7 @@ import 'package:project/core/utils/arabic_text.dart';
 import 'package:project/customer/features/ai_assistant/data/catalog/catalog_index.dart';
 import 'package:project/customer/features/ai_assistant/data/datasources/catalog_remote_datasource.dart';
 import 'package:project/customer/features/ai_assistant/data/matching/arabic_lexicon.dart';
+import 'package:project/customer/features/ai_assistant/data/matching/bundle_planner.dart';
 import 'package:project/customer/features/ai_assistant/data/datasources/gemini_extractor.dart';
 import 'package:project/customer/features/ai_assistant/data/datasources/gemini_judge.dart';
 import 'package:project/customer/features/ai_assistant/data/matching/product_scorer.dart';
@@ -33,6 +34,7 @@ class AiAssistantRepositoryImpl implements AiAssistantRepository {
   final RequestParser _parser;
   final ProductMatcher _matcher;
   final CatalogProvider _provider;
+  late final BundlePlanner _planner = BundlePlanner(_matcher);
   final GeminiJudge? _judge;
 
   static const _maxTextLength = 500;
@@ -128,11 +130,28 @@ class AiAssistantRepositoryImpl implements AiAssistantRepository {
       items.add(_matcher.fromRanked(spec, ranked));
     }
     final merged = _mergeDuplicates(items);
+
+    // بكج / هدية: كل دور أو نية يمر بنفس الاسترجاع والتحقق، من الكتالوج فقط.
+    final planned = <SuggestionItem>[];
+    PlanSummary? plan;
+    for (final r in extraction.requests) {
+      if (r.kind == IntentKind.bundleForPurpose && r.neededItems.isNotEmpty) {
+        final p = _planner.bundle(r, index);
+        planned.addAll(p.items);
+        plan ??= p.plan;
+      } else if (r.kind == IntentKind.giftOrToyForPurpose && r.searchIntents.isNotEmpty) {
+        final p = _planner.gift(r, index);
+        planned.addAll(p.items);
+        plan ??= p.plan;
+      }
+    }
+    final all = [...merged, ...planned];
     return AssistantResult(
       transcript: transcript,
-      unclear: merged.isEmpty,
-      items: merged,
+      unclear: all.isEmpty && extraction.clarification == null,
+      items: all,
       clarification: extraction.clarification,
+      plan: plan,
     );
   }
 

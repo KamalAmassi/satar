@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
 import 'package:project/core/network/masar_model/masar_models.dart';
 
 abstract class CatalogRemoteDataSource {
@@ -7,6 +7,9 @@ abstract class CatalogRemoteDataSource {
 
   /// بحث على الخادم (?q= يطابق الاسمين العربي والإنجليزي، حتى 60 حرفًا). المصدر الأساسي للمطابقة.
   Future<List<Product>> search(String q);
+
+  /// أسماء الفئات (id ← اسم) لدعم المطابقة؛ تُرجع خريطة فارغة إن تعذّر الجلب.
+  Future<Map<int, String>> fetchCategories();
 }
 
 class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
@@ -16,7 +19,23 @@ class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
 
   /// نفس القيمة المستخدمة في Postman (القيم الأكبر قد ترفضها الـ API بـ 422).
   static const _perPage = 50; // الحد الأقصى في العقد؛ المطابقة تحتاج الكتالوج كاملًا
-  static const _maxPages = 15;
+  static const _maxPages = 20;
+
+  @override
+  Future<Map<int, String>> fetchCategories() async {
+    try {
+      final response = await _dio.get<dynamic>('v1/categories');
+      final envelope = ApiEnvelope<List<Category>>.fromJson(
+        Map<String, dynamic>.from(response.data as Map),
+        (data) => (data as List<dynamic>)
+            .map((e) => Category.fromJson(Map<String, dynamic>.from(e as Map)))
+            .toList(),
+      );
+      return {for (final c in envelope.data ?? const <Category>[]) c.id: c.name};
+    } catch (_) {
+      return const {};
+    }
+  }
 
   @override
   Future<List<Product>> search(String q) async {

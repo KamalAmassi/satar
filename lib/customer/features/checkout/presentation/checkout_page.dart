@@ -501,7 +501,6 @@ class _AddressFormScreenState extends State<AddressFormScreen> {
   bool saving = false;
   bool locating = false;
   String? error;
-
   @override
   void initState() {
     super.initState();
@@ -514,9 +513,13 @@ class _AddressFormScreenState extends State<AddressFormScreen> {
       isDefault = a.isDefault;
     } else {
       isDefault = true;
-      _locate(silent: true);
+      // 💡 إعطاء الخريطة 500 مللي ثانية لتستقر في الواجهة قبل بدء تحريك الـ GPS
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) _locate(silent: true);
+      });
     }
   }
+
 
   @override
   void dispose() {
@@ -526,23 +529,39 @@ class _AddressFormScreenState extends State<AddressFormScreen> {
   }
 
   Future<void> _locate({bool silent = false}) async {
+    if (!mounted) return;
     setState(() => locating = true);
     try {
       var perm = await Geolocator.checkPermission();
       if (perm == LocationPermission.denied) perm = await Geolocator.requestPermission();
       if (perm == LocationPermission.denied || perm == LocationPermission.deniedForever) {
-        if (!silent) {
+        if (!silent && mounted) {
           Get.toNamed('/perm/location-denied');
         }
         return;
       }
-      final p = await Geolocator.getCurrentPosition(locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
+      
+      final p = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(accuracy: LocationAccuracy.high)
+      );
+      
+      // 👇 💡 [هذا هو المكان الصحيح للأسطر التي تسأل عنها - في نهاية الـ try]
+      if (!mounted) return;
       center = LatLng(p.latitude, p.longitude);
-      map.move(center, 16);
-      _check();
-    } catch (_) {
-      if (!silent) showToast('تعذّر تحديد موقعك. حرّك الدبوس يدويًا.', icon: 'alertC');
+
+      if (mounted) {
+        map.move(center, 16);
+        _check();
+      }
+      // ☝️ [هنا ينتهي الـ try ويقفل القوس الخاص به]
+
+    } catch (e) {
+      debugPrint("Geolocator Error: $e");
+      if (!silent && mounted) {
+        showToast('تعذّر تحديد موقعك. حرّك الدبوس يدويًا.', icon: 'alertC');
+      }
     } finally {
+      // 💡 كتلة الـ finally تنفذ هنا دائماً بعد الـ try/catch
       if (mounted) setState(() => locating = false);
     }
   }
@@ -595,7 +614,7 @@ class _AddressFormScreenState extends State<AddressFormScreen> {
                     if (gesture) _check();
                   }),
                   children: [
-                    TileLayer(urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', userAgentPackageName: 'com.example.project'),
+                    TileLayer(urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', userAgentPackageName: 'com.example.project',),
                     if (zones.isNotEmpty) PolygonLayer(polygons: [for (final z in zones) Polygon(points: [for (final p in z) LatLng(p.lat, p.lng)], color: c.pri.withValues(alpha: .10), borderColor: c.pri.withValues(alpha: .5), borderStrokeWidth: 2)]),
                   ],
                 ),

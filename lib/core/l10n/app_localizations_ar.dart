@@ -1592,6 +1592,17 @@ class AppLocalizationsAr extends AppLocalizations {
       'بالمتابعة فإنك توافق على شروط الاستخدام وسياسة الخصوصية.';
 
   @override
+  String get roleTagline => 'قرطاسية وكتب وطباعة، تصلك من مكتبتك';
+
+  @override
+  String get rolePick => 'اختر نوع الحساب';
+
+  @override
+  String roleContinueAs(String role) {
+    return 'متابعة ك$role';
+  }
+
+  @override
   String get sessionExpiredSnack => 'انتهت الجلسة، سجّل الدخول مرة أخرى.';
 
   @override

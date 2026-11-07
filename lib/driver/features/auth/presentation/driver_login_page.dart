@@ -21,6 +21,7 @@ import 'package:project/core/utils/haptics.dart';
 import 'package:project/core/utils/phone_normalizer.dart';
 import 'package:project/core/data/models.dart';
 import 'package:project/core/widgets/auth_header.dart';
+import 'package:project/core/widgets/auth_shell.dart';
 import 'package:project/core/widgets/common_widgets.dart';
 
 class DriverLoginScreen extends StatefulWidget {
@@ -138,84 +139,79 @@ class _DriverLoginScreenState extends State<DriverLoginScreen> {
     final c = context.sc;
     final l = context.l10n;
     if (_tried) _validate();
-    return Page2(
-      center: true,
-      body: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 480),
-        child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        AuthHeader(role: AuthRole.driver, title: l.driverLoginHeadline, subtitle: l.driverLoginSubtitle),
-        const SizedBox(height: 24),
-        Padding(
-          padding: EdgeInsets.zero,
-          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            Entrance(
-              index: 1,
-              child: ShakeOnChange(
-                trigger: _shake,
-                child: AuthCard(
-                  child: AutofillGroup(
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                      if (_generalErr != null) ...[
-                        Semantics(liveRegion: true, child: Note('err', text: _generalErr!)),
-                        const SizedBox(height: 16),
-                      ],
-                      Fld(
-                        label: l.driverLoginPhone,
-                        hint: '0599123456',
-                        pre: '${OtpConfig.defaultCountryCode} 🇵🇸',
-                        controller: phone,
-                        focusNode: _phoneFocus,
-                        keyboard: TextInputType.phone,
-                        ltr: true,
-                        error: _phoneErr,
-                        ok: _tried && _phoneOk,
-                        textInputAction: TextInputAction.next,
-                        autofillHints: const [AutofillHints.telephoneNumber],
-                        onChanged: (_) => setState(() => _generalErr = null),
-                        onSubmitted: (_) => _passFocus.requestFocus(),
-                      ),
-                      const SizedBox(height: 18),
-                      Fld(
-                        label: l.driverLoginPassword,
-                        controller: pass,
-                        focusNode: _passFocus,
-                        obscure: !show,
-                        error: _passErr,
-                        textInputAction: TextInputAction.done,
-                        autofillHints: const [AutofillHints.password],
-                        onChanged: (_) => setState(() => _generalErr = null),
-                        onSubmitted: (_) => _login(),
-                        suffix: Semantics(
-                          button: true,
-                          label: show ? l.driverLoginHidePassword : l.driverLoginShowPassword,
-                          child: InkResponse(
-                            onTap: () => setState(() => show = !show),
-                            radius: 24,
-                            child: SizedBox.square(dimension: 48, child: Center(child: SIcon('eye', size: 20, color: show ? c.pri : c.tx2))),
-                          ),
-                        ),
-                      ),
-                    ]),
+    return AuthShell(
+      role: AuthRole.driver,
+      body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Entrance(index: 0, child: AuthTitle(title: l.driverLoginHeadline, subtitle: Text(l.driverLoginSubtitle))),
+        const SizedBox(height: 20),
+        Entrance(
+          index: 1,
+          child: ShakeOnChange(
+            trigger: _shake,
+            child: AutofillGroup(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                if (_generalErr != null) ...[
+                  Semantics(liveRegion: true, child: Note('err', text: _generalErr!)),
+                  const SizedBox(height: 16),
+                ],
+                Fld(
+                  label: l.driverLoginPhone,
+                  hint: '05XX XXX XXX',
+                  pre: OtpConfig.defaultCountryCode,
+                  controller: phone,
+                  focusNode: _phoneFocus,
+                  keyboard: TextInputType.phone,
+                  ltr: true,
+                  error: _phoneErr,
+                  ok: _tried && _phoneOk,
+                  textInputAction: TextInputAction.next,
+                  autofillHints: const [AutofillHints.telephoneNumber],
+                  onChanged: (_) => setState(() => _generalErr = null),
+                  onSubmitted: (_) => _passFocus.requestFocus(),
+                ),
+                const SizedBox(height: 16),
+                Fld(
+                  label: l.driverLoginPassword,
+                  controller: pass,
+                  focusNode: _passFocus,
+                  obscure: !show,
+                  error: _passErr,
+                  textInputAction: TextInputAction.done,
+                  autofillHints: const [AutofillHints.password],
+                  onChanged: (_) => setState(() => _generalErr = null),
+                  onSubmitted: (_) => _login(),
+                  suffix: Semantics(
+                    button: true,
+                    label: show ? l.driverLoginHidePassword : l.driverLoginShowPassword,
+                    child: InkResponse(
+                      onTap: () => setState(() => show = !show),
+                      radius: 24,
+                      child: SizedBox.square(dimension: 48, child: Center(child: SIcon('eye', size: 20, color: show ? c.pri : c.tx2))),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Entrance(
-              index: 2,
-              child: Wrap(alignment: WrapAlignment.spaceBetween, crossAxisAlignment: WrapCrossAlignment.center, children: [
-                _TextLink(l.driverLoginForgot, onTap: () => _help(title: l.driverLoginForgot, text: l.driverLoginForgotText)),
-                _TextLink(l.driverLoginSupport, onTap: () => _help(title: l.driverLoginSupport, text: l.driverLoginSupportText)),
               ]),
             ),
-            const SizedBox(height: 16),
-            const ChangeRoleLink(),
-            Entrance(index: 3, child: Text(l.driverLoginVersion(AppEnv.appVersion), textAlign: TextAlign.center, style: T.cap(c.tx3))),
-          ]),
+          ),
         ),
+        Align(
+          alignment: AlignmentDirectional.centerEnd,
+          child: _TextLink(l.driverLoginForgot, onTap: () => _help(title: l.driverLoginForgot, text: l.driverLoginForgotText)),
+        ),
+        const SizedBox(height: 8),
+        const ChangeRoleLink(),
       ]),
+      foot: Foot(
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          SBtn(l.driverLoginSubmit, full: true, loading: busy, disabled: !_valid, onTap: _login),
+          const SizedBox(height: 4),
+          Wrap(alignment: WrapAlignment.center, crossAxisAlignment: WrapCrossAlignment.center, children: [
+            _TextLink(l.driverLoginSupport, onTap: () => _help(title: l.driverLoginSupport, text: l.driverLoginSupportText)),
+            Text('·', style: T.cap(c.tx3)),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: Text(l.driverLoginVersion(AppEnv.appVersion), style: T.cap(c.tx2))),
+          ]),
+        ]),
       ),
-      foot: Foot(child: SBtn(l.driverLoginSubmit, full: true, loading: busy, disabled: !_valid, onTap: _login)),
     );
   }
 }

@@ -2948,6 +2948,24 @@ abstract class AppLocalizations {
   /// **'بالمتابعة فإنك توافق على شروط الاستخدام وسياسة الخصوصية.'**
   String get roleLegal;
 
+  /// No description provided for @roleTagline.
+  ///
+  /// In ar, this message translates to:
+  /// **'قرطاسية وكتب وطباعة، تصلك من مكتبتك'**
+  String get roleTagline;
+
+  /// No description provided for @rolePick.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر نوع الحساب'**
+  String get rolePick;
+
+  /// No description provided for @roleContinueAs.
+  ///
+  /// In ar, this message translates to:
+  /// **'متابعة ك{role}'**
+  String roleContinueAs(String role);
+
   /// No description provided for @sessionExpiredSnack.
   ///
   /// In ar, this message translates to:

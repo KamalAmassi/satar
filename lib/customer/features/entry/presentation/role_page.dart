@@ -2,123 +2,145 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project/core/design/icons.dart';
 import 'package:project/core/design/pressable.dart';
+import 'package:project/core/design/shell.dart';
 import 'package:project/core/design/tokens.dart';
+import 'package:project/core/design/widgets.dart';
 import 'package:project/core/l10n/app_localizations.dart';
 import 'package:project/core/motion/entrance.dart';
 import 'package:project/core/storage/session_store.dart';
 import 'package:project/core/utils/haptics.dart';
+import 'package:project/core/widgets/auth_shell.dart';
 
-/// اختيار الدور: بطاقتان كبيرتان، نقرة واحدة تختار وتتابع. يُحفظ الدور فلا يُسأل ثانية.
-class RoleScreen extends StatelessWidget {
+/// اختيار الدور: بطاقتان قابلتان للاختيار ثم «متابعة». يُحفظ الدور فلا يُسأل ثانية.
+class RoleScreen extends StatefulWidget {
   const RoleScreen({super.key});
 
-  Future<void> _pick(String role, String route) async {
+  @override
+  State<RoleScreen> createState() => _RoleScreenState();
+}
+
+class _RoleScreenState extends State<RoleScreen> {
+  String? _role;
+
+  void _select(String role) {
+    if (_role == role) return;
+    Haptics.select();
+    setState(() => _role = role);
+  }
+
+  Future<void> _continue() async {
+    final role = _role;
+    if (role == null) return;
     Haptics.tap();
     await Get.find<SessionStore>().setChosenRole(role);
-    Get.toNamed(route);
+    Get.toNamed(role == 'driver' ? '/driver/login' : '/auth/phone');
   }
 
   @override
   Widget build(BuildContext context) {
     final c = context.sc;
     final l = AppLocalizations.of(context)!;
-    return Scaffold(
-      backgroundColor: c.bg,
-      body: Stack(children: [
-        Positioned.fill(child: CustomPaint(painter: _NotebookPainter(line: c.ln, margin: c.coral.withValues(alpha: .35)))),
-        SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 480),
-                child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                  Entrance(index: 0, child: Center(child: ExcludeSemantics(child: SizedBox(width: 150, height: 110, child: CustomPaint(painter: _BooksPainter(c)))))),
-                  const SizedBox(height: 20),
-                  Entrance(index: 1, child: Semantics(header: true, child: Text(l.roleTitle, textAlign: TextAlign.center, style: T.d2(c.tx)))),
-                  const SizedBox(height: 8),
-                  Entrance(index: 1, child: Text(l.roleSubtitle, textAlign: TextAlign.center, style: T.bd(c.tx2))),
-                  const SizedBox(height: 28),
-                  Entrance(
-                    index: 2,
-                    child: _RoleCard(
-                      icon: 'bag',
-                      title: l.roleCustomer,
-                      sub: l.roleCustomerSub,
-                      fill: c.plumSoft,
-                      border: c.pri,
-                      chip: c.sf,
-                      ink: c.plumInk,
-                      onTap: () => _pick('customer', '/auth/phone'),
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  Entrance(
-                    index: 3,
-                    child: _RoleCard(
-                      icon: 'truck',
-                      title: l.roleDriver,
-                      sub: l.roleDriverSub,
-                      fill: c.amberSoft,
-                      border: c.amber,
-                      chip: c.sf,
-                      ink: c.amberInk,
-                      onTap: () => _pick('driver', '/driver/login'),
-                    ),
-                  ),
-                  const SizedBox(height: 28),
-                  Entrance(index: 4, child: Text(l.roleLegal, textAlign: TextAlign.center, style: T.cap(c.tx3))),
-                ]),
-              ),
+    final label = switch (_role) {
+      'customer' => l.roleContinueAs(l.roleCustomer),
+      'driver' => l.roleContinueAs(l.roleDriver),
+      _ => l.rolePick,
+    };
+    return AuthShell(
+      tall: true,
+      showBack: false,
+      tagline: l.roleTagline,
+      body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Entrance(index: 0, child: AuthTitle(title: l.roleTitle, subtitle: Text(l.roleSubtitle))),
+        const SizedBox(height: 20),
+        Semantics(
+          container: true,
+          label: l.rolePick,
+          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            Entrance(
+              index: 1,
+              child: _RoleCard(icon: 'bag', title: l.roleCustomer, sub: l.roleCustomerSub, selected: _role == 'customer', onTap: () => _select('customer')),
             ),
-          ),
+            const SizedBox(height: 12),
+            Entrance(
+              index: 2,
+              child: _RoleCard(icon: 'truck', title: l.roleDriver, sub: l.roleDriverSub, selected: _role == 'driver', onTap: () => _select('driver')),
+            ),
+          ]),
         ),
       ]),
+      foot: Foot(
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          SBtn(label, full: true, disabled: _role == null, onTap: _continue),
+          const SizedBox(height: 8),
+          Text(l.roleLegal, textAlign: TextAlign.center, style: T.cap(c.tx2)),
+        ]),
+      ),
     );
   }
 }
 
+/// بطاقة دور قابلة للاختيار: أيقونة + عنوان + وصف + مؤشر اختيار.
 class _RoleCard extends StatelessWidget {
-  const _RoleCard({required this.icon, required this.title, required this.sub, required this.fill, required this.border, required this.chip, required this.ink, required this.onTap});
+  const _RoleCard({required this.icon, required this.title, required this.sub, required this.selected, required this.onTap});
   final String icon, title, sub;
-  final Color fill, border, chip, ink;
+  final bool selected;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final c = context.sc;
+    const dur = Duration(milliseconds: 160);
     return Semantics(
+      inMutuallyExclusiveGroup: true,
+      checked: selected,
       button: true,
       label: '$title. $sub',
       excludeSemantics: true,
       onTap: onTap,
       child: PressableScale(
         child: Material(
-          color: fill,
-          borderRadius: BorderRadius.circular(Rad.l),
+          color: c.sf,
+          borderRadius: BorderRadius.circular(22),
           child: InkWell(
-            borderRadius: BorderRadius.circular(Rad.l),
+            borderRadius: BorderRadius.circular(22),
             onTap: onTap,
-            child: Container(
+            child: AnimatedContainer(
+              duration: dur,
               constraints: const BoxConstraints(minHeight: 88),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(Rad.l), border: Border.all(color: border, width: 1.5)),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(22),
+                border: Border.all(color: selected ? c.pri : c.ln, width: selected ? 2 : 1.5),
+                boxShadow: selected ? [BoxShadow(color: c.shadow.withValues(alpha: .18), blurRadius: 24, offset: const Offset(0, 10), spreadRadius: -12)] : null,
+              ),
               child: Row(children: [
-                Container(
+                AnimatedContainer(
+                  duration: dur,
                   width: 56,
                   height: 56,
-                  decoration: BoxDecoration(color: chip, borderRadius: BorderRadius.circular(Rad.m)),
-                  child: Center(child: SIcon(icon, size: 28, color: ink)),
+                  decoration: BoxDecoration(color: selected ? c.pri : c.hero, borderRadius: BorderRadius.circular(16)),
+                  child: Center(child: SIcon(icon, size: 28, color: selected ? c.onPri : c.onHero)),
                 ),
                 const SizedBox(width: 14),
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-                    Text(title, style: T.h2(c.tx)),
+                    Text(title, style: T.h2(c.tx, size: 18)),
                     const SizedBox(height: 2),
-                    Text(sub, style: T.bd(c.tx2)),
+                    Text(sub, style: T.sm(c.tx2)),
                   ]),
                 ),
-                Icon(Directionality.of(context) == TextDirection.rtl ? Icons.chevron_left : Icons.chevron_right, color: c.tx2),
+                const SizedBox(width: 10),
+                AnimatedContainer(
+                  duration: dur,
+                  width: 26,
+                  height: 26,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: selected ? c.pri : Colors.transparent,
+                    border: Border.all(color: selected ? c.pri : c.tx3, width: 2),
+                  ),
+                  child: selected ? Center(child: SIcon('check', size: 15, color: c.onPri)) : null,
+                ),
               ]),
             ),
           ),
@@ -126,79 +148,4 @@ class _RoleCard extends StatelessWidget {
       ),
     );
   }
-}
-
-/// خلفية دفتر: سطور أفقية خافتة وهامش عمودي.
-class _NotebookPainter extends CustomPainter {
-  _NotebookPainter({required this.line, required this.margin});
-  final Color line, margin;
-  @override
-  void paint(Canvas canvas, Size s) {
-    final p = Paint()
-      ..color = line
-      ..strokeWidth = 1;
-    for (double y = 40; y < s.height; y += 32) {
-      canvas.drawLine(Offset(0, y), Offset(s.width, y), p);
-    }
-    final x = s.width * .88;
-    canvas.drawLine(Offset(x, 0), Offset(x, s.height), Paint()
-      ..color = margin
-      ..strokeWidth = 1.5);
-  }
-
-  @override
-  bool shouldRepaint(_NotebookPainter o) => o.line != line || o.margin != margin;
-}
-
-/// كتب مكدّسة وقلم رصاص، من ألوان الرموز.
-class _BooksPainter extends CustomPainter {
-  _BooksPainter(this.c);
-  final SatrColors c;
-
-  @override
-  void paint(Canvas canvas, Size s) {
-    void book(double y, double w, double x, Color fill, Color edge) {
-      final r = RRect.fromRectAndRadius(Rect.fromLTWH(x, y, w, 24), const Radius.circular(5));
-      canvas.drawRRect(r, Paint()..color = fill);
-      canvas.drawRRect(
-          r,
-          Paint()
-            ..color = edge
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 1.5);
-      canvas.drawLine(
-          Offset(x + 10, y + 12),
-          Offset(x + w - 10, y + 12),
-          Paint()
-            ..color = edge
-            ..strokeWidth = 1.5);
-    }
-
-    book(s.height - 26, 120, 10, c.plumSoft, c.pri);
-    book(s.height - 52, 100, 22, c.amberSoft, c.amber);
-    book(s.height - 78, 84, 14, c.coralSoft, c.coral);
-    canvas.save();
-    canvas.translate(s.width - 30, s.height - 80);
-    canvas.rotate(.7);
-    final body = RRect.fromRectAndRadius(const Rect.fromLTWH(-5, -52, 10, 52), const Radius.circular(2));
-    canvas.drawRRect(body, Paint()..color = c.amber);
-    canvas.drawRect(const Rect.fromLTWH(-5, -52, 10, 8), Paint()..color = c.coral);
-    final tip = Path()
-      ..moveTo(-5, 0)
-      ..lineTo(5, 0)
-      ..lineTo(0, 12)
-      ..close();
-    canvas.drawPath(tip, Paint()..color = c.sf3);
-    canvas.drawPath(
-        Path()
-          ..moveTo(-1.8, 7)
-          ..lineTo(1.8, 7)
-          ..lineTo(0, 12)
-          ..close(),
-        Paint()..color = c.pri);
-    canvas.restore();
-  }
-
-  @override
-  bool shouldRepaint(_BooksPainter o) => o.c != c;
 }

@@ -1624,6 +1624,18 @@ class AppLocalizationsEn extends AppLocalizations {
       'By continuing you agree to the Terms of Use and Privacy Policy.';
 
   @override
+  String get roleTagline =>
+      'Stationery, books and printing, delivered from your bookshop';
+
+  @override
+  String get rolePick => 'Choose an account type';
+
+  @override
+  String roleContinueAs(String role) {
+    return 'Continue as $role';
+  }
+
+  @override
   String get sessionExpiredSnack =>
       'Your session expired. Please sign in again.';
 

@@ -13,7 +13,10 @@ import 'package:project/core/motion/motion_settings.dart';
 import 'package:project/core/otp/presentation/otp_args.dart';
 import 'package:project/core/otp/presentation/otp_controller.dart';
 import 'package:project/core/otp/presentation/otp_messages.dart';
+import 'package:project/core/storage/session_store.dart';
 import 'package:project/core/utils/phone_normalizer.dart';
+import 'package:project/core/widgets/auth_header.dart' show AuthRole;
+import 'package:project/core/widgets/auth_shell.dart';
 
 /// شاشة التحقق المشتركة (/otp) للعميل والسائق. الوسائط: [OtpArgs].
 class OtpVerificationView extends StatefulWidget {
@@ -69,12 +72,11 @@ class _OtpVerificationViewState extends State<OtpVerificationView> {
     // عزل اتجاه الرقم داخل النص العربي.
     final masked = '${String.fromCharCode(0x2066)}${PhoneNormalizer.mask(a.phone)}${String.fromCharCode(0x2069)}'; // عزل LTR
 
-    return Page2(
-      top: TopBar(title: a.title ?? l.otpTitle),
+    final chosen = Get.isRegistered<SessionStore>() ? Get.find<SessionStore>().chosenRole : null;
+    return AuthShell(
+      role: chosen == 'driver' ? AuthRole.driver : chosen == 'customer' ? AuthRole.customer : null,
       body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Entrance(index: 0, child: Text(l.otpHeadline, style: T.d2(c.tx))),
-        const SizedBox(height: 8),
-        Entrance(index: 1, child: Text(l.otpSubtitle(masked), style: T.bd(c.tx2))),
+        Entrance(index: 0, child: AuthTitle(title: a.title ?? l.otpHeadline, subtitle: Text(l.otpSubtitle(masked)))),
         if (kDebugMode && OtpConfig.usingDevFallback) ...[
           const SizedBox(height: 16),
           Note('warn', text: l.otpDevMockNotice),

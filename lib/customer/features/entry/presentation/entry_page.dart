@@ -22,6 +22,8 @@ import 'package:project/core/data/models.dart';
 import 'package:project/core/widgets/common_widgets.dart';
 import 'package:project/core/widgets/auth_header.dart';
 import 'package:project/core/widgets/change_role_link.dart';
+import 'package:project/core/widgets/auth_shell.dart';
+import 'package:project/core/config/otp_config.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -171,12 +173,21 @@ class PhoneController extends GetxController {
   final sending = false.obs;
   final failure = Rxn<Failure>();
 
+  /// خطأ تحقق محلي يظهر تحت الحقل (بدل رسالة عائمة).
+  final invalid = false.obs;
+
+  void clearErrors() {
+    invalid.value = false;
+    failure.value = null;
+  }
+
   Future<void> send() async {
     final p = phone.text.trim();
     if (p.length < 8) {
-      showToast('أدخل رقم جوال صحيح', icon: 'alertC');
+      invalid.value = true;
       return;
     }
+    invalid.value = false;
     sending.value = true;
     failure.value = null;
     final r = await backend.sendOtp(p);
@@ -197,34 +208,38 @@ class PhoneScreen extends StatelessWidget {
   const PhoneScreen({super.key});
   @override
   Widget build(BuildContext context) {
+    final c = context.sc;
     final ctl = Get.put(PhoneController());
-    return Page2(
-      top: const TopBar(title: 'تسجيل الدخول'),
-      center: true,
-      body: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 480),
-        child: Obx(() => Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              const AuthHeader(role: AuthRole.customer, title: 'أهلاً بعودتك', subtitle: 'أدخل رقم جوالك وسنرسل لك رمز تحقق عبر واتساب أو SMS لتأكيد حسابك.'),
-              const SizedBox(height: 24),
-              AuthCard(
-                child: AutofillGroup(
-                  child: Fld(
-                    label: 'رقم الجوال',
-                    hint: '0599000000',
-                    controller: ctl.phone,
-                    keyboard: TextInputType.phone,
-                    ltr: true,
-                    textInputAction: TextInputAction.done,
-                    autofillHints: const [AutofillHints.telephoneNumber],
-                    onSubmitted: (_) => ctl.send(),
-                    error: ctl.failure.value == null ? null : failureText(ctl.failure.value!),
-                  ),
-                ),
+    return AuthShell(
+      role: AuthRole.customer,
+      body: Obx(() => Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            const AuthTitle(title: 'أهلًا بك في سطر', subtitle: Text('أدخل رقم جوالك ونرسل لك رمز تحقق عبر واتساب أو SMS.')),
+            const SizedBox(height: 22),
+            AutofillGroup(
+              child: Fld(
+                label: 'رقم الجوال',
+                hint: '05XX XXX XXX',
+                pre: OtpConfig.defaultCountryCode,
+                controller: ctl.phone,
+                keyboard: TextInputType.phone,
+                ltr: true,
+                textInputAction: TextInputAction.done,
+                autofillHints: const [AutofillHints.telephoneNumber],
+                onChanged: (_) => ctl.clearErrors(),
+                onSubmitted: (_) => ctl.send(),
+                error: ctl.invalid.value ? 'رقم الهاتف غير صحيح.' : (ctl.failure.value == null ? null : failureText(ctl.failure.value!)),
               ),
-              const SizedBox(height: 8),
-              const ChangeRoleLink(),
-            ])),
-      ),
+            ),
+            if (!ctl.invalid.value && ctl.failure.value == null) ...[
+              const SizedBox(height: 6),
+              Text.rich(TextSpan(style: T.cap(c.tx2), children: const [
+                TextSpan(text: 'مثال: '),
+                TextSpan(text: '\u20660599 000 000\u2069'),
+              ])),
+            ],
+            const SizedBox(height: 20),
+            const ChangeRoleLink(),
+          ])),
       foot: Foot(child: Obx(() => SBtn('أرسل الرمز', full: true, loading: ctl.sending.value, onTap: ctl.send))),
     );
   }
@@ -349,31 +364,30 @@ class OtpScreen extends StatelessWidget {
         _OtpUi.locked => const Note('err', title: 'أُقفل الرمز بعد 5 محاولات خاطئة.', text: 'اطلب رمزًا جديدًا.'),
         _OtpUi.entry => null,
       };
-      return Page2(
-        top: const TopBar(),
-        body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Eyebrow('التحقق'),
-          Text('أدخل الرمز', style: T.d2(c.tx)),
-          const SizedBox(height: 6),
-          Text.rich(TextSpan(style: T.bd(c.tx2), children: [
-            const TextSpan(text: 'أرسلناه إلى '),
-            WidgetSpan(alignment: PlaceholderAlignment.baseline, baseline: TextBaseline.alphabetic, child: Text(ctl.phone, textDirection: TextDirection.ltr, style: TextStyle(fontFamily: Fonts.ui, fontSize: 16, fontWeight: FontWeight.w600, color: c.tx))),
-            const TextSpan(text: '  '),
-            WidgetSpan(alignment: PlaceholderAlignment.baseline, baseline: TextBaseline.alphabetic, child: SLink('تغيير', onTap: () => Get.back())),
-          ])),
-          const SizedBox(height: 24),
+      return AuthShell(
+        role: AuthRole.customer,
+        body: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          AuthTitle(
+            title: 'أدخل رمز التحقق',
+            subtitle: Text.rich(TextSpan(children: [
+              const TextSpan(text: 'أرسلنا رمزًا من 4 أرقام إلى '),
+              TextSpan(text: '\u2066${ctl.phone}\u2069', style: TextStyle(fontWeight: FontWeight.w700, color: c.tx)),
+            ])),
+          ),
+          const SizedBox(height: 18),
           OtpBoxes(digits: ctl.otp.value, bad: bad),
-          if (msg != null) ...[const SizedBox(height: 24), msg],
-          const SizedBox(height: 24),
-          Center(
-            child: ctl.verifying.value
+          if (msg != null) ...[const SizedBox(height: 16), msg],
+          const SizedBox(height: 8),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            ctl.verifying.value
                 ? SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.5, color: c.pri))
                 : (dis || ctl.suggestResend.value)
                     ? SBtn('إرسال رمز جديد', kind: BtnKind.sec, size: BtnSize.sm, icon: 'refresh', loading: ctl.sending.value, onTap: () => ctl.sendOtp(resend: true))
                     : (ctl.resendIn.value > 0
                         ? Row(mainAxisSize: MainAxisSize.min, children: [Text('إعادة الإرسال بعد ', style: T.sm(c.tx2)), CountdownText(ctl.resendIn.value, key: ValueKey(ctl.resendIn.value ~/ 1000), style: T.sm(c.tx2))])
                         : SBtn('إعادة إرسال الرمز', kind: BtnKind.ghost, size: BtnSize.sm, onTap: () => ctl.sendOtp(resend: true))),
-          ),
+            SLink('تغيير الرقم', onTap: () => Get.back()),
+          ]),
         ]),
         foot: Keypad(onKey: ctl.key, disabled: dis || ctl.verifying.value),
       );
